@@ -1,6 +1,8 @@
 #pragma once
 
-# include <GLFW/glfw3.h>
+#include <GLFW/glfw3.h>
+#include "Env.hpp"
+#include "Renderer.hpp"
 
 /*  Project architecture:
     [MANDATORY]
@@ -16,6 +18,9 @@
 
     | class Character:
       -> will contain the hierarchies of body parts
+
+    | class BodyPart:
+      -> A body part
 
     | class Animator:
       -> will animate the body parts defined in Character

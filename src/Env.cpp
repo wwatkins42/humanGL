@@ -1,20 +1,29 @@
 #include "Env.hpp"
 
 Env::Env( void ) {
-    this->initGlfwEnvironment("4.0");
-    this->initGlfwWindow(1280, 960);
+    try {
+        this->initGlfwEnvironment("4.0");
+        this->initGlfwWindow(1280, 960);
+    } catch (std::exception const & err) {
+        std::cout << err.what() << std::endl;
+    }
 }
 
-Env::Env( Env::Env const & rhs ) {
+Env::Env( Env const & rhs ) {
     *this = rhs;
 }
 
-Env & Env::operator=( Env::Env const & rhs ) {
+Env & Env::operator=( Env const & rhs ) {
     (void)rhs;
     return (*this);
 }
 
 Env::~Env( void ) {
+    // glDeleteVertexArrays(1, &env->buffer.vao);
+    // glDeleteBuffers(1, &env->buffer.vbo);
+    // glDeleteBuffers(1, &env->buffer.ebo);
+    glfwDestroyWindow(this->window.ptr);
+    glfwTerminate();
 }
 
 void	Env::initGlfwEnvironment( std::string const & glVersion ) {
@@ -37,15 +46,3 @@ void	Env::initGlfwWindow( size_t width, size_t height ) {
 	glViewport(0, 0, this->window.width, this->window.height);
 	glfwSetInputMode(this->window.ptr, GLFW_STICKY_KEYS, 1);
 }
-
-// void	init_matrices(t_env *env)
-// {
-// 	mat4_set(&env->sim.model, IDENTITY);
-// 	mat4_set(&env->sim.view, IDENTITY);
-// 	set_projection_matrix(env, env->cam.fov);
-// 	mat4_set(&env->model.rotation, IDENTITY);
-// 	mat4_set(&env->model.translation, IDENTITY);
-// 	vec3_set(&env->model.inertia, 0);
-// 	vec3_set(&env->model.center_axis, 0);
-// }
-//

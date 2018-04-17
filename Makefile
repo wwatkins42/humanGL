@@ -11,7 +11,7 @@ INC_PATH = ./include/ $(LIB_PATH)$(LIB_GLFW_NAME)/include/
 CC_FLGS = -Werror -Wextra -Wall -std=c++11
 CC_LIBS = -lglfw3 -framework AppKit -framework OpenGL -framework IOKit -framework CoreVideo
 
-SRC_NAME = main.cpp Env.cpp
+SRC_NAME = main.cpp Env.cpp Renderer.cpp Character.cpp BodyPart.cpp
 OBJ_NAME = $(SRC_NAME:.cpp=.o)
 LIB_NAME = $(LIB_GLFW_NAME)/src
 

@@ -5,6 +5,7 @@
 #include <regex>
 #include <GLFW/glfw3.h>
 #include "Exception.hpp"
+#include "Character.hpp"
 
 typedef struct  s_window {
     GLFWwindow  *ptr;
@@ -23,6 +24,11 @@ public:
     void	initGlfwEnvironment( std::string const & glVersion = "4.0" );
     void	initGlfwWindow( size_t width, size_t height );
 
+    t_window const  & getWindow( void ) const { return (window); };
+    Character       & getCharacter( void ) { return (character); };
+
 private:
     t_window    window;
+    Character   character;
+
 };
