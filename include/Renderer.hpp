@@ -6,6 +6,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <forward_list>
 
 #include "Exception.hpp"
 #include "Env.hpp"
@@ -21,15 +22,13 @@ public:
     void	keyHandler( void );
     void	loop( void );
 
+    static const std::string   getShaderSource( std::string const & filename );
+    static GLuint              createShader( std::string const & filename, GLenum shaderType );
+    static GLuint              createShaderProgram( std::forward_list<GLuint> const & shaders );
+    static void                isCompilationSuccess( GLint handle, GLint success, int shaderType );
+
 private:
     Env     *env;
-    GLuint  vertexShader;
-    GLuint  fragmentShader;
     GLuint  shaderProgram;
 
-    const std::string   getShaderSource( std::string const & filename );
-    GLuint              createShader( std::string const & filename, GLenum shaderType );
-    GLuint              createShaderProgram( GLuint vertexShader, GLuint fragmentShader );
-
-    void                isShaderCompilationSuccess( GLint handle, GLint success, int shaderType );
 };

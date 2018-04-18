@@ -2,9 +2,9 @@
 
 Renderer::Renderer( Env * environment ) : env(environment) {
     try {
-        this->vertexShader = this->createShader("./shader/vertex.glsl", GL_VERTEX_SHADER);
-        this->fragmentShader = this->createShader("./shader/fragment.glsl", GL_FRAGMENT_SHADER);
-        this->shaderProgram = this->createShaderProgram(this->vertexShader, this->fragmentShader);
+        GLuint   vertexShader = Renderer::createShader("./shader/vertex.glsl", GL_VERTEX_SHADER);
+        GLuint fragmentShader = Renderer::createShader("./shader/fragment.glsl", GL_FRAGMENT_SHADER);
+        this->shaderProgram = Renderer::createShaderProgram( {{ vertexShader, fragmentShader }} );
     } catch (std::exception const & err) {
         std::cout << err.what() << std::endl;
     }
@@ -30,7 +30,6 @@ void    Renderer::keyHandler( void ) {
 void	Renderer::loop( void ) {
     // load_obj(&env, env.model.filename);
     // load_bmp(&env, "chaton.bmp");
-    // build_shader_program(&env);
     // create_buffers(&env, GL_DYNAMIC_DRAW);
     glBindVertexArray(0);
     glEnable(GL_DEPTH_TEST);
@@ -44,7 +43,7 @@ void	Renderer::loop( void ) {
         this->env->getCharacter().render();
 
         // env.sim.model = mat4_mul(env.model.translation, env.model.rotation);
-        // glUseProgram(env.shader.program);
+        glUseProgram(this->shaderProgram); // maybe a shader program will be associated with a model to render
         // compute_mvp_matrix(&env);
         // update_shader_uniforms(&env);
         // glBindTexture(GL_TEXTURE_2D, env.buffer.texture);
@@ -55,43 +54,58 @@ void	Renderer::loop( void ) {
     }
 }
 
+/* STATIC METHODS
+   -------------- */
+/*  we load the content of a file in a string (we need that because the shader compilation is done at
+    runtime and glCompileShader expects a <const GLchar *> value)
+*/
 const std::string   Renderer::getShaderSource( std::string const & filename ) {
     std::ifstream   ifs(filename);
     std::string     content((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
     return (content);
 }
 
+/*  we create the shader from a file in format glsl. The shaderType defines what type of shader it is
+    and it returns the id to the created shader (the shader object is allocated by OpenGL in the back)
+*/
 GLuint  Renderer::createShader( std::string const & filename, GLenum shaderType ) {
-    const GLchar *shaderSource = this->getShaderSource(filename).c_str();
-	GLuint shader = glCreateShader(shaderType);
-	glShaderSource(shader, 1, &shaderSource, NULL);
-	glCompileShader(shader);
 	GLint success;
+    const GLchar *shaderSource = Renderer::getShaderSource(filename).c_str();
+	GLuint shader = glCreateShader(shaderType);
+	glShaderSource(shader, 1, &shaderSource, nullptr);
+	glCompileShader(shader);
 	glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-    this->isShaderCompilationSuccess(shader, success, shaderType);
+    Renderer::isCompilationSuccess(shader, success, shaderType);
 	return (shader);
 }
 
-GLuint  Renderer::createShaderProgram( GLuint vertexShader, GLuint fragmentShader ) {
-	GLuint shaderProgram = glCreateProgram();
-	glAttachShader(shaderProgram, vertexShader);
-	glAttachShader(shaderProgram, fragmentShader);
-	glLinkProgram(shaderProgram);
+/*  here we create the shader program that will be used to render our objects. It takes a list of shaders
+    that will instruct the GPU how to manage the vertices, etc... and we delete the compiled shaders at the
+    end because we no longer need them. We return the id of the created shader program.
+*/
+GLuint  Renderer::createShaderProgram( std::forward_list<GLuint> const & shaders ) {
 	GLint success;
+	GLuint shaderProgram = glCreateProgram();
+    for (std::forward_list<GLuint>::const_iterator it = shaders.begin(); it != shaders.end(); ++it)
+        glAttachShader(shaderProgram, *it);
+	glLinkProgram(shaderProgram);
 	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    this->isShaderCompilationSuccess(shaderProgram, success, -1);
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);
+    Renderer::isCompilationSuccess(shaderProgram, success, -1);
+    for (std::forward_list<GLuint>::const_iterator it = shaders.begin(); it != shaders.end(); ++it)
+        glDeleteShader(*it);
 	return (shaderProgram);
 }
 
-void    Renderer::isShaderCompilationSuccess( GLint handle, GLint success, int shaderType ) {
+/*  check if the shader or shader program compilation returned an error, if so throw an exception
+    with the message specified by glGetShaderInfoLog or glGetProgramInfoLog.
+*/
+void    Renderer::isCompilationSuccess( GLint handle, GLint success, int shaderType ) {
     if (!success) {
         char infoLog[512];
         if (shaderType != -1)
-            glGetShaderInfoLog(handle, 512, NULL, infoLog);
+            glGetShaderInfoLog(handle, 512, nullptr, infoLog);
         else
-            glGetProgramInfoLog(handle, 512, NULL, infoLog);
+            glGetProgramInfoLog(handle, 512, nullptr, infoLog);
         throw Exception::ShaderError(shaderType, infoLog);
     }
 }

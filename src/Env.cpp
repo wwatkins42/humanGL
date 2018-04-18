@@ -7,6 +7,7 @@ Env::Env( void ) : character() {
         // glad : load all OpenGL function pointers
         if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
             throw Exception::InitError("glad initialization failed");
+        this->character = new Character();
     } catch (std::exception const & err) {
         std::cout << err.what() << std::endl;
     }
@@ -22,9 +23,6 @@ Env & Env::operator=( Env const & rhs ) {
 }
 
 Env::~Env( void ) {
-    // glDeleteVertexArrays(1, &env->buffer.vao);
-    // glDeleteBuffers(1, &env->buffer.vbo);
-    // glDeleteBuffers(1, &env->buffer.ebo);
     glfwDestroyWindow(this->window.ptr);
     glfwTerminate();
 }

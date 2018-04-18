@@ -25,11 +25,11 @@ public:
     ~Env( void );
 
     t_window const  & getWindow( void ) const { return (window); };
-    Character       & getCharacter( void ) { return (character); };
+    Character       * getCharacter( void ) { return (character); };
 
 private:
     t_window    window;
-    Character   character;
+    Character   *character;
 
     void	       initGlfwEnvironment( std::string const & glVersion = "4.0" );
     void	       initGlfwWindow( size_t width, size_t height );

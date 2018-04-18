@@ -9,12 +9,7 @@
 #include <forward_list>
 
 #include "Exception.hpp"
-
-// typedef struct  s_model {
-//     std::array<GLfloat, 24> vertices;
-//     std::array<GLfloat, 36> indices;
-//     std::array<GLfloat, 24> colors;
-// }               t_model;
+#include "Model.hpp"
 
 class BodyPart {
 
@@ -28,13 +23,10 @@ public:
     void    render( void );
 
     std::string const getType( void ) const { return (type); };
-    void        initBufferObjects( int mode = GL_STATIC_DRAW );
 
 private:
-    std::string const               type; // good for debug
+    std::string const               type;
+    Model                           *model;
     std::forward_list<BodyPart *>   children;
-    /* eventualy we could add colors and texture to individual body parts */
-
-    // void        initBufferObjects( int mode = GL_STATIC_DRAW );
 
 };
