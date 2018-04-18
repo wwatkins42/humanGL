@@ -1,11 +1,11 @@
 #pragma once
 
 #include <glad/glad.h>
-// #define GLFW_INCLUDE_GLCOREARB
 #include <GLFW/glfw3.h>
 
 #include <iostream>
 #include <string>
+#include <fstream>
 
 #include "Exception.hpp"
 #include "Env.hpp"
@@ -22,6 +22,14 @@ public:
     void	loop( void );
 
 private:
-    Env     * env;
+    Env     *env;
+    GLuint  vertexShader;
+    GLuint  fragmentShader;
+    GLuint  shaderProgram;
 
+    const std::string   getShaderSource( std::string const & filename );
+    GLuint              createShader( std::string const & filename, GLenum shaderType );
+    GLuint              createShaderProgram( GLuint vertexShader, GLuint fragmentShader );
+
+    void                isShaderCompilationSuccess( GLint handle, GLint success, int shaderType );
 };

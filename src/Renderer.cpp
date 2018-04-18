@@ -1,6 +1,13 @@
 #include "Renderer.hpp"
 
 Renderer::Renderer( Env * environment ) : env(environment) {
+    try {
+        this->vertexShader = this->createShader("./shader/vertex.glsl", GL_VERTEX_SHADER);
+        this->fragmentShader = this->createShader("./shader/fragment.glsl", GL_FRAGMENT_SHADER);
+        this->shaderProgram = this->createShaderProgram(this->vertexShader, this->fragmentShader);
+    } catch (std::exception const & err) {
+        std::cout << err.what() << std::endl;
+    }
 }
 
 Renderer::Renderer( Renderer const & rhs ) {
@@ -35,7 +42,6 @@ void	Renderer::loop( void ) {
         this->keyHandler();
         // this->env->getCharacter().updateFrame();
         this->env->getCharacter().render();
-        std::exit(1);
 
         // env.sim.model = mat4_mul(env.model.translation, env.model.rotation);
         // glUseProgram(env.shader.program);
@@ -46,6 +52,47 @@ void	Renderer::loop( void ) {
         // glDrawElements(GL_TRIANGLES, env.model.num_indices, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
         glfwSwapBuffers(this->env->getWindow().ptr);
+    }
+}
+
+const std::string   Renderer::getShaderSource( std::string const & filename ) {
+    std::ifstream   ifs(filename);
+    std::string     content((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
+    return (content);
+}
+
+GLuint  Renderer::createShader( std::string const & filename, GLenum shaderType ) {
+    const GLchar *shaderSource = this->getShaderSource(filename).c_str();
+	GLuint shader = glCreateShader(shaderType);
+	glShaderSource(shader, 1, &shaderSource, NULL);
+	glCompileShader(shader);
+	GLint success;
+	glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+    this->isShaderCompilationSuccess(shader, success, shaderType);
+	return (shader);
+}
+
+GLuint  Renderer::createShaderProgram( GLuint vertexShader, GLuint fragmentShader ) {
+	GLuint shaderProgram = glCreateProgram();
+	glAttachShader(shaderProgram, vertexShader);
+	glAttachShader(shaderProgram, fragmentShader);
+	glLinkProgram(shaderProgram);
+	GLint success;
+	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+    this->isShaderCompilationSuccess(shaderProgram, success, -1);
+	glDeleteShader(vertexShader);
+	glDeleteShader(fragmentShader);
+	return (shaderProgram);
+}
+
+void    Renderer::isShaderCompilationSuccess( GLint handle, GLint success, int shaderType ) {
+    if (!success) {
+        char infoLog[512];
+        if (shaderType != -1)
+            glGetShaderInfoLog(handle, 512, NULL, infoLog);
+        else
+            glGetProgramInfoLog(handle, 512, NULL, infoLog);
+        throw Exception::ShaderError(shaderType, infoLog);
     }
 }
 

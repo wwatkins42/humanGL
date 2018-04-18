@@ -1,6 +1,6 @@
 #include "BodyPart.hpp"
 
-const GLfloat vertices[] = { // 24
+GLfloat vertices[] = { // 24
     // front
     -1.0, -1.0,  1.0,
      1.0, -1.0,  1.0,
@@ -12,7 +12,7 @@ const GLfloat vertices[] = { // 24
      1.0,  1.0, -1.0,
     -1.0,  1.0, -1.0,
 };
-const GLfloat colors[] = { // 24
+GLfloat colors[] = { // 24
     // front colors
     1.0, 0.0, 0.0,
     0.0, 1.0, 0.0,
@@ -24,7 +24,7 @@ const GLfloat colors[] = { // 24
     0.0, 0.0, 1.0,
     1.0, 1.0, 1.0,
 };
-const GLushort indices[] = { // 36
+GLushort indices[] = { // 36
     // front
     0, 1, 2,
     2, 3, 0,
@@ -85,7 +85,6 @@ void    BodyPart::initBufferObjects( int mode ) {
     GLuint      vbo = 0; // vertex buffer object
     GLuint      ibo = 0; // index buffer object (or ebo sometimes)
 
-    // (void)mode;
     // gen buffers and vertex arrays
     glGenBuffers(1, &vbo);
 	glGenBuffers(1, &ibo);
@@ -93,14 +92,14 @@ void    BodyPart::initBufferObjects( int mode ) {
     // bind vertex array object
 	glBindVertexArray(vao);
     // bind vertex buffer object and copy
-	// glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	// glBufferData(GL_ARRAY_BUFFER, 24, vertices, mode); // not 24
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, mode);
     // // bind index buffer object and copy
-	// glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-	// glBufferData(GL_ELEMENT_ARRAY_BUFFER, 36, indices, mode); // not 36
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, mode);
     // // set the vertex attribute pointers
-	// glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), static_cast<GLvoid*>(0));
-	// glEnableVertexAttribArray(0);
-	// glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-	// glEnableVertexAttribArray(1);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), static_cast<GLvoid*>(0));
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(1);
 }

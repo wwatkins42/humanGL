@@ -1,7 +1,6 @@
 #pragma once
 
 #include <glad/glad.h>
-// #define GLFW_INCLUDE_GLCOREARB
 #include <GLFW/glfw3.h>
 
 #include <iostream>
@@ -19,7 +18,8 @@ public:
     Character & operator=( Character const & rhs );
     ~Character( void );
 
-    void    render( void );
+    void        render( void );
+    BodyPart    *getParentPart( void ) const { return (parentPart); };
 
 private:
     BodyPart    *parentPart;

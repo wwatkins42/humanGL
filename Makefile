@@ -3,7 +3,7 @@ CC = clang++
 
 LIB_GLFW_NAME = glfw-3.2.1
 LIB_GLAD_NAME = glad
-LIB_GLEW_NAME = glew-2.1.0
+# LIB_GLEW_NAME = glew-2.1.0
 
 SRC_PATH = ./src/
 OBJ_PATH = ./obj/
@@ -16,7 +16,6 @@ CC_LIBS = -lglfw3 -framework AppKit -framework OpenGL -framework IOKit -framewor
 SRC_NAME = main.cpp Env.cpp Renderer.cpp Character.cpp BodyPart.cpp
 OBJ_NAME = $(SRC_NAME:.cpp=.o)
 LIB_NAME = $(LIB_GLFW_NAME)/src #$(LIB_GLEW_NAME)/build/lib
-
 LIB_SRC_NAME = $(LIB_GLAD_NAME)/src/glad.c
 
 SRC = $(addprefix $(SRC_PATH), $(SRC_NAME))

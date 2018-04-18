@@ -1,9 +1,12 @@
 #include "Env.hpp"
 
-Env::Env( void ) {
+Env::Env( void ) : character() {
     try {
         this->initGlfwEnvironment("4.0");
         this->initGlfwWindow(1280, 960);
+        // glad : load all OpenGL function pointers
+        if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+            throw Exception::InitError("glad initialization failed");
     } catch (std::exception const & err) {
         std::cout << err.what() << std::endl;
     }
@@ -36,13 +39,17 @@ void	Env::initGlfwEnvironment( std::string const & glVersion ) {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, std::stoi(glVersion.substr(p+1)));
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+	glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);//GL_FALSE);
 }
 
 void	Env::initGlfwWindow( size_t width, size_t height ) {
-	this->window.ptr = glfwCreateWindow(width, height, "humanGL", NULL, NULL);
+	if (!(this->window.ptr = glfwCreateWindow(width, height, "humanGL", NULL, NULL)))
+        throw Exception::InitError("glfwCreateWindow failed");
 	glfwMakeContextCurrent(this->window.ptr);
-	glfwGetFramebufferSize(this->window.ptr, &this->window.width, &this->window.height);
-	glViewport(0, 0, this->window.width, this->window.height);
+	glfwSetFramebufferSizeCallback(this->window.ptr, this->framebufferSizeCallback);
 	glfwSetInputMode(this->window.ptr, GLFW_STICKY_KEYS, 1);
+}
+
+void    Env::framebufferSizeCallback( GLFWwindow* window, int width, int height ) {
+    glViewport(0, 0, width, height);
 }

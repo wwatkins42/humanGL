@@ -12,10 +12,7 @@ Character::Character( void ) {
     BodyPart    *upperLegLeft = new BodyPart((std::forward_list<BodyPart *>){ lowerLegLeft }, "upperLegLeft");
     BodyPart    *upperLegRight = new BodyPart((std::forward_list<BodyPart *>){ lowerLegRight }, "upperLegRight");
     BodyPart    *torso = new BodyPart((std::forward_list<BodyPart *>){{ head, upperArmLeft, upperArmRight, upperLegLeft, upperLegRight }}, "torso");
-
     this->parentPart = torso;
-
-    head->initBufferObjects();
 }
 
 Character::Character( Character const & rhs ) {
@@ -53,7 +50,5 @@ dims are defined as : width, height, depth (from a front view)
 9: [],              { 1,-2, 0}, {0.5,   1 ,   1 }, 0x0, "lower_leg_right"
 
 pos is not correct, it's something like that
-
-
 
 */
