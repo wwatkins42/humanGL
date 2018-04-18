@@ -1,10 +1,14 @@
 #pragma once
 
+#include <glad/glad.h>
+// #define GLFW_INCLUDE_GLCOREARB
+#include <GLFW/glfw3.h>
+
 #include <iostream>
 #include <string>
 #include <array>
 #include <forward_list>
-#include <GLFW/glfw3.h>
+
 #include "Exception.hpp"
 
 // typedef struct  s_model {
@@ -25,17 +29,13 @@ public:
     void    render( void );
 
     std::string const getType( void ) const { return (type); };
+    void        initBufferObjects( int mode = GL_STATIC_DRAW );
 
 private:
     std::string const               type; // good for debug
     std::forward_list<BodyPart *>   children;
     /* eventualy we could add colors and texture to individual body parts */
-    static const GLfloat    vertices[];
-    static const GLushort   indices[];
-    static const GLfloat    colors[];
 
-    void        initBufferObjects( int mode = GL_STATIC_DRAW );
-    GLuint      vao; // vertex array object
-    GLuint      vbo; // vertex buffer object
-    GLuint      ibo; // index buffer object (or ebo sometimes)
+    // void        initBufferObjects( int mode = GL_STATIC_DRAW );
+
 };

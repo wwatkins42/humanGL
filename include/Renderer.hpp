@@ -1,8 +1,12 @@
 #pragma once
 
+#include <glad/glad.h>
+// #define GLFW_INCLUDE_GLCOREARB
+#include <GLFW/glfw3.h>
+
 #include <iostream>
 #include <string>
-#include <GLFW/glfw3.h>
+
 #include "Exception.hpp"
 #include "Env.hpp"
 

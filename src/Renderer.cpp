@@ -25,7 +25,7 @@ void	Renderer::loop( void ) {
     // load_bmp(&env, "chaton.bmp");
     // build_shader_program(&env);
     // create_buffers(&env, GL_DYNAMIC_DRAW);
-    // glBindVertexArray(0);
+    glBindVertexArray(0);
     glEnable(GL_DEPTH_TEST);
     while (!glfwWindowShouldClose(this->env->getWindow().ptr)) {
         glfwPollEvents();
@@ -44,7 +44,7 @@ void	Renderer::loop( void ) {
         // glBindTexture(GL_TEXTURE_2D, env.buffer.texture);
         // glBindVertexArray(env.buffer.vao);
         // glDrawElements(GL_TRIANGLES, env.model.num_indices, GL_UNSIGNED_INT, 0);
-        // glBindVertexArray(0);
+        glBindVertexArray(0);
         glfwSwapBuffers(this->env->getWindow().ptr);
     }
 }

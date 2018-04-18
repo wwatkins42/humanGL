@@ -14,6 +14,8 @@ Character::Character( void ) {
     BodyPart    *torso = new BodyPart((std::forward_list<BodyPart *>){{ head, upperArmLeft, upperArmRight, upperLegLeft, upperLegRight }}, "torso");
 
     this->parentPart = torso;
+
+    head->initBufferObjects();
 }
 
 Character::Character( Character const & rhs ) {

@@ -1,12 +1,9 @@
 #pragma once
 
-/* NOTE : I had to change the line 140 in lib/glfw-3.2.1/include/GLFW/glfw3.h to :
-          #include <OpenGL/gl3.h>
-          (it was : #include <OpenGL/gl.h>)
-*/
-#include <GLFW/glfw3.h>
-#include "Env.hpp"
+// #define GLFW_INCLUDE_GLCOREARB
+// #include <GLFW/glfw3.h>
 #include "Renderer.hpp"
+#include "Env.hpp"
 
 /*  Project architecture:
     [MANDATORY]

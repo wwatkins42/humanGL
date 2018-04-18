@@ -1,6 +1,6 @@
 #include "BodyPart.hpp"
 
-const GLfloat BodyPart::vertices[] = { // 24
+const GLfloat vertices[] = { // 24
     // front
     -1.0, -1.0,  1.0,
      1.0, -1.0,  1.0,
@@ -12,7 +12,7 @@ const GLfloat BodyPart::vertices[] = { // 24
      1.0,  1.0, -1.0,
     -1.0,  1.0, -1.0,
 };
-const GLfloat BodyPart::colors[] = { // 24
+const GLfloat colors[] = { // 24
     // front colors
     1.0, 0.0, 0.0,
     0.0, 1.0, 0.0,
@@ -24,7 +24,7 @@ const GLfloat BodyPart::colors[] = { // 24
     0.0, 0.0, 1.0,
     1.0, 1.0, 1.0,
 };
-const GLushort BodyPart::indices[] = { // 36
+const GLushort indices[] = { // 36
     // front
     0, 1, 2,
     2, 3, 0,
@@ -47,11 +47,11 @@ const GLushort BodyPart::indices[] = { // 36
 
 BodyPart::BodyPart( std::forward_list<BodyPart *> children, std::string const type ) : type(type), children(children) {
     /* DEBUG */
-    std::cout << type << " : ";
-    for (std::forward_list<BodyPart *>::iterator it = children.begin(); it != children.end(); ++it)
-        if (*it) std::cout << (*it)->getType() << ", ";
-    std::cout << std::endl;
-    // initBufferObjects(GL_STATIC_DRAW); // SEGFAULT
+    // std::cout << type << " : ";
+    // for (std::forward_list<BodyPart *>::iterator it = children.begin(); it != children.end(); ++it)
+    //     if (*it) std::cout << (*it)->getType() << ", ";
+    // std::cout << std::endl;
+    // initBufferObjects(GL_DYNAMIC_DRAW); // SEGFAULT
 }
 
 BodyPart::BodyPart( BodyPart const & rhs ) {
@@ -81,22 +81,26 @@ void    BodyPart::render( void ) {
 }
 
 void    BodyPart::initBufferObjects( int mode ) {
+    GLuint      vao = 0; // vertex array object
+    GLuint      vbo = 0; // vertex buffer object
+    GLuint      ibo = 0; // index buffer object (or ebo sometimes)
+
     // (void)mode;
     // gen buffers and vertex arrays
-    glGenBuffers(1, &this->vbo);
-	glGenBuffers(1, &this->ibo);
-	glGenVertexArrays(1, &this->vao);
+    glGenBuffers(1, &vbo);
+	glGenBuffers(1, &ibo);
+	glGenVertexArrays(1, &vao);
     // bind vertex array object
-	glBindVertexArray(this->vao);
+	glBindVertexArray(vao);
     // bind vertex buffer object and copy
-	glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
-	glBufferData(GL_ARRAY_BUFFER, 24, this->vertices, mode);
-    // bind index buffer object and copy
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ibo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 36, this->indices, mode);
-    // set the vertex attribute pointers
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), static_cast<GLvoid*>(0));
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-	glEnableVertexAttribArray(1);
+	// glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	// glBufferData(GL_ARRAY_BUFFER, 24, vertices, mode); // not 24
+    // // bind index buffer object and copy
+	// glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+	// glBufferData(GL_ELEMENT_ARRAY_BUFFER, 36, indices, mode); // not 36
+    // // set the vertex attribute pointers
+	// glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), static_cast<GLvoid*>(0));
+	// glEnableVertexAttribArray(0);
+	// glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+	// glEnableVertexAttribArray(1);
 }
