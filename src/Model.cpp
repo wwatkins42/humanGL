@@ -57,7 +57,7 @@ unsigned int indices[] = {  // note that we start from 0!
     1, 2, 3   // second Triangle
 };
 
-Model::Model( void ) {
+Model::Model( void ) : nIndices(6) {
     this->initBufferObjects(GL_STATIC_DRAW);
 }
 
@@ -81,7 +81,10 @@ void    Model::update( void ) {
 }
 
 void    Model::render( void ) {
-    // code for render of this instance
+    /* NOTE: will also contain the code for rendering relative to the updated position of the model */
+    // glBindTexture(GL_TEXTURE_2D, env.buffer.texture);
+    glBindVertexArray(this->vao);
+    glDrawElements(GL_TRIANGLES, this->nIndices, GL_UNSIGNED_INT, 0);
 }
 
 void    Model::initBufferObjects( int mode ) {

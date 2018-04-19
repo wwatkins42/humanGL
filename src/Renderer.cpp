@@ -37,19 +37,30 @@ void	Renderer::loop( void ) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         this->keyHandler();
-        // this->env->getCharacter().updateFrame();
-        // this->env->getCharacter()->render();
+
+        glUseProgram(this->shaderProgram);
+
         // env.sim.model = mat4_mul(env.model.translation, env.model.rotation);
-        glUseProgram(this->shaderProgram); // maybe a shader program will be associated with a model to render
         // compute_mvp_matrix(&env);
-        // update_shader_uniforms(&env);
-        // glBindTexture(GL_TEXTURE_2D, env.buffer.texture);
-        glBindVertexArray(this->env->getCharacter()->getParentPart()->getModel()->getVao());
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        this->updateShaderUniforms();
+        // this->env->getCharacter()->update();
+        this->env->getCharacter()->render();
         // glBindVertexArray(0);
         glfwSwapBuffers(this->env->getWindow().ptr);
     }
 }
+
+void    Renderer::updateShaderUniforms( void ) const {
+    float timeValue = glfwGetTime();
+    int vertexColorLocation = glGetUniformLocation(this->shaderProgram, "customColor");
+    glUniform4f(vertexColorLocation,
+        0.5f,
+        (std::sin(timeValue) / 2.0f) + 0.5f,
+        (std::cos(timeValue)) + 0.5f,
+        1.0f
+    );
+}
+
 
 /* STATIC METHODS
    -------------- */

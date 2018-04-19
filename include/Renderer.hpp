@@ -3,6 +3,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include <cmath>
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -31,4 +32,5 @@ private:
     Env     *env;
     GLuint  shaderProgram;
 
+    void    updateShaderUniforms( void ) const;
 };

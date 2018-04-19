@@ -16,7 +16,7 @@ BodyPart & BodyPart::operator=( BodyPart const & rhs ) {
 BodyPart::~BodyPart( void ) {
     for (std::forward_list<BodyPart *>::iterator it = this->children.begin(); it != this->children.end(); ++it)
         delete *it; // something like that
-    // delete this->model;
+    delete this->model;
 }
 
 void    BodyPart::update( void ) {
@@ -26,7 +26,9 @@ void    BodyPart::update( void ) {
 }
 
 void    BodyPart::render( void ) {
+    // render all the children parts
     for (std::forward_list<BodyPart *>::iterator it = this->children.begin(); it != this->children.end(); ++it)
         if (*it) (*it)->render();
-    // code for render of this instance
+    // then render this part
+    this->model->render();
 }
