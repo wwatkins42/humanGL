@@ -38,12 +38,11 @@ void	Renderer::loop( void ) {
 
         this->keyHandler();
 
-        // glUseProgram(this->shaderProgram);
         this->shader.use();
 
         // env.sim.model = mat4_mul(env.model.translation, env.model.rotation);
         // compute_mvp_matrix(&env);
-        // this->updateShaderUniforms();
+        this->updateShaderUniforms();
         // this->env->getCharacter()->update();
         this->env->getCharacter()->render();
         // glBindVertexArray(0);
@@ -51,16 +50,16 @@ void	Renderer::loop( void ) {
     }
 }
 
-// void    Renderer::updateShaderUniforms( void ) const {
-//     float timeValue = glfwGetTime();
-//     int vertexColorLocation = glGetUniformLocation(this->shaderProgram, "customColor");
-//     glUniform4f(vertexColorLocation,
-//         0.5f,
-//         (std::sin(timeValue) / 2.0f) + 0.5f,
-//         (std::cos(timeValue)) + 0.5f,
-//         1.0f
-//     );
-// }
+void    Renderer::updateShaderUniforms( void ) const {
+    float timeValue = glfwGetTime();
+    this->shader.setUniformValue(
+        "customColor",
+        0.5f,
+        (std::sin(timeValue) / 2.0f) + 0.5f,
+        (std::cos(timeValue)) + 0.5f,
+        1.0f
+    );
+}
 
 
 // void	key_handle(t_env *env)

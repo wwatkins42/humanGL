@@ -28,5 +28,5 @@ private:
     Env     *env;
     Shader  shader;
 
-    // void    updateShaderUniforms( void ) const;
+    void    updateShaderUniforms( void ) const;
 };

@@ -10,6 +10,8 @@
 
 #include "Exception.hpp"
 
+
+
 class Shader {
 
 public:
@@ -24,6 +26,15 @@ public:
     static void                 isCompilationSuccess( GLint handle, GLint success, int shaderType );
 
     void                        use( void ) const;
+
+    template<typename T>
+    void    setUniformValue( std::string const & name, T x ) const;
+    template<typename T>
+    void    setUniformValue( std::string const & name, T x, T y ) const;
+    template<typename T>
+    void    setUniformValue( std::string const & name, T x, T y, T z ) const;
+    template<typename T>
+    void    setUniformValue( std::string const & name, T x, T y, T z, T w ) const;
 
     GLuint  id;
 

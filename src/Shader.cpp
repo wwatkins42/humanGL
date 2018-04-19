@@ -75,3 +75,53 @@ void    Shader::isCompilationSuccess( GLint handle, GLint success, int shaderTyp
         throw Exception::ShaderError(shaderType, infoLog);
     }
 }
+
+/* not really good looking but it does the job */
+template<>
+void    Shader::setUniformValue<int>( std::string const & name, int x ) const {
+    glUniform1i(glGetUniformLocation(this->id, name.c_str()), x);
+}
+template<>
+void    Shader::setUniformValue<unsigned int>( std::string const & name, unsigned int x ) const {
+    glUniform1ui(glGetUniformLocation(this->id, name.c_str()), x);
+}
+template<>
+void    Shader::setUniformValue<float>( std::string const & name, float x ) const {
+    glUniform1f(glGetUniformLocation(this->id, name.c_str()), x);
+}
+template<>
+void    Shader::setUniformValue<int>( std::string const & name, int x, int y ) const {
+    glUniform2i(glGetUniformLocation(this->id, name.c_str()), x, y);
+}
+template<>
+void    Shader::setUniformValue<unsigned int>( std::string const & name, unsigned int x, unsigned int y ) const {
+    glUniform2ui(glGetUniformLocation(this->id, name.c_str()), x, y);
+}
+template<>
+void    Shader::setUniformValue<float>( std::string const & name, float x, float y ) const {
+    glUniform2f(glGetUniformLocation(this->id, name.c_str()), x, y);
+}
+template<>
+void    Shader::setUniformValue<int>( std::string const & name, int x, int y, int z ) const {
+    glUniform3i(glGetUniformLocation(this->id, name.c_str()), x, y, z);
+}
+template<>
+void    Shader::setUniformValue<unsigned int>( std::string const & name, unsigned int x, unsigned int y, unsigned int z ) const {
+    glUniform3ui(glGetUniformLocation(this->id, name.c_str()), x, y, z);
+}
+template<>
+void    Shader::setUniformValue<float>( std::string const & name, float x, float y, float z ) const {
+    glUniform3f(glGetUniformLocation(this->id, name.c_str()), x, y, z);
+}
+template<>
+void    Shader::setUniformValue<int>( std::string const & name, int x, int y, int z, int w ) const {
+    glUniform4i(glGetUniformLocation(this->id, name.c_str()), x, y, z, w);
+}
+template<>
+void    Shader::setUniformValue<unsigned int>( std::string const & name, unsigned int x, unsigned int y, unsigned int z, unsigned int w ) const {
+    glUniform4ui(glGetUniformLocation(this->id, name.c_str()), x, y, z, w);
+}
+template<>
+void    Shader::setUniformValue<float>( std::string const & name, float x, float y, float z, float w ) const {
+    glUniform4f(glGetUniformLocation(this->id, name.c_str()), x, y, z, w);
+}
