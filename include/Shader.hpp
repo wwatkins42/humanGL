@@ -35,6 +35,7 @@ public:
     void    setUniformValue( std::string const & name, T x, T y, T z ) const;
     template<typename T>
     void    setUniformValue( std::string const & name, T x, T y, T z, T w ) const;
+    /* save the uniform location in a hashMap for efficiency */
 
     GLuint  id;
 

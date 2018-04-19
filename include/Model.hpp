@@ -30,6 +30,4 @@ private:
     GLuint  vbo; // Vertex Buffer Object
     GLuint  ebo; // Element Buffer Object (or indices buffer object, ibo)
 
-    size_t  nIndices;
-
 };

@@ -1,13 +1,6 @@
 #include "Renderer.hpp"
 
 Renderer::Renderer( Env * environment ) : env(environment), shader("./shader/vertex.glsl", "./shader/fragment.glsl") {
-    // try {
-    //     // GLuint   vertexShader = Renderer::createShader("./shader/vertex.glsl", GL_VERTEX_SHADER);
-    //     // GLuint fragmentShader = Renderer::createShader("./shader/fragment.glsl", GL_FRAGMENT_SHADER);
-    //     // this->shaderProgram = Renderer::createShaderProgram( {{ vertexShader, fragmentShader }} );
-    // } catch (std::exception const & err) {
-    //     std::cout << err.what() << std::endl;
-    // }
 }
 
 Renderer::Renderer( Renderer const & rhs ) : shader("./shader/vertex.glsl", "./shader/fragment.glsl") {

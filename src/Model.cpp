@@ -46,18 +46,18 @@
 //     6, 7, 3,
 // };
 
-float vertices[] = {
+std::array<float, 12> vertices = {{
      0.5f,  0.5f, 0.0f,  // top right
      0.5f, -0.5f, 0.0f,  // bottom right
     -0.5f, -0.5f, 0.0f,  // bottom left
     -0.5f,  0.5f, 0.0f   // top left
-};
-unsigned int indices[] = {  // note that we start from 0!
+}};
+std::array<unsigned int, 6> indices = {{  // note that we start from 0!
     0, 1, 3,  // first Triangle
     1, 2, 3   // second Triangle
-};
+}};
 
-Model::Model( void ) : nIndices(6) {
+Model::Model( void ) {
     this->initBufferObjects(GL_STATIC_DRAW);
 }
 
@@ -84,7 +84,7 @@ void    Model::render( void ) {
     /* NOTE: will also contain the code for rendering relative to the updated position of the model */
     // glBindTexture(GL_TEXTURE_2D, env.buffer.texture);
     glBindVertexArray(this->vao);
-    glDrawElements(GL_TRIANGLES, this->nIndices, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 }
 
 void    Model::initBufferObjects( int mode ) {
@@ -97,10 +97,10 @@ void    Model::initBufferObjects( int mode ) {
 	glBindVertexArray(this->vao);
     // copy our vertices array in a buffer for OpenGL to use
 	glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, mode);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), vertices.data(), mode);
     // copy our indices array in a buffer for OpenGL to use
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, mode);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indices.size(), indices.data(), mode);
     // set the vertex attribute pointers
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), static_cast<GLvoid*>(0));
 	glEnableVertexAttribArray(0);
