@@ -29,9 +29,7 @@ void    Renderer::keyHandler( void ) {
 
 void	Renderer::loop( void ) {
     // load_obj(&env, env.model.filename);
-    // load_bmp(&env, "chaton.bmp");
-    // create_buffers(&env, GL_DYNAMIC_DRAW);
-    glBindVertexArray(0);
+    // glBindVertexArray(0);
     glEnable(GL_DEPTH_TEST);
     while (!glfwWindowShouldClose(this->env->getWindow().ptr)) {
         glfwPollEvents();
@@ -40,16 +38,15 @@ void	Renderer::loop( void ) {
 
         this->keyHandler();
         // this->env->getCharacter().updateFrame();
-        this->env->getCharacter().render();
-
+        // this->env->getCharacter()->render();
         // env.sim.model = mat4_mul(env.model.translation, env.model.rotation);
         glUseProgram(this->shaderProgram); // maybe a shader program will be associated with a model to render
         // compute_mvp_matrix(&env);
         // update_shader_uniforms(&env);
         // glBindTexture(GL_TEXTURE_2D, env.buffer.texture);
-        // glBindVertexArray(env.buffer.vao);
-        // glDrawElements(GL_TRIANGLES, env.model.num_indices, GL_UNSIGNED_INT, 0);
-        glBindVertexArray(0);
+        glBindVertexArray(this->env->getCharacter()->getParentPart()->getModel()->getVao());
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        // glBindVertexArray(0);
         glfwSwapBuffers(this->env->getWindow().ptr);
     }
 }

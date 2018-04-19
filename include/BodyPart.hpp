@@ -22,7 +22,8 @@ public:
     void    update( void );
     void    render( void );
 
-    std::string const getType( void ) const { return (type); };
+    std::string const   getType( void ) const { return (type); };
+    Model               *getModel( void ) const { return (model); };
 
 private:
     std::string const               type;

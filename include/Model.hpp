@@ -23,9 +23,11 @@ public:
 
     void    initBufferObjects( int mode = GL_STATIC_DRAW );
 
+    GLuint const & getVao( void ) const { return (vao); };
+
 private:
     GLuint  vao; // Vertex Array Object
     GLuint  vbo; // Vertex Buffer Object
-    GLuint  ibo; // Indice Buffer Object
+    GLuint  ebo; // Element Buffer Object (or indices buffer object, ibo)
 
 };
