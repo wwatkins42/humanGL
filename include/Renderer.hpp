@@ -11,6 +11,7 @@
 
 #include "Exception.hpp"
 #include "Env.hpp"
+#include "Shader.hpp"
 
 class Renderer {
 
@@ -23,14 +24,9 @@ public:
     void	keyHandler( void );
     void	loop( void );
 
-    static const std::string   getShaderSource( std::string const & filename );
-    static GLuint              createShader( std::string const & filename, GLenum shaderType );
-    static GLuint              createShaderProgram( std::forward_list<GLuint> const & shaders );
-    static void                isCompilationSuccess( GLint handle, GLint success, int shaderType );
-
 private:
     Env     *env;
-    GLuint  shaderProgram;
+    Shader  shader;
 
-    void    updateShaderUniforms( void ) const;
+    // void    updateShaderUniforms( void ) const;
 };

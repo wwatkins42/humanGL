@@ -1,16 +1,16 @@
 #include "Renderer.hpp"
 
-Renderer::Renderer( Env * environment ) : env(environment) {
-    try {
-        GLuint   vertexShader = Renderer::createShader("./shader/vertex.glsl", GL_VERTEX_SHADER);
-        GLuint fragmentShader = Renderer::createShader("./shader/fragment.glsl", GL_FRAGMENT_SHADER);
-        this->shaderProgram = Renderer::createShaderProgram( {{ vertexShader, fragmentShader }} );
-    } catch (std::exception const & err) {
-        std::cout << err.what() << std::endl;
-    }
+Renderer::Renderer( Env * environment ) : env(environment), shader("./shader/vertex.glsl", "./shader/fragment.glsl") {
+    // try {
+    //     // GLuint   vertexShader = Renderer::createShader("./shader/vertex.glsl", GL_VERTEX_SHADER);
+    //     // GLuint fragmentShader = Renderer::createShader("./shader/fragment.glsl", GL_FRAGMENT_SHADER);
+    //     // this->shaderProgram = Renderer::createShaderProgram( {{ vertexShader, fragmentShader }} );
+    // } catch (std::exception const & err) {
+    //     std::cout << err.what() << std::endl;
+    // }
 }
 
-Renderer::Renderer( Renderer const & rhs ) {
+Renderer::Renderer( Renderer const & rhs ) : shader("./shader/vertex.glsl", "./shader/fragment.glsl") {
     *this = rhs;
 }
 
@@ -38,11 +38,12 @@ void	Renderer::loop( void ) {
 
         this->keyHandler();
 
-        glUseProgram(this->shaderProgram);
+        // glUseProgram(this->shaderProgram);
+        this->shader.use();
 
         // env.sim.model = mat4_mul(env.model.translation, env.model.rotation);
         // compute_mvp_matrix(&env);
-        this->updateShaderUniforms();
+        // this->updateShaderUniforms();
         // this->env->getCharacter()->update();
         this->env->getCharacter()->render();
         // glBindVertexArray(0);
@@ -50,73 +51,17 @@ void	Renderer::loop( void ) {
     }
 }
 
-void    Renderer::updateShaderUniforms( void ) const {
-    float timeValue = glfwGetTime();
-    int vertexColorLocation = glGetUniformLocation(this->shaderProgram, "customColor");
-    glUniform4f(vertexColorLocation,
-        0.5f,
-        (std::sin(timeValue) / 2.0f) + 0.5f,
-        (std::cos(timeValue)) + 0.5f,
-        1.0f
-    );
-}
+// void    Renderer::updateShaderUniforms( void ) const {
+//     float timeValue = glfwGetTime();
+//     int vertexColorLocation = glGetUniformLocation(this->shaderProgram, "customColor");
+//     glUniform4f(vertexColorLocation,
+//         0.5f,
+//         (std::sin(timeValue) / 2.0f) + 0.5f,
+//         (std::cos(timeValue)) + 0.5f,
+//         1.0f
+//     );
+// }
 
-
-/* STATIC METHODS
-   -------------- */
-/*  we load the content of a file in a string (we need that because the shader compilation is done at
-    runtime and glCompileShader expects a <const GLchar *> value)
-*/
-const std::string   Renderer::getShaderSource( std::string const & filename ) {
-    std::ifstream   ifs(filename);
-    std::string     content((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
-    return (content);
-}
-
-/*  we create the shader from a file in format glsl. The shaderType defines what type of shader it is
-    and it returns the id to the created shader (the shader object is allocated by OpenGL in the back)
-*/
-GLuint  Renderer::createShader( std::string const & filename, GLenum shaderType ) {
-	GLint success;
-    const GLchar *shaderSource = Renderer::getShaderSource(filename).c_str();
-	GLuint shader = glCreateShader(shaderType);
-	glShaderSource(shader, 1, &shaderSource, nullptr);
-	glCompileShader(shader);
-	glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-    Renderer::isCompilationSuccess(shader, success, shaderType);
-	return (shader);
-}
-
-/*  here we create the shader program that will be used to render our objects. It takes a list of shaders
-    that will instruct the GPU how to manage the vertices, etc... and we delete the compiled shaders at the
-    end because we no longer need them. We return the id of the created shader program.
-*/
-GLuint  Renderer::createShaderProgram( std::forward_list<GLuint> const & shaders ) {
-	GLint success;
-	GLuint shaderProgram = glCreateProgram();
-    for (std::forward_list<GLuint>::const_iterator it = shaders.begin(); it != shaders.end(); ++it)
-        glAttachShader(shaderProgram, *it);
-	glLinkProgram(shaderProgram);
-	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    Renderer::isCompilationSuccess(shaderProgram, success, -1);
-    for (std::forward_list<GLuint>::const_iterator it = shaders.begin(); it != shaders.end(); ++it)
-        glDeleteShader(*it);
-	return (shaderProgram);
-}
-
-/*  check if the shader or shader program compilation returned an error, if so throw an exception
-    with the message specified by glGetShaderInfoLog or glGetProgramInfoLog.
-*/
-void    Renderer::isCompilationSuccess( GLint handle, GLint success, int shaderType ) {
-    if (!success) {
-        char infoLog[512];
-        if (shaderType != -1)
-            glGetShaderInfoLog(handle, 512, nullptr, infoLog);
-        else
-            glGetProgramInfoLog(handle, 512, nullptr, infoLog);
-        throw Exception::ShaderError(shaderType, infoLog);
-    }
-}
 
 // void	key_handle(t_env *env)
 // {
