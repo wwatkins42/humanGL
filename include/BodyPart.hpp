@@ -14,20 +14,20 @@
 class BodyPart {
 
 public:
-    BodyPart( std::forward_list<BodyPart *> children, std::string const type );
-    BodyPart( BodyPart const & rhs );
-    BodyPart & operator=( BodyPart const & rhs );
+    BodyPart( std::forward_list<BodyPart*> children, const std::string type );
+    BodyPart( const BodyPart& rhs );
+    BodyPart& operator=( const BodyPart& rhs );
     ~BodyPart( void );
 
     void    update( void );
     void    render( void );
 
-    std::string const   getType( void ) const { return (type); };
-    Model               *getModel( void ) const { return (model); };
+    const std::string   getType( void ) const { return (type); };
+    Model*              getModel( void ) const { return (model); };
 
 private:
-    std::string const               type;
-    Model                           *model;
-    std::forward_list<BodyPart *>   children;
+    const std::string               type;
+    Model*                          model;
+    std::forward_list<BodyPart*>    children;
 
 };

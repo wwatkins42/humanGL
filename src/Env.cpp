@@ -8,16 +8,16 @@ Env::Env( void ) : character() {
         if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
             throw Exception::InitError("glad initialization failed");
         this->character = new Character();
-    } catch (std::exception const & err) {
+    } catch (const std::exception& err) {
         std::cout << err.what() << std::endl;
     }
 }
 
-Env::Env( Env const & rhs ) {
+Env::Env( const Env& rhs ) {
     *this = rhs;
 }
 
-Env & Env::operator=( Env const & rhs ) {
+Env & Env::operator=( const Env& rhs ) {
     (void)rhs;
     return (*this);
 }
@@ -27,7 +27,7 @@ Env::~Env( void ) {
     glfwTerminate();
 }
 
-void	Env::initGlfwEnvironment( std::string const & glVersion ) {
+void	Env::initGlfwEnvironment( const std::string& glVersion ) {
 	if (!glfwInit())
 		throw Exception::InitError("glfw initialization failed");
     if (!std::regex_match(glVersion, static_cast<std::regex>("^[0-9]{1}.[0-9]{1}$")))

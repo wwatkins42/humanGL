@@ -14,15 +14,15 @@ class Character {
 
 public:
     Character( void );
-    Character( Character const & rhs );
-    Character & operator=( Character const & rhs );
+    Character( const Character& rhs );
+    Character& operator=( const Character& rhs );
     ~Character( void );
 
     void        render( void );
-    BodyPart    *getParentPart( void ) const { return (parentPart); };
+    BodyPart*   getParentPart( void ) const { return (parentPart); };
 
 private:
-    BodyPart    *parentPart;
+    BodyPart*   parentPart;
 
 };
 

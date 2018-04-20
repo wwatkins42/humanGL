@@ -1,16 +1,16 @@
 #include "Shader.hpp"
 
-Shader::Shader( std::string const & vertexShader, std::string const & fragmentShader ) {
+Shader::Shader( const std::string& vertexShader, const std::string& fragmentShader ) {
     GLuint vertShader = Shader::create(vertexShader, GL_VERTEX_SHADER);
     GLuint fragShader = Shader::create(fragmentShader, GL_FRAGMENT_SHADER);
     this->id = Shader::createProgram({{ vertShader, fragShader }});
 }
 
-Shader::Shader( Shader const & rhs ) {
+Shader::Shader( const Shader& rhs ) {
     *this = rhs;
 }
 
-Shader & Shader::operator=( Shader const & rhs ) {
+Shader& Shader::operator=( const Shader& rhs ) {
     (void)rhs;
     return (*this);
 }
@@ -25,7 +25,7 @@ void    Shader::use( void ) const {
 /*  we load the content of a file in a string (we need that because the shader compilation is done at
     runtime and glCompileShader expects a <const GLchar *> value)
 */
-const std::string   Shader::getFromFile( std::string const & filename ) {
+const std::string   Shader::getFromFile( const std::string& filename ) {
     std::ifstream   ifs(filename);
     std::string     content((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
     return (content);
@@ -34,7 +34,7 @@ const std::string   Shader::getFromFile( std::string const & filename ) {
 /*  we create the shader from a file in format glsl. The shaderType defines what type of shader it is
     and it returns the id to the created shader (the shader object is allocated by OpenGL in the back)
 */
-GLuint  Shader::create( std::string const & filename, GLenum shaderType ) {
+GLuint  Shader::create( const std::string& filename, GLenum shaderType ) {
 	GLint success;
     const GLchar *shaderSource = Shader::getFromFile(filename).c_str();
 	GLuint shader = glCreateShader(shaderType);
@@ -49,7 +49,7 @@ GLuint  Shader::create( std::string const & filename, GLenum shaderType ) {
     that will instruct the GPU how to manage the vertices, etc... and we delete the compiled shaders at the
     end because we no longer need them. We return the id of the created shader program.
 */
-GLuint  Shader::createProgram( std::forward_list<GLuint> const & shaders ) {
+GLuint  Shader::createProgram( const std::forward_list<GLuint>& shaders ) {
 	GLint success;
 	GLuint shaderProgram = glCreateProgram();
     for (std::forward_list<GLuint>::const_iterator it = shaders.begin(); it != shaders.end(); ++it)
@@ -78,50 +78,50 @@ void    Shader::isCompilationSuccess( GLint handle, GLint success, int shaderTyp
 
 /* not really good looking but it does the job */
 template<>
-void    Shader::setUniformValue<int>( std::string const & name, int x ) const {
+void    Shader::setUniformValue<int>( const std::string& name, int x ) const {
     glUniform1i(glGetUniformLocation(this->id, name.c_str()), x);
 }
 template<>
-void    Shader::setUniformValue<unsigned int>( std::string const & name, unsigned int x ) const {
+void    Shader::setUniformValue<unsigned int>( const std::string& name, unsigned int x ) const {
     glUniform1ui(glGetUniformLocation(this->id, name.c_str()), x);
 }
 template<>
-void    Shader::setUniformValue<float>( std::string const & name, float x ) const {
+void    Shader::setUniformValue<float>( const std::string& name, float x ) const {
     glUniform1f(glGetUniformLocation(this->id, name.c_str()), x);
 }
 template<>
-void    Shader::setUniformValue<int>( std::string const & name, int x, int y ) const {
+void    Shader::setUniformValue<int>( const std::string& name, int x, int y ) const {
     glUniform2i(glGetUniformLocation(this->id, name.c_str()), x, y);
 }
 template<>
-void    Shader::setUniformValue<unsigned int>( std::string const & name, unsigned int x, unsigned int y ) const {
+void    Shader::setUniformValue<unsigned int>( const std::string& name, unsigned int x, unsigned int y ) const {
     glUniform2ui(glGetUniformLocation(this->id, name.c_str()), x, y);
 }
 template<>
-void    Shader::setUniformValue<float>( std::string const & name, float x, float y ) const {
+void    Shader::setUniformValue<float>( const std::string& name, float x, float y ) const {
     glUniform2f(glGetUniformLocation(this->id, name.c_str()), x, y);
 }
 template<>
-void    Shader::setUniformValue<int>( std::string const & name, int x, int y, int z ) const {
+void    Shader::setUniformValue<int>( const std::string& name, int x, int y, int z ) const {
     glUniform3i(glGetUniformLocation(this->id, name.c_str()), x, y, z);
 }
 template<>
-void    Shader::setUniformValue<unsigned int>( std::string const & name, unsigned int x, unsigned int y, unsigned int z ) const {
+void    Shader::setUniformValue<unsigned int>( const std::string& name, unsigned int x, unsigned int y, unsigned int z ) const {
     glUniform3ui(glGetUniformLocation(this->id, name.c_str()), x, y, z);
 }
 template<>
-void    Shader::setUniformValue<float>( std::string const & name, float x, float y, float z ) const {
+void    Shader::setUniformValue<float>( const std::string& name, float x, float y, float z ) const {
     glUniform3f(glGetUniformLocation(this->id, name.c_str()), x, y, z);
 }
 template<>
-void    Shader::setUniformValue<int>( std::string const & name, int x, int y, int z, int w ) const {
+void    Shader::setUniformValue<int>( const std::string& name, int x, int y, int z, int w ) const {
     glUniform4i(glGetUniformLocation(this->id, name.c_str()), x, y, z, w);
 }
 template<>
-void    Shader::setUniformValue<unsigned int>( std::string const & name, unsigned int x, unsigned int y, unsigned int z, unsigned int w ) const {
+void    Shader::setUniformValue<unsigned int>( const std::string& name, unsigned int x, unsigned int y, unsigned int z, unsigned int w ) const {
     glUniform4ui(glGetUniformLocation(this->id, name.c_str()), x, y, z, w);
 }
 template<>
-void    Shader::setUniformValue<float>( std::string const & name, float x, float y, float z, float w ) const {
+void    Shader::setUniformValue<float>( const std::string& name, float x, float y, float z, float w ) const {
     glUniform4f(glGetUniformLocation(this->id, name.c_str()), x, y, z, w);
 }

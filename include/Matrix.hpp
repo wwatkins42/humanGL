@@ -15,14 +15,14 @@ public:
         for (size_t i = 0; i < size; ++i)
             data[i] = 0;
     }
-    Mat2d( std::array<T, W * H> const & value ) : w(W), h(H), size(W * H) {
+    Mat2d( const std::array<T, W * H>& value ) : w(W), h(H), size(W * H) {
         for (size_t i = 0; i < size; ++i)
             data[i] = value[i];
     }
     Mat2d( Mat2d const & rhs ) : w(W), h(H), size(W * H) {
         *this = rhs;
     }
-    Mat2d & operator=( Mat2d const & rhs ) {
+    Mat2d & operator=( const Mat2d& rhs ) {
         w = rhs.w;
         h = rhs.h;
         size = rhs.size;
@@ -31,20 +31,44 @@ public:
     }
     ~Mat2d( void ) {
     }
-    // access the data as 2 dimensions
-    T & operator()( size_t j, size_t i ) {
+
+    Mat2d   &identity( void ) {
+        if (h != w)
+            throw Exception::MatrixTypeError(h, w);
+        for (size_t i = 0; i < size; ++i)
+            data[i] = (!(i % (w + 1)) ? 1 : 0);
+        return (*this);
+    }
+
+    Mat2d<T, W, H>   transpose( void ) {
+        Mat2d<T, W, H> res;
+        for (int i = 0; i < h; ++i)
+            for (int j = 0; j < w; ++j)
+                res(j,i) = (*this)(i,j);
+        return (res);
+    }
+
+    /*  MUTABLE ACCESSORS
+    */
+    T& operator()( size_t j, size_t i ) {
         if (j < 0 || j > h - 1 || i < 0 || i > w - 1)
             throw Exception::MatrixAccessError(j, i, h, w);
         return (data[j * w + i]);
     }
-    // access the data as it is in the array
-    T & operator[]( size_t i ) {
+    T& operator()( size_t i ) {
         if (i < 0 || i > size - 1)
             throw Exception::MatrixAccessError(i, size);
         return (data[i]);
     }
-
-    /* scalar operator overload (we could take type other than T) */
+    /*  IMMUTABLE ACCESSOR
+    */
+    const T& operator[]( size_t i ) const {
+        if (i < 0 || i > size - 1)
+            throw Exception::MatrixAccessError(i, size);
+        return (data[i]);
+    }
+    /*  SCALAR OPERATORS
+    */
     Mat2d   operator+( T scalar ) {
         auto res = *this;
         return (res += scalar);
@@ -61,29 +85,30 @@ public:
         auto res = *this;
         return (res /= scalar);
     }
-    /* matrix operator overload */
-    Mat2d   operator+( Mat2d const & rhs ) {
+    /*  OTHER MATRIX INSTANCE OPERATORS
+    */
+    Mat2d   operator+( const Mat2d& rhs ) {
         auto res = *this;
         return (res += rhs);
     }
-    Mat2d   operator-( Mat2d const & rhs ) {
+    Mat2d   operator-( const Mat2d& rhs ) {
         auto res = *this;
         return (res -= rhs);
     }
-    Mat2d   operator*( Mat2d const & rhs ) {
+    template<typename _T, size_t _H, size_t _W>
+    Mat2d<_T, H,_W>   operator*( Mat2d<_T,_H,_W> & rhs ) {
         if (rhs.h != w)
             throw Exception::MatrixOperationError(h, w, rhs.h, rhs.w);
-        Mat2d<T, H, W>  tmp;
-        for (size_t i = 0; i < h; ++i) {
+        Mat2d<_T, H,_W>  res;
+        for (size_t i = 0; i < h; ++i)
             for (size_t j = 0; j < rhs.w; ++j) {
-                tmp(i,j) = 0;
+                res(i,j) = 0;
                 for (size_t k = 0; k < w; ++k)
-                    tmp(i,j) += (*this)(i,k) * rhs(k,j);
+                    res(i,j) += (*this)(i,k) * rhs(k,j);
             }
-        }
-        return (tmp);
+        return (res);
     }
-    Mat2d   operator/( Mat2d const & rhs ) {
+    Mat2d   operator/( const Mat2d & rhs ) {
         auto res = *this;
         return (res /= rhs);
     }
@@ -109,21 +134,21 @@ public:
         return (*this);
     }
     /* matrix operator overload */
-    Mat2d   &operator+=( Mat2d const & rhs ) {
+    Mat2d   &operator+=( const Mat2d& rhs ) {
         if (rhs.size != size)
             throw Exception::MatrixOperationError(size, rhs.size);
         for (size_t i = 0; i < size; ++i)
             data[i] += rhs[i];
         return (*this);
     }
-    Mat2d   &operator-=( Mat2d const & rhs ) {
+    Mat2d   &operator-=( const Mat2d& rhs ) {
         if (rhs.size != size)
             throw Exception::MatrixOperationError(size, rhs.size);
         for (size_t i = 0; i < size; ++i)
             data[i] -= rhs[i];
         return (*this);
     }
-    Mat2d   &operator*=( Mat2d const & rhs ) {
+    Mat2d   &operator*=( const Mat2d& rhs ) {
         if (rhs.h != w)
             throw Exception::MatrixOperationError(h, w, rhs.h, rhs.w);
         // well we would have to reshape the matrix
@@ -138,25 +163,21 @@ public:
         // *this = tmp;
         return (*this);
     }
-    Mat2d   &operator/=( Mat2d const & rhs ) {
+    Mat2d   &operator/=( const Mat2d& rhs ) {
         if (rhs.h != w)
             throw Exception::MatrixOperationError(h, w, rhs.h, rhs.w);
-
+        // TODO
         return (*this);
     }
 
-    void   compareDims( Mat2d const & rhs ) {
+    void   compareDims( const Mat2d& rhs ) {
         if (rhs.w != w or rhs.h != h)
             throw Exception::MatrixError("");
     }
 
-    const size_t    w;
-    const size_t    h;
-    const size_t    size;
+    std::array<T, W * H>    getData( void ) const { return (data); };
 
-    std::array<T, W * H>    &getData( void ) const { return (data); };
-
-    friend std::ostream &operator<<( std::ostream & stream, Mat2d & mat ) {
+    friend std::ostream &operator<<( std::ostream& stream, const Mat2d& mat ) {
         stream << "[[";
         for (size_t j = 0; j < mat.h; ++j) {
             for (size_t i = 0; i < mat.w; ++i)
@@ -166,7 +187,23 @@ public:
         return (stream);
     }
 
+    size_t  w;
+    size_t  h;
+    size_t  size;
+
 private:
     std::array<T, W * H> data; // maybe we'll change that for when we implement reshape
 
 };
+
+typedef Mat2d<int, 4, 1> vec4i;
+typedef Mat2d<int, 3, 1> vec3i;
+typedef Mat2d<int, 2, 1> vec2i;
+
+typedef Mat2d<float, 4, 1> vec4f;
+typedef Mat2d<float, 3, 1> vec3f;
+typedef Mat2d<float, 2, 1> vec2f;
+
+typedef Mat2d<double, 4, 1> vec4d;
+typedef Mat2d<double, 3, 1> vec3d;
+typedef Mat2d<double, 2, 1> vec2d;

@@ -11,7 +11,7 @@ namespace Exception {
     class InitError : public std::exception {
 
     public:
-        InitError( std::string const & str ) {
+        InitError( const std::string& str ) {
             std::stringstream ss;
             ss << "InitError : " << str;
             msg = ss.str();
@@ -27,7 +27,7 @@ namespace Exception {
     class ShaderError : public std::exception {
 
     public:
-        ShaderError( int type, std::string const & err ) {
+        ShaderError( int type, const std::string& err ) {
             std::stringstream ss;
             if (type == GL_VERTEX_SHADER)
                 ss << "SHADER::VERTEX::COMPILATION_FAILED_";
@@ -49,7 +49,7 @@ namespace Exception {
     class MatrixError : public std::exception {
 
     public:
-        MatrixError( std::string const & str ) {
+        MatrixError( const std::string& str ) {
             std::stringstream ss;
             ss << "MatrixError : " << str;
             msg = ss.str();
@@ -74,6 +74,23 @@ namespace Exception {
         MatrixAccessError( size_t i, size_t size ) {
             std::stringstream ss;
             ss << "MatrixAccessError : index [" << i << "] is invalid, size is " << size;
+            msg = ss.str();
+        }
+        virtual const char* what() const noexcept {
+            return (msg.c_str());
+        }
+
+    private:
+        std::string msg;
+    };
+
+    class MatrixTypeError : public std::exception {
+
+    public:
+        MatrixTypeError( size_t h, size_t w ) {
+            std::stringstream ss;
+            ss << "MatrixTypeError : matrix has invalid dims, " << h << " != " << w
+            << ", should be N x N";
             msg = ss.str();
         }
         virtual const char* what() const noexcept {

@@ -11,7 +11,7 @@
 #include "Character.hpp"
 
 typedef struct  s_window {
-    GLFWwindow  *ptr;
+    GLFWwindow* ptr;
     int         width;
     int         height;
 }               t_window;
@@ -20,18 +20,18 @@ class Env {
 
 public:
     Env( void );
-    Env( Env const & rhs );
-    Env & operator=( Env const & rhs );
+    Env( const Env& rhs );
+    Env&    operator=( const Env& rhs );
     ~Env( void );
 
-    t_window const  & getWindow( void ) const { return (window); };
-    Character       * getCharacter( void ) { return (character); };
+    const t_window& getWindow( void ) const { return (window); };
+    Character*      getCharacter( void ) { return (character); };
 
 private:
     t_window    window;
-    Character   *character;
+    Character*  character;
 
-    void	       initGlfwEnvironment( std::string const & glVersion = "4.0" );
+    void	       initGlfwEnvironment( const std::string& glVersion = "4.0" );
     void	       initGlfwWindow( size_t width, size_t height );
     // callback to be called each time the window is resized to update the viewport size as well
     static void    framebufferSizeCallback( GLFWwindow* window, int width, int height );

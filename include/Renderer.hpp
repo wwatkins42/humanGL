@@ -16,16 +16,16 @@
 class Renderer {
 
 public:
-    Renderer( Env * environment );
-    Renderer( Renderer const & rhs );
-    Renderer & operator=( Renderer const & rhs );
+    Renderer( Env* environment );
+    Renderer( const Renderer& rhs );
+    Renderer& operator=( const Renderer& rhs );
     ~Renderer( void );
 
     void	keyHandler( void );
     void	loop( void );
 
 private:
-    Env     *env;
+    Env*    env;
     Shader  shader;
 
     void    updateShaderUniforms( void ) const;

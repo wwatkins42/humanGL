@@ -1,13 +1,13 @@
 #include "Renderer.hpp"
 
-Renderer::Renderer( Env * environment ) : env(environment), shader("./shader/vertex.glsl", "./shader/fragment.glsl") {
+Renderer::Renderer( Env* environment ) : env(environment), shader("./shader/vertex.glsl", "./shader/fragment.glsl") {
 }
 
-Renderer::Renderer( Renderer const & rhs ) : shader("./shader/vertex.glsl", "./shader/fragment.glsl") {
+Renderer::Renderer( const Renderer& rhs ) : shader("./shader/vertex.glsl", "./shader/fragment.glsl") {
     *this = rhs;
 }
 
-Renderer & Renderer::operator=( Renderer const & rhs ) {
+Renderer& Renderer::operator=( const Renderer& rhs ) {
     (void)rhs;
     return (*this);
 }

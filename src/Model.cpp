@@ -61,11 +61,11 @@ Model::Model( void ) {
     this->initBufferObjects(GL_STATIC_DRAW);
 }
 
-Model::Model( Model const & rhs ) {
+Model::Model( const Model& rhs ) {
     *this = rhs;
 }
 
-Model & Model::operator=( Model const & rhs ) {
+Model& Model::operator=( const Model& rhs ) {
     (void)rhs;
     return (*this);
 }

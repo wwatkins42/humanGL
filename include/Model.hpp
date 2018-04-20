@@ -14,8 +14,8 @@ class Model {
 
 public:
     Model( void );
-    Model( Model const & rhs );
-    Model & operator=( Model const & rhs );
+    Model( const Model& rhs );
+    Model& operator=( const Model& rhs );
     ~Model( void );
 
     void    update( void );
@@ -23,7 +23,7 @@ public:
 
     void    initBufferObjects( int mode = GL_STATIC_DRAW );
 
-    GLuint const & getVao( void ) const { return (vao); };
+    const GLuint& getVao( void ) const { return (vao); };
 
 private:
     GLuint  vao; // Vertex Array Object

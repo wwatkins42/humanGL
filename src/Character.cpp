@@ -15,11 +15,11 @@ Character::Character( void ) {
     this->parentPart = torso;
 }
 
-Character::Character( Character const & rhs ) {
+Character::Character( const Character& rhs ) {
     *this = rhs;
 }
 
-Character & Character::operator=( Character const & rhs ) {
+Character& Character::operator=( const Character& rhs ) {
     (void)rhs;
     return (*this);
 }
