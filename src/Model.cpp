@@ -1,19 +1,39 @@
 #include "Model.hpp"
 
 // NOTE: Change that to a parser of .obj, like in scop but cleaner
-// GLfloat vertices[] = { // 24
-//     // front
-//     -1.0, -1.0,  1.0,
-//      1.0, -1.0,  1.0,
-//      1.0,  1.0,  1.0,
-//     -1.0,  1.0,  1.0,
-//     // back
-//     -1.0, -1.0, -1.0,
-//      1.0, -1.0, -1.0,
-//      1.0,  1.0, -1.0,
-//     -1.0,  1.0, -1.0,
-// };
-// GLfloat colors[] = { // 24
+std::array<GLfloat, 24> vertices = {{
+    // front
+    -1.0, -1.0,  1.0,
+     1.0, -1.0,  1.0,
+     1.0,  1.0,  1.0,
+    -1.0,  1.0,  1.0,
+    // back
+    -1.0, -1.0, -1.0,
+     1.0, -1.0, -1.0,
+     1.0,  1.0, -1.0,
+    -1.0,  1.0, -1.0,
+}};
+std::array<unsigned int, 36> indices = {{
+    // front
+    0, 1, 2,
+    2, 3, 0,
+    // right
+    1, 5, 6,
+    6, 2, 1,
+    // back
+    7, 6, 5,
+    5, 4, 7,
+    // left
+    4, 0, 3,
+    3, 7, 4,
+    // bottom
+    4, 5, 1,
+    1, 0, 4,
+    // top
+    3, 2, 6,
+    6, 7, 3,
+}};
+// std::array<GLfloat, 24> colors = {{
 //     // front colors
 //     1.0, 0.0, 0.0,
 //     0.0, 1.0, 0.0,
@@ -24,38 +44,18 @@
 //     0.0, 1.0, 0.0,
 //     0.0, 0.0, 1.0,
 //     1.0, 1.0, 1.0,
-// };
-// GLushort indices[] = { // 36
-//     // front
-//     0, 1, 2,
-//     2, 3, 0,
-//     // right
-//     1, 5, 6,
-//     6, 2, 1,
-//     // back
-//     7, 6, 5,
-//     5, 4, 7,
-//     // left
-//     4, 0, 3,
-//     3, 7, 4,
-//     // bottom
-//     4, 5, 1,
-//     1, 0, 4,
-//     // top
-//     3, 2, 6,
-//     6, 7, 3,
-// };
+// }};
 
-std::array<float, 12> vertices = {{
-     0.5f,  0.5f, 0.0f,  // top right
-     0.5f, -0.5f, 0.0f,  // bottom right
-    -0.5f, -0.5f, 0.0f,  // bottom left
-    -0.5f,  0.5f, 0.0f   // top left
-}};
-std::array<unsigned int, 6> indices = {{  // note that we start from 0!
-    0, 1, 3,  // first Triangle
-    1, 2, 3   // second Triangle
-}};
+// std::array<float, 12> vertices = {{
+//      0.5f,  0.5f, 0.0f,  // top right
+//      0.5f, -0.5f, 0.0f,  // bottom right
+//     -0.5f, -0.5f, 0.0f,  // bottom left
+//     -0.5f,  0.5f, 0.0f   // top left
+// }};
+// std::array<unsigned int, 6> indices = {{  // note that we start from 0!
+//     0, 1, 3,  // first Triangle
+//     1, 2, 3   // second Triangle
+// }};
 
 Model::Model( void ) {
     this->initBufferObjects(GL_STATIC_DRAW);
