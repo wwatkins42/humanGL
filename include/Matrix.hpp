@@ -157,7 +157,9 @@ public:
     //     return (*this);
     // }
 
-    std::array<T, W * H>    getData( void ) const { return (data); };
+    const T*                    getRawData( void ) const { return (data.data()); };
+    const std::array<T, W * H>& getData( void ) const { return (data); };
+    std::array<T, W * H>        getDataCpy( void ) const { return (data); };
 
     friend std::ostream &operator<<( std::ostream& stream, const Mat2d& mat ) {
         stream << "[[";
@@ -197,38 +199,12 @@ typedef Mat2d<float, 3, 3> mat3;
 typedef Mat2d<float, 2, 2> mat2;
 
 namespace mtls {
-    float   radians( const float deg ) { return (deg * DEG2RAD); }
-    float   degrees( const float rad ) { return (rad * RAD2DEG); }
+    float   radians( const float deg );
+    float   degrees( const float rad );
 
-    mat4    &scale( mat4& m, const vec3& scale ) {
-        mat4    tmp;
-        tmp(0)  = scale[0];
-        tmp(5)  = scale[1];
-        tmp(10) = scale[2];
-        m = tmp * m;
-        return (m);
-    }
-    mat4    &translate( mat4& m, const vec3& translate ) {
-        mat4    tmp;
-        tmp(3)  = translate[0];
-        tmp(7)  = translate[1];
-        tmp(11) = translate[2];
-        m = tmp * m;
-        return (m);
-    }
-    mat4    &rotate( mat4& m, double theta, const vec3& r ) {
-        const float sin = std::sin(theta);
-        const float cos = std::cos(theta);
-        mat4    tmp({
-            cos+r[0]*r[0]*(1-cos),      r[0]*r[1]*(1-cos)-r[2]*sin, r[0]*r[2]*(1-cos)+r[1]*sin, 0,
-            r[1]*r[0]*(1-cos)+r[2]*sin, cos+r[1]*r[1]*(1-cos),      r[1]*r[2]*(1-cos)-r[0]*sin, 0,
-            r[2]*r[0]*(1-cos)-r[1]*sin, r[2]*r[1]*(1-cos)+r[0]*sin, cos+r[2]*r[2]*(1-cos),      0,
-            0,                          0,                          0,                          1
-        });
-        m = tmp * m;
-        return (m);
-    }
-
+    mat4    &scale( mat4& m, const vec3& scale );
+    mat4    &translate( mat4& m, const vec3& translate );
+    mat4    &rotate( mat4& m, double theta, const vec3& r );
 }
 
 /*

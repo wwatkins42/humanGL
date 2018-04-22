@@ -7,8 +7,10 @@
 #include <string>
 #include <fstream>
 #include <forward_list>
+#include <unordered_map>
 
 #include "Exception.hpp"
+#include "Matrix.hpp"
 
 class Shader {
 
@@ -24,17 +26,26 @@ public:
     static void                 isCompilationSuccess( GLint handle, GLint success, int shaderType );
 
     void                        use( void ) const;
+    
+    unsigned int                getUniformLocation( const std::string& name );
 
     template<typename T>
-    void    setUniformValue( const std::string& name, T x ) const;
+    void    setVecUniformValue( const std::string& name, T x );
     template<typename T>
-    void    setUniformValue( const std::string& name, T x, T y ) const;
+    void    setVecUniformValue( const std::string& name, T x, T y );
     template<typename T>
-    void    setUniformValue( const std::string& name, T x, T y, T z ) const;
+    void    setVecUniformValue( const std::string& name, T x, T y, T z );
     template<typename T>
-    void    setUniformValue( const std::string& name, T x, T y, T z, T w ) const;
+    void    setVecUniformValue( const std::string& name, T x, T y, T z, T w );
     /* save the uniform location in a hashMap for efficiency */
 
+    void    setMat2UniformValue( const std::string& name, const mat2& m );
+    void    setMat3UniformValue( const std::string& name, const mat3& m );
+    void    setMat4UniformValue( const std::string& name, const mat4& m );
+
     GLuint  id;
+
+private:
+    std::unordered_map<std::string, unsigned int>   uniformLocations;
 
 };

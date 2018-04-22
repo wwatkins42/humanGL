@@ -32,6 +32,18 @@ void	Renderer::loop( void ) {
         this->keyHandler();
 
         this->shader.use();
+        /* playing with transformations */
+        mat4    trans;
+        // trans = mtls::translate(trans, vec3({ (float)(std::sin(glfwGetTime())*1), 1, 0 }));
+        // trans = mtls::rotate(trans, mtls::radians(90), vec3({ 0, 0, 1 }));
+        // trans = mtls::scale(trans, vec3({ 0.25, 0.25, 0.25 }));
+        // trans = mtls::translate(trans, vec3({ 0.5, -0.5, 0 }));
+        trans = mtls::rotate(trans, (float)glfwGetTime(), vec3({ 0, 0, 1 }));
+        trans = mtls::rotate(trans, (float)glfwGetTime(), vec3({ 1, 0, 0 }));
+        trans = mtls::rotate(trans, (float)glfwGetTime(), vec3({ 0, 1, 0 }));
+        trans = mtls::scale(trans, vec3({ 0.25, 0.25, 0.25 }));
+
+        this->shader.setMat4UniformValue("transform", trans);
 
         // env.sim.model = mat4_mul(env.model.translation, env.model.rotation);
         // compute_mvp_matrix(&env);
@@ -43,9 +55,9 @@ void	Renderer::loop( void ) {
     }
 }
 
-void    Renderer::updateShaderUniforms( void ) const {
+void    Renderer::updateShaderUniforms( void ) {
     float timeValue = glfwGetTime();
-    this->shader.setUniformValue(
+    this->shader.setVecUniformValue(
         "customColor",
         0.5f,
         (std::sin(timeValue) / 2.0f) + 0.5f,
@@ -53,7 +65,6 @@ void    Renderer::updateShaderUniforms( void ) const {
         1.0f
     );
 }
-
 
 // void	key_handle(t_env *env)
 // {

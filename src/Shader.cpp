@@ -76,52 +76,73 @@ void    Shader::isCompilationSuccess( GLint handle, GLint success, int shaderTyp
     }
 }
 
+/*  find the uniform location in the shader and store it in an unordered_map.
+    next time we want to use it we just have to get the location from the map
+*/
+unsigned int    Shader::getUniformLocation( const std::string& name ) {
+    if (this->uniformLocations.find(name) != this->uniformLocations.end())
+        return (this->uniformLocations[name]);
+    unsigned int newLoc = glGetUniformLocation(this->id, name.c_str());
+    this->uniformLocations[name] = newLoc;
+    return (newLoc);
+}
+
 /* not really good looking but it does the job */
 template<>
-void    Shader::setUniformValue<int>( const std::string& name, int x ) const {
-    glUniform1i(glGetUniformLocation(this->id, name.c_str()), x);
+void    Shader::setVecUniformValue<int>( const std::string& name, int x ) {
+    glUniform1i(getUniformLocation(name), x);
 }
 template<>
-void    Shader::setUniformValue<unsigned int>( const std::string& name, unsigned int x ) const {
-    glUniform1ui(glGetUniformLocation(this->id, name.c_str()), x);
+void    Shader::setVecUniformValue<unsigned int>( const std::string& name, unsigned int x ) {
+    glUniform1ui(getUniformLocation(name), x);
 }
 template<>
-void    Shader::setUniformValue<float>( const std::string& name, float x ) const {
-    glUniform1f(glGetUniformLocation(this->id, name.c_str()), x);
+void    Shader::setVecUniformValue<float>( const std::string& name, float x ) {
+    glUniform1f(getUniformLocation(name), x);
 }
 template<>
-void    Shader::setUniformValue<int>( const std::string& name, int x, int y ) const {
-    glUniform2i(glGetUniformLocation(this->id, name.c_str()), x, y);
+void    Shader::setVecUniformValue<int>( const std::string& name, int x, int y ) {
+    glUniform2i(getUniformLocation(name), x, y);
 }
 template<>
-void    Shader::setUniformValue<unsigned int>( const std::string& name, unsigned int x, unsigned int y ) const {
-    glUniform2ui(glGetUniformLocation(this->id, name.c_str()), x, y);
+void    Shader::setVecUniformValue<unsigned int>( const std::string& name, unsigned int x, unsigned int y ) {
+    glUniform2ui(getUniformLocation(name), x, y);
 }
 template<>
-void    Shader::setUniformValue<float>( const std::string& name, float x, float y ) const {
-    glUniform2f(glGetUniformLocation(this->id, name.c_str()), x, y);
+void    Shader::setVecUniformValue<float>( const std::string& name, float x, float y ) {
+    glUniform2f(getUniformLocation(name), x, y);
 }
 template<>
-void    Shader::setUniformValue<int>( const std::string& name, int x, int y, int z ) const {
-    glUniform3i(glGetUniformLocation(this->id, name.c_str()), x, y, z);
+void    Shader::setVecUniformValue<int>( const std::string& name, int x, int y, int z ) {
+    glUniform3i(getUniformLocation(name), x, y, z);
 }
 template<>
-void    Shader::setUniformValue<unsigned int>( const std::string& name, unsigned int x, unsigned int y, unsigned int z ) const {
-    glUniform3ui(glGetUniformLocation(this->id, name.c_str()), x, y, z);
+void    Shader::setVecUniformValue<unsigned int>( const std::string& name, unsigned int x, unsigned int y, unsigned int z ) {
+    glUniform3ui(getUniformLocation(name), x, y, z);
 }
 template<>
-void    Shader::setUniformValue<float>( const std::string& name, float x, float y, float z ) const {
-    glUniform3f(glGetUniformLocation(this->id, name.c_str()), x, y, z);
+void    Shader::setVecUniformValue<float>( const std::string& name, float x, float y, float z ) {
+    glUniform3f(getUniformLocation(name), x, y, z);
 }
 template<>
-void    Shader::setUniformValue<int>( const std::string& name, int x, int y, int z, int w ) const {
-    glUniform4i(glGetUniformLocation(this->id, name.c_str()), x, y, z, w);
+void    Shader::setVecUniformValue<int>( const std::string& name, int x, int y, int z, int w ) {
+    glUniform4i(getUniformLocation(name), x, y, z, w);
 }
 template<>
-void    Shader::setUniformValue<unsigned int>( const std::string& name, unsigned int x, unsigned int y, unsigned int z, unsigned int w ) const {
-    glUniform4ui(glGetUniformLocation(this->id, name.c_str()), x, y, z, w);
+void    Shader::setVecUniformValue<unsigned int>( const std::string& name, unsigned int x, unsigned int y, unsigned int z, unsigned int w ) {
+    glUniform4ui(getUniformLocation(name), x, y, z, w);
 }
 template<>
-void    Shader::setUniformValue<float>( const std::string& name, float x, float y, float z, float w ) const {
-    glUniform4f(glGetUniformLocation(this->id, name.c_str()), x, y, z, w);
+void    Shader::setVecUniformValue<float>( const std::string& name, float x, float y, float z, float w ) {
+    glUniform4f(getUniformLocation(name), x, y, z, w);
+}
+
+void    Shader::setMat2UniformValue( const std::string& name, const mat2& m ) {
+    glUniformMatrix2fv(getUniformLocation(name), 1, GL_TRUE, m.getRawData());
+}
+void    Shader::setMat3UniformValue( const std::string& name, const mat3& m ) {
+    glUniformMatrix3fv(getUniformLocation(name), 1, GL_TRUE, m.getRawData());
+}
+void    Shader::setMat4UniformValue( const std::string& name, const mat4& m ) {
+    glUniformMatrix4fv(getUniformLocation(name), 1, GL_TRUE, m.getRawData());
 }

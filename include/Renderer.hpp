@@ -12,6 +12,7 @@
 #include "Exception.hpp"
 #include "Env.hpp"
 #include "Shader.hpp"
+#include "Matrix.hpp"
 
 class Renderer {
 
@@ -28,5 +29,5 @@ private:
     Env*    env;
     Shader  shader;
 
-    void    updateShaderUniforms( void ) const;
+    void    updateShaderUniforms( void );
 };
