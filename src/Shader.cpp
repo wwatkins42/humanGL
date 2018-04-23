@@ -1,9 +1,12 @@
 #include "Shader.hpp"
 
 Shader::Shader( const std::string& vertexShader, const std::string& fragmentShader ) {
-    GLuint vertShader = Shader::create(vertexShader, GL_VERTEX_SHADER);
-    GLuint fragShader = Shader::create(fragmentShader, GL_FRAGMENT_SHADER);
-    this->id = Shader::createProgram({{ vertShader, fragShader }});
+    std::string vSrc = getFromFile(vertexShader);
+    std::string fSrc = getFromFile(fragmentShader);
+
+    GLuint vertShader = this->create(vSrc.c_str(), GL_VERTEX_SHADER);
+    GLuint fragShader = this->create(fSrc.c_str(), GL_FRAGMENT_SHADER);
+    this->id = this->createProgram({{ vertShader, fragShader }});
 }
 
 Shader::Shader( const Shader& rhs ) {
@@ -25,7 +28,7 @@ void    Shader::use( void ) const {
 /*  we load the content of a file in a string (we need that because the shader compilation is done at
     runtime and glCompileShader expects a <const GLchar *> value)
 */
-const std::string   Shader::getFromFile( const std::string& filename ) {
+std::string   Shader::getFromFile( const std::string& filename ) {
     std::ifstream   ifs(filename);
     std::string     content((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
     return (content);
@@ -34,14 +37,14 @@ const std::string   Shader::getFromFile( const std::string& filename ) {
 /*  we create the shader from a file in format glsl. The shaderType defines what type of shader it is
     and it returns the id to the created shader (the shader object is allocated by OpenGL in the back)
 */
-GLuint  Shader::create( const std::string& filename, GLenum shaderType ) {
+// GLuint  Shader::create( const std::string& filename, GLenum shaderType ) {
+GLuint  Shader::create( const char* shaderSource, GLenum shaderType ) {
 	GLint success;
-    const GLchar *shaderSource = Shader::getFromFile(filename).c_str();
 	GLuint shader = glCreateShader(shaderType);
 	glShaderSource(shader, 1, &shaderSource, nullptr);
 	glCompileShader(shader);
 	glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-    Shader::isCompilationSuccess(shader, success, shaderType);
+    this->isCompilationSuccess(shader, success, shaderType);
 	return (shader);
 }
 
@@ -56,7 +59,7 @@ GLuint  Shader::createProgram( const std::forward_list<GLuint>& shaders ) {
         glAttachShader(shaderProgram, *it);
 	glLinkProgram(shaderProgram);
 	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    Shader::isCompilationSuccess(shaderProgram, success, -1);
+    this->isCompilationSuccess(shaderProgram, success, -1);
     for (std::forward_list<GLuint>::const_iterator it = shaders.begin(); it != shaders.end(); ++it)
         glDeleteShader(*it);
 	return (shaderProgram);
@@ -138,12 +141,11 @@ void    Shader::setVecUniformValue<float>( const std::string& name, float x, flo
 }
 
 void    Shader::setMat2UniformValue( const std::string& name, const mat2& m ) {
-    glUniformMatrix2fv(getUniformLocation(name), 1, GL_TRUE, m.getRawData());
+    glUniformMatrix2fv(getUniformLocation(name), 1, GL_FALSE, m.getRawData());
 }
 void    Shader::setMat3UniformValue( const std::string& name, const mat3& m ) {
-    glUniformMatrix3fv(getUniformLocation(name), 1, GL_TRUE, m.getRawData());
+    glUniformMatrix3fv(getUniformLocation(name), 1, GL_FALSE, m.getRawData());
 }
 void    Shader::setMat4UniformValue( const std::string& name, const mat4& m ) {
-    // glUniformMatrix4fv(getUniformLocation(name), 1, GL_TRUE, m.getRawData());
     glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, m.getRawData());
 }

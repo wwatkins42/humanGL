@@ -20,13 +20,14 @@ public:
     Shader& operator=( const Shader& rhs );
     ~Shader( void );
 
-    static const std::string    getFromFile( const std::string& filename );
-    static GLuint               create( const std::string& filename, GLenum shaderType );
-    static GLuint               createProgram( const std::forward_list<GLuint>& shaders );
-    static void                 isCompilationSuccess( GLint handle, GLint success, int shaderType );
+    std::string         getFromFile( const std::string& filename );
+    // GLuint              create( const std::string& filename, GLenum shaderType );
+    GLuint              create( const char* shaderSource, GLenum shaderType );
+    GLuint              createProgram( const std::forward_list<GLuint>& shaders );
+    void                isCompilationSuccess( GLint handle, GLint success, int shaderType );
 
     void                        use( void ) const;
-    
+
     unsigned int                getUniformLocation( const std::string& name );
 
     template<typename T>

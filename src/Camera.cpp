@@ -3,7 +3,7 @@
 Camera::Camera( float fov, float aspect, short projectionType ) : aspect(aspect), fov(fov) {
     this->projectionMatrix = Camera::createPerspectiveProjectionMatrix(fov, aspect);
     this->viewMatrix.identity();
-    this->viewMatrix = mtls::translate(this->viewMatrix, vec3({ 0, 0, -3 }));
+    this->viewMatrix = mtls::translate(this->viewMatrix, vec3({ 0, 0, -2 }));
 }
 
 Camera::Camera( const Camera& rhs ) : aspect(rhs.getAspect()) {

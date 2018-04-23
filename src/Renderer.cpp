@@ -2,12 +2,12 @@
 
 Renderer::Renderer( Env* environment ) :
 env(environment),
-camera(90, (float)env->getWindow().width / (float)env->getWindow().height),
+camera(60, (float)env->getWindow().width / (float)env->getWindow().height),
 shader("./shader/vertex.glsl", "./shader/fragment.glsl") {
 }
 
 Renderer::Renderer( const Renderer& rhs ) :
-camera(90, (float)env->getWindow().width / (float)env->getWindow().height),
+camera(60, (float)env->getWindow().width / (float)env->getWindow().height),
 shader("./shader/vertex.glsl", "./shader/fragment.glsl") {
     *this = rhs;
 }
@@ -33,30 +33,27 @@ void	Renderer::loop( void ) {
         glfwPollEvents();
         glClearColor(0.09f, 0.08f, 0.15f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
         this->keyHandler();
-
         this->shader.use();
-
         this->updateShaderUniforms();
         // this->env->getCharacter()->update();
         this->env->getCharacter()->render();
-        // glBindVertexArray(0);
         glfwSwapBuffers(this->env->getWindow().ptr);
     }
 }
 
 void    Renderer::updateShaderUniforms( void ) {
     float timeValue = glfwGetTime();
+
     /* playing with transformations */
     mat4    trans;
     trans.identity();
-    trans = mtls::translate(trans, vec3({ 0, 0, -1 }));
+    trans = mtls::translate(trans, vec3({ 0, 0, 1 }));
     trans = mtls::rotate(trans, timeValue, vec3({ 0, 0, 1 }));
     trans = mtls::rotate(trans, timeValue, vec3({ 1, 0, 0 }));
     trans = mtls::rotate(trans, timeValue, vec3({ 0, 1, 0 }));
     trans = mtls::scale(trans, vec3({ 0.5, 0.5, 0.5 }));
-    this->shader.setMat4UniformValue("view", trans);
+    this->shader.setMat4UniformValue("model", trans);
 
     this->shader.setVecUniformValue(
         "customColor",
@@ -65,10 +62,8 @@ void    Renderer::updateShaderUniforms( void ) {
         (std::cos(timeValue)) + 0.5f,
         1.0f
     );
-    // mat4 tmp;
-    // tmp.identity();
-    // this->shader.setMat4UniformValue("model", tmp);
-    // this->shader.setMat4UniformValue("view", this->camera.getViewMatrix());
+    this->shader.setMat4UniformValue("model", trans);
+    this->shader.setMat4UniformValue("view", this->camera.getViewMatrix());
     this->shader.setMat4UniformValue("projection", this->camera.getProjectionMatrix());
 }
 
