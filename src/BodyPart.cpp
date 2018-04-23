@@ -15,7 +15,7 @@ BodyPart&   BodyPart::operator=( const BodyPart& rhs ) {
 
 BodyPart::~BodyPart( void ) {
     for (std::forward_list<BodyPart*>::iterator it = this->children.begin(); it != this->children.end(); ++it)
-        delete *it; // something like that
+        delete *it;
     delete this->model;
 }
 

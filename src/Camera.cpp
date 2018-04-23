@@ -1,7 +1,10 @@
 #include "Camera.hpp"
 
 Camera::Camera( float fov, float aspect, short projectionType ) : aspect(aspect), fov(fov) {
-    this->projectionMatrix = Camera::createPerspectiveProjectionMatrix(fov, aspect);
+    if (projectionType == projection::perspective)
+        this->projectionMatrix = Camera::createPerspectiveProjectionMatrix(fov, aspect);
+    else
+        this->projectionMatrix = Camera::createOrthographicProjectionMatrix(aspect);
     this->viewMatrix.identity();
     this->viewMatrix = mtls::translate(this->viewMatrix, vec3({ 0, 0, -2 }));
 }
@@ -38,23 +41,24 @@ void    Camera::setAspect( float aspect ) {
 mat4    Camera::createPerspectiveProjectionMatrix( float fov, float aspect, float near, float far ) {
     float yScale = 1 / std::tan(mtls::radians(fov * 0.5));
     float xScale = yScale / aspect;
-    float nearfar = far - near;
-    // float nearfar = near - far;
+    float nearfar = near - far;
     mat4    projectionMatrix({
         xScale, 0, 0, 0,
         0, yScale, 0, 0,
-        0, 0, -(far+near)/nearfar, -1,
-        0, 0, -2*far*near/nearfar, 0
+        0, 0, (far+near)/nearfar, -1,
+        0, 0, 2*far*near/nearfar, 0
     });
     return (projectionMatrix);
 }
 
-// mat4    Camera::createOrthographicProjectionMatrix( double fov, double aspect, double near, double far ) {
-//     mat4    projectionMatrix({{
-//         1/r, 0, 0, 0,
-//         0, 1/t, 0, 0,
-//         0, 0, -2/(far-near), -((far+near)/(far-near)),
-//         0, 0, -1, 0
-//     }});
-//     return (projectionMatrix);
-// }
+mat4    Camera::createOrthographicProjectionMatrix( float aspect, float near, float far ) {
+    mat4    projectionMatrix({
+        // 1/aspect, 0, 0, 0,
+        // 0, 1, 0, 0,
+        1, 0, 0, 0,
+        0, 1/aspect, 0, 0,
+        0, 0, -2/(far-near), -1,
+        0, 0, -((far+near)/(far-near)), 0
+    });
+    return (projectionMatrix);
+}

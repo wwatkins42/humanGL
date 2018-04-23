@@ -37,7 +37,6 @@ std::string   Shader::getFromFile( const std::string& filename ) {
 /*  we create the shader from a file in format glsl. The shaderType defines what type of shader it is
     and it returns the id to the created shader (the shader object is allocated by OpenGL in the back)
 */
-// GLuint  Shader::create( const std::string& filename, GLenum shaderType ) {
 GLuint  Shader::create( const char* shaderSource, GLenum shaderType ) {
 	GLint success;
 	GLuint shader = glCreateShader(shaderType);

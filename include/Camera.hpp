@@ -36,7 +36,7 @@ public:
     float   getAspect( void ) const { return (aspect); };
 
     static mat4 createPerspectiveProjectionMatrix( float fov, float aspect, float near = 0.1, float far = 100.0 );
-    // static mat4 createOrthographicProjectionMatrix( float near = 0.1, float far = 100.0 );
+    static mat4 createOrthographicProjectionMatrix( float aspect, float near = 0.1, float far = 100.0 );
 
 private:
     mat4    projectionMatrix;

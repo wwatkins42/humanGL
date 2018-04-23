@@ -21,7 +21,6 @@ public:
     ~Shader( void );
 
     std::string         getFromFile( const std::string& filename );
-    // GLuint              create( const std::string& filename, GLenum shaderType );
     GLuint              create( const char* shaderSource, GLenum shaderType );
     GLuint              createProgram( const std::forward_list<GLuint>& shaders );
     void                isCompilationSuccess( GLint handle, GLint success, int shaderType );
@@ -38,7 +37,6 @@ public:
     void    setVecUniformValue( const std::string& name, T x, T y, T z );
     template<typename T>
     void    setVecUniformValue( const std::string& name, T x, T y, T z, T w );
-    /* save the uniform location in a hashMap for efficiency */
 
     void    setMat2UniformValue( const std::string& name, const mat2& m );
     void    setMat3UniformValue( const std::string& name, const mat3& m );
