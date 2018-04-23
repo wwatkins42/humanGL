@@ -8,20 +8,24 @@ float   mtls::degrees( const float rad ) {
     return (rad * RAD2DEG);
 }
 
-mat4    &mtls::scale( mat4& m, const vec3& scale ) {
-    mat4    tmp;
-    tmp(0)  = scale[0];
-    tmp(5)  = scale[1];
-    tmp(10) = scale[2];
+mat4    &mtls::scale( mat4& m, const vec3& s ) {
+    mat4    tmp({
+        s[0], 0, 0, 0,
+        0, s[1], 0, 0,
+        0, 0, s[2], 0,
+        0, 0, 0, 1
+    });
     m = tmp * m;
     return (m);
 }
 
-mat4    &mtls::translate( mat4& m, const vec3& translate ) {
-    mat4    tmp;
-    tmp(3)  = translate[0];
-    tmp(7)  = translate[1];
-    tmp(11) = translate[2];
+mat4    &mtls::translate( mat4& m, const vec3& t ) {
+    mat4    tmp({
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, 0,
+        t[0], t[1], t[2], 1
+    });
     m = tmp * m;
     return (m);
 }

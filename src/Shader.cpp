@@ -144,5 +144,6 @@ void    Shader::setMat3UniformValue( const std::string& name, const mat3& m ) {
     glUniformMatrix3fv(getUniformLocation(name), 1, GL_TRUE, m.getRawData());
 }
 void    Shader::setMat4UniformValue( const std::string& name, const mat4& m ) {
-    glUniformMatrix4fv(getUniformLocation(name), 1, GL_TRUE, m.getRawData());
+    // glUniformMatrix4fv(getUniformLocation(name), 1, GL_TRUE, m.getRawData());
+    glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, m.getRawData());
 }

@@ -15,12 +15,8 @@ class Mat2d {
 
 public:
     Mat2d( void ) : w(W), h(H), size(W * H) {
-        if (h == w)
-            this->identity();
-        else {
-            for (size_t i = 0; i < size; ++i)
-                data[i] = 0;
-        }
+        for (size_t i = 0; i < size; ++i)
+            data[i] = 0;
     }
     Mat2d( const std::array<T, W * H>& value ) : w(W), h(H), size(W * H) {
         for (size_t i = 0; i < size; ++i)
@@ -202,8 +198,8 @@ namespace mtls {
     float   radians( const float deg );
     float   degrees( const float rad );
 
-    mat4    &scale( mat4& m, const vec3& scale );
-    mat4    &translate( mat4& m, const vec3& translate );
+    mat4    &scale( mat4& m, const vec3& s );
+    mat4    &translate( mat4& m, const vec3& t );
     mat4    &rotate( mat4& m, double theta, const vec3& r );
 }
 

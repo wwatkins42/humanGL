@@ -46,6 +46,8 @@ void	Env::initGlfwWindow( size_t width, size_t height ) {
 	glfwMakeContextCurrent(this->window.ptr);
 	glfwSetFramebufferSizeCallback(this->window.ptr, this->framebufferSizeCallback);
 	glfwSetInputMode(this->window.ptr, GLFW_STICKY_KEYS, 1);
+    this->window.width = width;
+    this->window.height = height;
 }
 
 void    Env::framebufferSizeCallback( GLFWwindow* window, int width, int height ) {

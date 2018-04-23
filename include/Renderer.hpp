@@ -13,6 +13,7 @@
 #include "Env.hpp"
 #include "Shader.hpp"
 #include "Matrix.hpp"
+#include "Camera.hpp"
 
 class Renderer {
 
@@ -28,6 +29,20 @@ public:
 private:
     Env*    env;
     Shader  shader;
+    Camera  camera;
 
     void    updateShaderUniforms( void );
+
 };
+
+/*
+clip = projection * view * model * local;
+
+    __Camera__
+    > projection
+    > view ??
+
+    __Model__
+    > model
+    > local
+*/

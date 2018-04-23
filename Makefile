@@ -12,7 +12,7 @@ INC_PATH = ./include/ $(LIB_PATH)$(LIB_GLFW_NAME)/include/ $(LIB_PATH)$(LIB_GLAD
 CC_FLGS = -std=c++11 #-Werror -Wextra -Wall
 CC_LIBS = -lglfw3 -framework AppKit -framework OpenGL -framework IOKit -framework CoreVideo
 
-SRC_NAME = main.cpp Env.cpp matrixUtils.cpp Renderer.cpp Character.cpp BodyPart.cpp Model.cpp Shader.cpp
+SRC_NAME = main.cpp Env.cpp matrixUtils.cpp Camera.cpp Renderer.cpp Character.cpp BodyPart.cpp Model.cpp Shader.cpp
 OBJ_NAME = $(SRC_NAME:.cpp=.o)
 LIB_NAME = $(LIB_GLFW_NAME)/src
 LIB_SRC_NAME = $(LIB_GLAD_NAME)/src/glad.c
