@@ -2,12 +2,12 @@
 
 Renderer::Renderer( Env* environment ) :
 env(environment),
-camera(60, (float)env->getWindow().width / (float)env->getWindow().height, projection::perspective),
+camera(90, (float)env->getWindow().width / (float)env->getWindow().height, projection::perspective),
 shader("./shader/vertex.glsl", "./shader/fragment.glsl") {
 }
 
 Renderer::Renderer( const Renderer& rhs ) :
-camera(60, (float)env->getWindow().width / (float)env->getWindow().height, projection::perspective),
+camera(90, (float)env->getWindow().width / (float)env->getWindow().height, projection::perspective),
 shader("./shader/vertex.glsl", "./shader/fragment.glsl") {
     *this = rhs;
 }
@@ -34,8 +34,8 @@ void	Renderer::loop( void ) {
         this->keyHandler();
         this->shader.use();
         this->updateShaderUniforms();
-        // this->env->getCharacter()->update();
-        this->env->getCharacter()->render();
+        this->env->getCharacter()->update(); // updates all the body parts model matrices
+        this->env->getCharacter()->render(&this->shader); // render and update the model uniform in the shader at the same time
         glfwSwapBuffers(this->env->getWindow().ptr);
     }
 }
@@ -60,7 +60,7 @@ void    Renderer::updateShaderUniforms( void ) {
         (std::cos(timeValue)) + 0.5f,
         1.0f
     );
-    this->shader.setMat4UniformValue("model", trans); // This changes depending on the model
+    // this->shader.setMat4UniformValue("model", trans); // This changes depending on the model
     this->shader.setMat4UniformValue("view", this->camera.getViewMatrix());
     this->shader.setMat4UniformValue("projection", this->camera.getProjectionMatrix());
 }

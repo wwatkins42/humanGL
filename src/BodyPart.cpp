@@ -1,7 +1,7 @@
 #include "BodyPart.hpp"
 
-BodyPart::BodyPart( std::forward_list<BodyPart*> children, const std::string type ) : type(type), children(children) {
-    this->model = new Model();
+BodyPart::BodyPart( std::forward_list<BodyPart*> children, const std::string type, const vec3& pos, const vec3& scale ) : type(type), children(children) {
+    this->model = new Model(pos, scale);
 }
 
 BodyPart::BodyPart( const BodyPart& rhs ) {
@@ -25,10 +25,8 @@ void    BodyPart::update( void ) {
     // code for update of this instance
 }
 
-void    BodyPart::render( void ) {
-    // render all the children parts
+void    BodyPart::render( Shader* shader ) {
     for (std::forward_list<BodyPart*>::iterator it = this->children.begin(); it != this->children.end(); ++it)
-        if (*it) (*it)->render();
-    // then render this part
-    this->model->render();
+        if (*it) (*it)->render(shader);
+    this->model->render(shader);
 }

@@ -34,15 +34,3 @@ private:
     void    updateShaderUniforms( void );
 
 };
-
-/*
-clip = projection * view * model * local;
-
-    __Camera__
-    > projection
-    > view ??
-
-    __Model__
-    > model
-    > local
-*/

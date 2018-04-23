@@ -6,7 +6,7 @@ Camera::Camera( float fov, float aspect, short projectionType ) : aspect(aspect)
     else
         this->projectionMatrix = Camera::createOrthographicProjectionMatrix(aspect);
     this->viewMatrix.identity();
-    this->viewMatrix = mtls::translate(this->viewMatrix, vec3({ 0, 0, -2 }));
+    this->viewMatrix = mtls::translate(this->viewMatrix, vec3({ 0, 0, -4 }));
 }
 
 Camera::Camera( const Camera& rhs ) : aspect(rhs.getAspect()) {

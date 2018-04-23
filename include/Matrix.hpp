@@ -112,36 +112,36 @@ public:
     }
     /*  OTHER MATRIX INSTANCE OPERATORS
     */
-    Mat2d   &operator+=( T scalar ) {
+    Mat2d&  operator+=( T scalar ) {
         for (size_t i = 0; i < size; ++i)
             data[i] += scalar;
         return (*this);
     }
-    Mat2d   &operator-=( T scalar ) {
+    Mat2d&  operator-=( T scalar ) {
         for (size_t i = 0; i < size; ++i)
             data[i] -= scalar;
         return (*this);
     }
-    Mat2d   &operator*=( T scalar ) {
+    Mat2d&  operator*=( T scalar ) {
         for (size_t i = 0; i < size; ++i)
             data[i] *= scalar;
         return (*this);
     }
-    Mat2d   &operator/=( T scalar ) {
+    Mat2d&  operator/=( T scalar ) {
         for (size_t i = 0; i < size; ++i)
             data[i] /= scalar;
         return (*this);
     }
     /*  OTHER MATRIX INSTANCE OPERATORS
     */
-    Mat2d   &operator+=( const Mat2d& rhs ) {
+    Mat2d&  operator+=( const Mat2d& rhs ) {
         if (rhs.size != size)
             throw Exception::MatrixOperationError(size, rhs.size);
         for (size_t i = 0; i < size; ++i)
             data[i] += rhs[i];
         return (*this);
     }
-    Mat2d   &operator-=( const Mat2d& rhs ) {
+    Mat2d&  operator-=( const Mat2d& rhs ) {
         if (rhs.size != size)
             throw Exception::MatrixOperationError(size, rhs.size);
         for (size_t i = 0; i < size; ++i)
@@ -157,7 +157,7 @@ public:
     const std::array<T, W * H>& getData( void ) const { return (data); };
     std::array<T, W * H>        getDataCpy( void ) const { return (data); };
 
-    friend std::ostream &operator<<( std::ostream& stream, const Mat2d& mat ) {
+    friend std::ostream&    operator<<( std::ostream& stream, const Mat2d& mat ) {
         stream << "[[";
         for (size_t j = 0; j < mat.h; ++j) {
             for (size_t i = 0; i < mat.w; ++i)
@@ -202,29 +202,3 @@ namespace mtls {
     mat4    &translate( mat4& m, const vec3& t );
     mat4    &rotate( mat4& m, double theta, const vec3& r );
 }
-
-/*
-    _IDENTITY______
-    [[ 1  0  0  0 ]
-     [ 0  1  0  0 ]
-     [ 0  0  1  0 ]
-     [ 0  0  0  1 ]]
-
-    _SCALE_________
-    [[ Sx 0  0  0 ]
-     [ 0  Sy 0  0 ]
-     [ 0  0  Sz 0 ]
-     [ 0  0  0  1 ]]
-
-    _TRANSLATE_____
-    [[ 1  0  0  Tx]
-     [ 0  1  0  Ty]
-     [ 0  0  1  Tz]
-     [ 0  0  0  1 ]]
-
-     when doing matrix multiplication it is advised to do it in the following order:
-        scaling -> rotation -> translation
-     as matrix multiplications are read from right to left, we do:
-        translation * rotation * scaling * V
-
-*/

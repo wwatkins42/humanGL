@@ -9,6 +9,7 @@
 
 #include "Exception.hpp"
 #include "BodyPart.hpp"
+#include "Shader.hpp"
 
 class Character {
 
@@ -18,7 +19,8 @@ public:
     Character& operator=( const Character& rhs );
     ~Character( void );
 
-    void        render( void );
+    void        update( void );
+    void        render( Shader* shader );
     BodyPart*   getParentPart( void ) const { return (parentPart); };
 
 private:

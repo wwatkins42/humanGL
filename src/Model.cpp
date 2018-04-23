@@ -14,24 +14,12 @@ std::array<GLfloat, 24> vertices = {{
     -0.5,  0.5, -0.5,
 }};
 std::array<unsigned int, 36> indices = {{
-    // front
-    0, 1, 2,
-    2, 3, 0,
-    // right
-    1, 5, 6,
-    6, 2, 1,
-    // back
-    7, 6, 5,
-    5, 4, 7,
-    // left
-    4, 0, 3,
-    3, 7, 4,
-    // bottom
-    4, 5, 1,
-    1, 0, 4,
-    // top
-    3, 2, 6,
-    6, 7, 3,
+    0, 1, 2,  2, 3, 0, // front
+    1, 5, 6,  6, 2, 1, // right
+    7, 6, 5,  5, 4, 7, // back
+    4, 0, 3,  3, 7, 4, // left
+    4, 5, 1,  1, 0, 4, // bottom
+    3, 2, 6,  6, 7, 3, // top
 }};
 // std::array<GLfloat, 24> colors = {{
 //     // front colors
@@ -46,19 +34,11 @@ std::array<unsigned int, 36> indices = {{
 //     1.0, 1.0, 1.0,
 // }};
 
-// std::array<float, 12> vertices = {{
-//      0.5f,  0.5f, 0.0f,  // top right
-//      0.5f, -0.5f, 0.0f,  // bottom right
-//     -0.5f, -0.5f, 0.0f,  // bottom left
-//     -0.5f,  0.5f, 0.0f   // top left
-// }};
-// std::array<unsigned int, 6> indices = {{  // note that we start from 0!
-//     0, 1, 3,  // first Triangle
-//     1, 2, 3   // second Triangle
-// }};
-
-Model::Model( void ) {
+Model::Model( const vec3& pos, const vec3& scale ) {
     this->initBufferObjects(GL_STATIC_DRAW);
+    this->matrix.identity();
+    this->matrix = mtls::translate(this->matrix, pos);
+    this->matrix = mtls::scale(this->matrix, scale);
 }
 
 Model::Model( const Model& rhs ) {
@@ -78,11 +58,11 @@ Model::~Model( void ) {
 
 void    Model::update( void ) {
     // code for update of this instance
+
 }
 
-void    Model::render( void ) {
-    /* NOTE: will also contain the code for rendering relative to the updated position of the model */
-    // glBindTexture(GL_TEXTURE_2D, env.buffer.texture);
+void    Model::render( Shader* shader ) {
+    shader->setMat4UniformValue("model", this->matrix);
     glBindVertexArray(this->vao);
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 }
