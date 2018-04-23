@@ -22,7 +22,7 @@ BodyPart::~BodyPart( void ) {
 void    BodyPart::update( void ) {
     for (std::forward_list<BodyPart*>::iterator it = this->children.begin(); it != this->children.end(); ++it)
         if (*it) (*it)->update();
-    // code for update of this instance
+    this->model->update();
 }
 
 void    BodyPart::render( Shader* shader ) {

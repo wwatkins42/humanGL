@@ -57,8 +57,8 @@ Model::~Model( void ) {
 }
 
 void    Model::update( void ) {
-    // code for update of this instance
-
+    float timeValue = glfwGetTime();
+    this->matrix = mtls::rotate(this->matrix, timeValue * 0.01, vec3({ 0, 1, 0 })); // LOL
 }
 
 void    Model::render( Shader* shader ) {

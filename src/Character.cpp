@@ -5,62 +5,62 @@ Character::Character( void ) {
     BodyPart* head = new BodyPart(
         (std::forward_list<BodyPart *>){{}},
         "head",
-        vec3({0, 1, 0}),
+        vec3({0, 1.5, 0}),
         vec3({1, 1, 1})
     );
     BodyPart* lowerLegLeft = new BodyPart(
         (std::forward_list<BodyPart *>){{}},
         "lowerLegLeft",
-        vec3({0, 0, 0}),
-        vec3({1, 1, 1})
+        vec3({0.4, -3.4, 0}),
+        vec3({0.5, 1.5, 0.5})
     );
     BodyPart* lowerLegRight = new BodyPart(
         (std::forward_list<BodyPart *>){{}},
         "lowerLegRight",
-        vec3({0, 0, 0}),
-        vec3({1, 1, 1})
+        vec3({-0.4, -3.4, 0}),
+        vec3({0.5, 1.5, 0.5})
     );
     BodyPart* lowerArmLeft = new BodyPart(
         (std::forward_list<BodyPart *>){{}},
         "lowerArmLeft",
-        vec3({-1, -1, 0}),
-        vec3({1, 1, 1})
+        vec3({-1, -1.25, 0}),
+        vec3({0.5, 1.5, 0.5})
     );
     BodyPart* lowerArmRight = new BodyPart(
         (std::forward_list<BodyPart *>){{}},
         "lowerArmRight",
-        vec3({1, -1, 0}),
-        vec3({1, 1, 1})
+        vec3({1, -1.25, 0}),
+        vec3({0.5, 1.5, 0.5})
     );
     BodyPart* upperArmLeft = new BodyPart(
         (std::forward_list<BodyPart *>){ lowerArmLeft },
         "upperArmLeft",
-        vec3({-1, 0, 0}),
-        vec3({1, 1, 1})
+        vec3({-1, 0.3, 0}),
+        vec3({0.5, 1.5, 0.5})
     );
     BodyPart* upperArmRight = new BodyPart(
         (std::forward_list<BodyPart *>){ lowerArmRight },
         "upperArmRight",
-        vec3({1, 0, 0}),
-        vec3({1, 1, 1})
+        vec3({1, 0.3, 0}),
+        vec3({0.5, 1.5, 0.5})
     );
     BodyPart* upperLegLeft = new BodyPart(
         (std::forward_list<BodyPart *>){ lowerLegLeft },
         "upperLegLeft",
-        vec3({0, 0, 0}),
-        vec3({1, 1, 1})
+        vec3({-0.4, -1.85, 0}),
+        vec3({0.5, 1.5, 0.5})
     );
     BodyPart* upperLegRight = new BodyPart(
         (std::forward_list<BodyPart *>){ lowerLegRight },
         "upperLegRight",
-        vec3({0, 0, 0}),
-        vec3({1, 1, 1})
+        vec3({0.4, -1.85, 0}),
+        vec3({0.5, 1.5, 0.5})
     );
     BodyPart* torso = new BodyPart(
         (std::forward_list<BodyPart *>){{ head, upperArmLeft, upperArmRight, upperLegLeft, upperLegRight }},
         "torso",
         vec3({0, 0, 0}),
-        vec3({1, 1, 1})
+        vec3({1.25, 2, 0.8})
     );
     this->parentPart = torso;
 }
