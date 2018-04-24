@@ -1,7 +1,7 @@
 #include "BodyPart.hpp"
 
 BodyPart::BodyPart( std::forward_list<BodyPart*> children, const std::string type, const vec3& pos, const vec3& scale ) : type(type), children(children) {
-    this->model = new Model(pos, scale);
+    this->model = new Model(pos, scale, vec3({0, 0, 0}));
 }
 
 BodyPart::BodyPart( const BodyPart& rhs ) {

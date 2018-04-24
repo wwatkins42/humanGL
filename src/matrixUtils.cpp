@@ -8,6 +8,12 @@ float   mtls::degrees( const float rad ) {
     return (rad * RAD2DEG);
 }
 
+vec3    mtls::createAxisUnitVec3( size_t index ) {
+    vec3 res;
+    res(index) = 1;
+    return (res);
+}
+
 mat4    &mtls::scale( mat4& m, const vec3& s ) {
     const mat4    tmp({
         s[0], 0, 0, 0,
@@ -30,6 +36,25 @@ mat4    &mtls::translate( mat4& m, const vec3& t ) {
     return (m);
 }
 
+/* rotate around an offset position */
+mat4    &mtls::rotate( mat4& m, const vec3& r, const vec3& offset ) {
+    m = mtls::translate(m, offset);
+    for (size_t i = 0; i < 3; ++i)
+        if (r[i] != 0)
+            m = mtls::rotate(m, static_cast<double>(r[i]), createAxisUnitVec3(i));
+    m = mtls::translate(m, vec3({-offset[0], -offset[1], -offset[2]}));
+    return (m);
+}
+
+/* rotate using a vec3 of type vec3({ 25, 0, 3 }) which will rotate 25 degrees on x axis and 3 on z axis */
+mat4    &mtls::rotate( mat4& m, const vec3& r ) {
+    for (size_t i = 0; i < 3; ++i)
+        if (r[i] != 0)
+            m = mtls::rotate(m, static_cast<double>(r[i]), createAxisUnitVec3(i));
+    return (m);
+}
+
+/* rotate around the given unit axis r */
 mat4    &mtls::rotate( mat4& m, double theta, const vec3& r ) { // use quaternions in the future
     const float sin = std::sin(theta);
     const float cos = std::cos(theta);

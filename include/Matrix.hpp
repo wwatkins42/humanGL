@@ -199,8 +199,12 @@ namespace mtls {
     float   radians( const float deg );
     float   degrees( const float rad );
 
+    vec3    createAxisUnitVec3( size_t index );
+
     mat4    &scale( mat4& m, const vec3& s );
     mat4    &translate( mat4& m, const vec3& t );
+    mat4    &rotate( mat4& m, const vec3& r, const vec3& offset );
+    mat4    &rotate( mat4& m, const vec3& r );
     mat4    &rotate( mat4& m, double theta, const vec3& r );
     mat4    inverse( const mat4& m );
 }

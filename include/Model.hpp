@@ -15,38 +15,35 @@
 class Model {
 
 public:
-    Model( const vec3& pos, const vec3& scale );
+    Model( const vec3& pos, const vec3& scale, const vec3& rotation );
     Model( const Model& rhs );
     Model& operator=( const Model& rhs );
     ~Model( void );
 
-    // void    update( const vec3& pPos = vec3({0, 0, 0}), const vec3& pScale = vec3({0, 0, 0}) );
     void    update( const mat4& parentTransform );
     void    render( Shader* shader );
 
     void    setScale( const vec3& s ) { scale = s; };
     void    setPos( const vec3& p ) { pos = p; };
+    void    setRotation( const vec3& r ) { rotation = r; };
 
     void    initBufferObjects( int mode = GL_STATIC_DRAW );
 
     const GLuint&   getVao( void ) const { return (vao); };
     const vec3&     getPos( void ) const { return (pos); };
     const vec3&     getScale( void ) const { return (scale); };
-    const vec3&     getOScale( void ) const { return (oScale); };
-    const mat4&     getTransform( void ) const { return (btransform); };
+    const mat4&     getTransform( void ) const { return (ut); };
 
 private:
     GLuint      vao; // Vertex Array Object
     GLuint      vbo; // Vertex Buffer Object
     GLuint      ebo; // Element Buffer Object (or indices buffer object, ibo)
 
-    mat4        btransform;
-    mat4        transform; // model matrix (for object transformations)
-    mat4        ut;
+    mat4        ut;         // the non-scaled version of the transfornm matrix
+    mat4        transform;  // model matrix (for object transformations)
+    
     vec3        pos;
     vec3        scale;
-
-    const vec3  oPos;
-    const vec3  oScale;
+    vec3        rotation;
 
 };

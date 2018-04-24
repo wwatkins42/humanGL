@@ -27,8 +27,9 @@ public:
 
     // void    resize( const vec3& v, bool child = false );
 
-    const std::string   getType( void ) const { return (type); };
-    Model*              getModel( void ) const { return (model); };
+    const std::string               getType( void ) const { return (type); };
+    Model*                          getModel( void ) const { return (model); };
+    std::forward_list<BodyPart*>&   getChildren( void ) { return (children); };
 
 private:
     const std::string               type;
