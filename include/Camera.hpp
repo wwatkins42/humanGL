@@ -26,13 +26,13 @@ public:
     ~Camera( void );
 
     /* Setters */
-    void    setFov( float fov );
-    void    setAspect( float aspect );
+    void        setFov( float fov );
+    void        setAspect( float aspect );
     /* Getters */
-    mat4&   getProjectionMatrix( void ) { return (projectionMatrix); };
-    mat4&   getViewMatrix( void ) { return (viewMatrix); };
-    float   getFov( void ) const { return (fov); };
-    float   getAspect( void ) const { return (aspect); };
+    mat4&       getProjectionMatrix( void ) { return (projectionMatrix); };
+    mat4&       getViewMatrix( void ) { return (viewMatrix); };
+    float       getFov( void ) const { return (fov); };
+    float       getAspect( void ) const { return (aspect); };
 
     static mat4 createPerspectiveProjectionMatrix( float fov, float aspect, float near = 0.1, float far = 100.0 );
     static mat4 createOrthographicProjectionMatrix( float aspect, float near = 0.1, float far = 100.0 );
@@ -40,7 +40,6 @@ public:
 private:
     mat4    projectionMatrix;
     mat4    viewMatrix;
-
     float   fov;
     float   aspect;
 

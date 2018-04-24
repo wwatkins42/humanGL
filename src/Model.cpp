@@ -34,11 +34,17 @@ std::array<unsigned int, 36> indices = {{
 //     1.0, 1.0, 1.0,
 // }};
 
-Model::Model( const vec3& pos, const vec3& scale ) {
+Model::Model( const vec3& pos, const vec3& scale ) : oPos(pos), oScale(scale) {
     this->initBufferObjects(GL_STATIC_DRAW);
-    this->matrix.identity();
-    this->matrix = mtls::translate(this->matrix, pos);
-    this->matrix = mtls::scale(this->matrix, scale);
+    this->pos = pos;
+    this->scale = scale;
+    // rotation too
+
+    this->btransform.identity();
+    this->btransform = mtls::translate(this->btransform, this->pos);
+    this->transform = this->btransform;
+    this->transform = mtls::scale(this->transform, this->scale);
+    std::cout << this->btransform << std::endl << std::endl;
 }
 
 Model::Model( const Model& rhs ) {
@@ -56,13 +62,19 @@ Model::~Model( void ) {
     glDeleteBuffers(1, &this->ebo);
 }
 
-void    Model::update( void ) {
-    float timeValue = glfwGetTime();
-    this->matrix = mtls::rotate(this->matrix, timeValue * 0.01, vec3({ 0, 1, 0 })); // LOL
+// void    Model::update( const vec3& pPos, const vec3& pScale ) {
+void    Model::update( const mat4& parentTransform ) {
+    this->transform.identity();
+    // this->transform = mtls::rotate(this->transform, glfwGetTime() * 2, vec3({ 0, 1, 0 }));
+    this->transform = mtls::translate(this->transform, this->pos);
+    this->transform = mtls::scale(this->transform, this->scale);
+
+    // this->ut = parentTransform * this->transform;
+    this->ut = this->transform * parentTransform; // it works fuckboy !!!!
 }
 
 void    Model::render( Shader* shader ) {
-    shader->setMat4UniformValue("model", this->matrix);
+    shader->setMat4UniformValue("model", this->ut);
     glBindVertexArray(this->vao);
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 }

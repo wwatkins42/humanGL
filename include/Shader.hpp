@@ -25,9 +25,9 @@ public:
     GLuint              createProgram( const std::forward_list<GLuint>& shaders );
     void                isCompilationSuccess( GLint handle, GLint success, int shaderType );
 
-    void                        use( void ) const;
+    void                use( void ) const;
 
-    unsigned int                getUniformLocation( const std::string& name );
+    unsigned int        getUniformLocation( const std::string& name );
 
     template<typename T>
     void    setVecUniformValue( const std::string& name, T x );

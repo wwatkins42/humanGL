@@ -34,25 +34,14 @@ void	Renderer::loop( void ) {
         this->keyHandler();
         this->shader.use();
         this->updateShaderUniforms();
-        this->env->getCharacter()->update(); // updates all the body parts model matrices
-        this->env->getCharacter()->render(&this->shader); // render and update the model uniform in the shader at the same time
+        this->env->getCharacter()->update();
+        this->env->getCharacter()->render(&this->shader);
         glfwSwapBuffers(this->env->getWindow().ptr);
     }
 }
 
 void    Renderer::updateShaderUniforms( void ) {
     float timeValue = glfwGetTime();
-
-    /* playing with transformations */
-    // mat4    trans;
-    // trans.identity();
-    // trans = mtls::translate(trans, vec3({ 0, 0, 1 }));
-    // trans = mtls::rotate(trans, timeValue, vec3({ 0, 0, 1 }));
-    // trans = mtls::rotate(trans, timeValue, vec3({ 1, 0, 0 }));
-    // trans = mtls::rotate(trans, timeValue, vec3({ 0, 1, 0 }));
-    // trans = mtls::scale(trans, vec3({ 0.5, 0.5, 0.5 }));
-    // this->shader.setMat4UniformValue("model", trans);
-
     this->shader.setVecUniformValue(
         "customColor",
         0.5f,
@@ -60,7 +49,6 @@ void    Renderer::updateShaderUniforms( void ) {
         (std::cos(timeValue)) + 0.5f,
         1.0f
     );
-    // this->shader.setMat4UniformValue("model", trans); // This changes depending on the model
     this->shader.setMat4UniformValue("view", this->camera.getViewMatrix());
     this->shader.setMat4UniformValue("projection", this->camera.getProjectionMatrix());
 }

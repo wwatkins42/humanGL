@@ -71,34 +71,34 @@ public:
     }
     /*  SCALAR OPERATORS
     */
-    Mat2d   operator+( T scalar ) {
+    Mat2d   operator+( T scalar ) const {
         auto res = *this;
         return (res += scalar);
     }
-    Mat2d   operator-( T scalar ) {
+    Mat2d   operator-( T scalar ) const {
         auto res = *this;
         return (res -= scalar);
     }
-    Mat2d   operator*( T scalar ) {
+    Mat2d   operator*( T scalar ) const {
         auto res = *this;
         return (res *= scalar);
     }
-    Mat2d   operator/( T scalar ) {
+    Mat2d   operator/( T scalar ) const {
         auto res = *this;
         return (res /= scalar);
     }
     /*  OTHER MATRIX INSTANCE OPERATORS
     */
-    Mat2d   operator+( const Mat2d& rhs ) {
+    Mat2d   operator+( const Mat2d& rhs ) const {
         auto res = *this;
         return (res += rhs);
     }
-    Mat2d   operator-( const Mat2d& rhs ) {
+    Mat2d   operator-( const Mat2d& rhs ) const {
         auto res = *this;
         return (res -= rhs);
     }
     template<typename _T, size_t _H, size_t _W>
-    Mat2d<_T, H,_W>   operator*( const Mat2d<_T,_H,_W>& rhs ) {
+    Mat2d<_T, H,_W>   operator*( const Mat2d<_T,_H,_W>& rhs ) const {
         if (rhs.h != w)
             throw Exception::MatrixOperationError(h, w, rhs.h, rhs.w);
         Mat2d<_T, H,_W>  res;
@@ -106,7 +106,8 @@ public:
             for (size_t j = 0; j < rhs.w; ++j) {
                 res(i,j) = 0;
                 for (size_t k = 0; k < w; ++k)
-                    res(i,j) += (*this)(i,k) * rhs[k * rhs.w + j];
+                    res(i,j) += (*this)[i * w + k] * rhs[k * rhs.w + j];
+                    // res(i,j) += (*this)(i,k) * rhs[k * rhs.w + j]; // not const
             }
         return (res);
     }
@@ -201,4 +202,5 @@ namespace mtls {
     mat4    &scale( mat4& m, const vec3& s );
     mat4    &translate( mat4& m, const vec3& t );
     mat4    &rotate( mat4& m, double theta, const vec3& r );
+    mat4    inverse( const mat4& m );
 }

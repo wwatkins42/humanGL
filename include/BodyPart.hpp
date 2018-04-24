@@ -21,8 +21,11 @@ public:
     BodyPart& operator=( const BodyPart& rhs );
     ~BodyPart( void );
 
-    void    update( void );
+    // void    update( const vec3& pPos = vec3({0, 0, 0}), const vec3& pScale = vec3({0, 0, 0}) );
+    void    update( const mat4& transform );
     void    render( Shader* shader );
+
+    // void    resize( const vec3& v, bool child = false );
 
     const std::string   getType( void ) const { return (type); };
     Model*              getModel( void ) const { return (model); };
