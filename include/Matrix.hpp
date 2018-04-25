@@ -219,13 +219,6 @@ namespace mtls {
 
     vec3    createAxisUnitVec3( size_t index );
 
-    // template<typename T, size_t H>
-    // Mat2d<T,H,1>  sign( const Mat2d<T,H,1>& v ) {
-    //     Mat2d<T,H,1>    res;
-    //     for (size_t i = 0; i < H; ++i)
-    //         res(i) = static_cast<T>(v[i] < static_cast<T>(0) ? -1 : 1);
-    //     return (res);
-    // }
     template<size_t H>
     Mat2d<float,H,1>  sign( const Mat2d<float,H,1>& v ) {
         Mat2d<float,H,1>    res;
@@ -256,4 +249,8 @@ namespace mtls {
     mat4    &rotate( mat4& m, const vec3& r );
     mat4    &rotate( mat4& m, double theta, const vec3& r );
     mat4    inverse( const mat4& m );
+
+    extern const mat4  mat4identity;
+    extern const mat3  mat3identity;
+    extern const mat2  mat2identity;
 }

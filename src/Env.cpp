@@ -7,7 +7,7 @@ Env::Env( void ) : character() {
         // glad : load all OpenGL function pointers
         if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
             throw Exception::InitError("glad initialization failed");
-        this->character = new Character();
+        this->character = new Skeleton(this->createCharacterSkeleton(), "torso");
     } catch (const std::exception& err) {
         std::cout << err.what() << std::endl;
     }
@@ -52,4 +52,89 @@ void	Env::initGlfwWindow( size_t width, size_t height ) {
 
 void    Env::framebufferSizeCallback( GLFWwindow* window, int width, int height ) {
     glViewport(0, 0, width, height);
+}
+
+std::unordered_map<std::string, Bone*>  Env::createCharacterSkeleton( void ) {
+    std::unordered_map<std::string, Bone*>  bones;
+    bones["head"] = new Bone(
+        (std::forward_list<Bone*>){{}},
+        "head",
+        vec3({0, 2, 0}),
+        vec3({1, 1, 1}),
+        vec3({0, 0, 0}), vec3({0, -0.5, 0}),
+        0xEEAD7E
+    );
+    bones["lowerLegLeft"] = new Bone(
+        (std::forward_list<Bone*>){{}},
+        "lowerLegLeft",
+        vec3({0, -1.5, 0}),
+        vec3({0.75, 1.5, 0.75}),
+        vec3({0, 0, 0}), vec3({0, 0.75, 0}),
+        0x3F5D6A
+    );
+    bones["lowerLegRight"] = new Bone(
+        (std::forward_list<Bone*>){{}},
+        "lowerLegRight",
+        vec3({0, -1.5, 0}),
+        vec3({0.75, 1.5, 0.75}),
+        vec3({0, 0, 0}), vec3({0, 0.75, 0}),
+        0x3F5D6A
+    );
+    bones["upperLegLeft"] = new Bone(
+        (std::forward_list<Bone*>){ bones["lowerLegLeft"] },
+        "upperLegLeft",
+        vec3({-0.625, -2.25, 0}),
+        vec3({0.75, 1.5, 0.75}),
+        vec3({0, 0, 0}), vec3({-0.375, 0.75, 0}),
+        0x3F5D6A
+    );
+    bones["upperLegRight"] = new Bone(
+        (std::forward_list<Bone*>){ bones["lowerLegRight"] },
+        "upperLegRight",
+        vec3({0.625, -2.25, 0}),
+        vec3({0.75, 1.5, 0.75}),
+        vec3({0, 0, 0}), vec3({0.375, 0.75, 0}),
+        0x3F5D6A
+    );
+    bones["lowerArmLeft"] = new Bone(
+        (std::forward_list<Bone*>){{}},
+        "lowerArmLeft",
+        vec3({0, -1.5, 0}),
+        vec3({0.6, 1.5, 0.6}),
+        vec3({1.9, 0, 0}), vec3({0, 0.75, 0}),
+        0xEEAD7E
+    );
+    bones["lowerArmRight"] = new Bone(
+        (std::forward_list<Bone*>){{}},
+        "lowerArmRight",
+        vec3({0, -1.5, 0}),
+        vec3({0.6, 1.5, 0.6}),
+        vec3({1.9, 0, 0}), vec3({0, 0.75, 0}),
+        0xEEAD7E
+    );
+    bones["upperArmLeft"] = new Bone(
+        (std::forward_list<Bone*>){ bones["lowerArmLeft"] },
+        "upperArmLeft",
+        vec3({-1.3, 0.75, 0}),
+        vec3({0.6, 1.5, 0.6}),
+        vec3({0, 0, 0}), vec3({0.3, 0.75, 0}),
+        0x408467
+    );
+    bones["upperArmRight"] = new Bone(
+        (std::forward_list<Bone*>){ bones["lowerArmRight"] },
+        "upperArmRight",
+        vec3({1.3, 0.75, 0}),
+        vec3({0.6, 1.5, 0.6}),
+        vec3({0, 0, 0}), vec3({-0.3, 0.75, 0}),
+        0x408467
+    );
+    bones["torso"] = new Bone(
+        (std::forward_list<Bone*>){{ bones["head"], bones["upperArmLeft"], bones["upperArmRight"], bones["upperLegLeft"], bones["upperLegRight"] }},
+        "torso",
+        vec3({0, 0, 0}),
+        vec3({2, 3, 0.9}),
+        vec3({0, 0, 0}), vec3({0, 0, 0}),
+        0x43876A
+    );
+    return (bones);
 }

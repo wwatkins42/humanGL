@@ -5,26 +5,31 @@
 
 #include <iostream>
 #include <string>
-#include <forward_list>
+#include <unordered_map>
 
 #include "Exception.hpp"
-#include "BodyPart.hpp"
+#include "Bone.hpp"
 #include "Shader.hpp"
 
-class Character {
+class Skeleton {
 
 public:
-    Character( void );
-    Character( const Character& rhs );
-    Character& operator=( const Character& rhs );
-    ~Character( void );
+    Skeleton( std::unordered_map<std::string, Bone*> bones, const std::string& parentBoneId );
+    Skeleton( const Skeleton& rhs );
+    Skeleton& operator=( const Skeleton& rhs );
+    ~Skeleton( void );
 
-    void        update( void );
-    void        render( Shader* shader );
-    BodyPart*   getParentPart( void ) const { return (parentPart); };
+    void    update( void );
+    void    render( Shader* shader );
+
+    Bone*       getParentBone( void ) const { return (parentBone); };
+    std::string getParentBoneId( void ) const { return (parentBoneId); };
+    std::unordered_map<std::string, Bone*>  getBones( void ) const { return (bones); };
 
 private:
-    BodyPart*   parentPart;
+    Bone*                                   parentBone;
+    std::string                             parentBoneId;
+    std::unordered_map<std::string, Bone*>  bones;
 
 };
 
@@ -56,7 +61,7 @@ UpperLegRight : [ LowerLegRight ]
  LowerLegLeft : [ ]
 LowerLegRight : [ ]
 
-BodyPart will contain methods to update the position, render the body part, then call the childrens and do the necessary updates too
+Bone will contain methods to update the position, render the body part, then call the childrens and do the necessary updates too
 so basically, we will call the Torso which is the highest instance, and in turn it will call the childrens one by one
 
 When we populate our characters body parts, we must begin from the extremities and go up

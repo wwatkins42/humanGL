@@ -21,18 +21,6 @@ std::array<unsigned int, 36> indices = {{
     4, 5, 1,  1, 0, 4, // bottom
     3, 2, 6,  6, 7, 3, // top
 }};
-// std::array<GLfloat, 24> colors = {{
-//     // front colors
-//     1.0, 0.0, 0.0,
-//     0.0, 1.0, 0.0,
-//     0.0, 0.0, 1.0,
-//     1.0, 1.0, 1.0,
-//     // back colors
-//     1.0, 0.0, 0.0,
-//     0.0, 1.0, 0.0,
-//     0.0, 0.0, 1.0,
-//     1.0, 1.0, 1.0,
-// }};
 
 Model::Model( const vec3& pos, const vec3& scale, const vec3& rotation, const vec3& joint, const int64_t color ) : pos(pos), scale(scale), rotation(rotation), joint(joint), color(hex2vec(color)) {
     this->initBufferObjects(GL_STATIC_DRAW);
@@ -97,10 +85,6 @@ void    Model::initBufferObjects( int mode ) {
     // set the vertex attribute pointers
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), static_cast<GLvoid*>(0));
 	glEnableVertexAttribArray(0);
-	// glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), static_cast<GLvoid*>(0));
-	// glEnableVertexAttribArray(0);
-	// glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), reinterpret_cast<GLvoid*>(3 * sizeof(GLfloat)));
-	// glEnableVertexAttribArray(1); // CAREFUL WITH REINTERPRET_CAST
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 }

@@ -94,3 +94,21 @@ mat4    mtls::inverse( const mat4& m ) {
         return (m);
     return (inv * (1.0 / det));
 }
+
+extern const mat4    mtls::mat4identity = mat4({
+    1, 0, 0, 0,
+    0, 1, 0, 0,
+    0, 0, 1, 0,
+    0, 0, 0, 1
+});
+
+extern const mat3    mtls::mat3identity = mat3({
+    1, 0, 0,
+    0, 1, 0,
+    0, 0, 1,
+});
+
+extern const mat2    mtls::mat2identity = mat2({
+    1, 0,
+    0, 1,
+});
