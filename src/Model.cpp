@@ -34,13 +34,8 @@ std::array<unsigned int, 36> indices = {{
 //     1.0, 1.0, 1.0,
 // }};
 
-Model::Model( const vec3& pos, const vec3& scale, const vec3& rotation ) : pos(pos), scale(scale), rotation(rotation) {
+Model::Model( const vec3& pos, const vec3& scale, const vec3& rotation, const vec3& joint, const int64_t color ) : pos(pos), scale(scale), rotation(rotation), joint(joint), color(hex2vec(color)) {
     this->initBufferObjects(GL_STATIC_DRAW);
-    // this->ut.identity();
-    // this->ut = mtls::translate(this->ut, this->pos);
-    // this->ut = mtls::rotate(this->ut, this->rotation);
-    // this->transform = this->ut;
-    // this->transform = mtls::scale(this->transform, this->scale);
 }
 
 Model::Model( const Model& rhs ) {
@@ -58,21 +53,28 @@ Model::~Model( void ) {
     glDeleteBuffers(1, &this->ebo);
 }
 
+vec4    Model::hex2vec( int64_t hex ) {
+    return vec4({
+        ((hex >> 16) & 0xFF) / 255.0f,
+        ((hex >>  8) & 0xFF) / 255.0f,
+        ((hex      ) & 0xFF) / 255.0f,
+        1
+    });
+}
+
 void    Model::update( const mat4& parentTransform ) {
     /* this is the non-scaled transform passed as parentTransform for children */
-    this->ut.identity();
-    this->ut = mtls::translate(this->ut, this->pos);
-    this->ut = mtls::rotate(this->ut, this->rotation, vec3({0, this->scale[1]/2, 0})); // this offset value should be modular
-    this->ut = this->ut * parentTransform;
+    this->nst.identity();
+    this->nst = mtls::translate(this->nst, this->pos);
+    this->nst = mtls::rotate(this->nst, this->rotation, this->joint);
+    this->nst = this->nst * parentTransform;
     /* the transformation matrix used to display the model */
-    this->transform.identity();
-    this->transform = mtls::translate(this->transform, this->pos);
-    this->transform = mtls::rotate(this->transform, this->rotation, vec3({0, this->scale[1]/2, 0}) );
+    this->transform = this->nst;
     this->transform = mtls::scale(this->transform, this->scale);
-    this->transform = this->transform * parentTransform;
 }
 
 void    Model::render( Shader* shader ) {
+    shader->setVec4UniformValue("customColor", this->color);
     shader->setMat4UniformValue("model", this->transform);
     glBindVertexArray(this->vao);
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);

@@ -53,10 +53,8 @@ mat4    Camera::createPerspectiveProjectionMatrix( float fov, float aspect, floa
 
 mat4    Camera::createOrthographicProjectionMatrix( float aspect, float near, float far ) {
     mat4    projectionMatrix({
-        // 1/aspect, 0, 0, 0,
-        // 0, 1, 0, 0,
-        1, 0, 0, 0,
-        0, 1/aspect, 0, 0,
+        1/aspect, 0, 0, 0,
+        0, 1, 0, 0,
         0, 0, -2/(far-near), -1,
         0, 0, -((far+near)/(far-near)), 0
     });

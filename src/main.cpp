@@ -2,26 +2,28 @@
 #include "Matrix.hpp"
 
 int main( void ) {
-    // mat4    mat({
-    //     4, 0, 0, 3,
-    //     0, 4, 0, 5,
-    //     0, 0, 4, 2,
-    //     0, 0, 0, 1
+    // mat4    mat({ // this is a classical tranlation matrix in openGL
+    //     1, 0, 0, 0,
+    //     0, 1, 0, 0,
+    //     0, 0, 1, 0,
+    //     3, 3, 0, 1
     // });
-    // mat = mtls::inverse(mat);
-    // std::cout << mat << std::endl;
+    // vec4    vec({
+    //     1, 2, 3, 1
+    // });
+    // std::cout << mat.transpose() * vec << std::endl; // [4, 5, 3, 1]
 
-    // mat3    m1({
-    //     4, 0, 3,
-    //     0, 4, 5,
-    //     2, 0, 4,
+    // vec4    vec({
+    //     1, 2, 3, 1
     // });
-    // mat3    m2({
-    //     1, 1, 1,
-    //     7, 2, 0,
-    //     0, 0, 1,
+    // vec3    t = static_cast<vec3>(vec);
+    // std::cout << t << std::endl;
+    //
+    // vec4    b({
+    //     4, 5, 2, 1
     // });
-    // std::cout << m1 * m2 << std::endl;
+    // std::cout << mtls::multiply(static_cast<vec4>(t), b) << std::endl;
+    // std::cout << b.multiply(static_cast<vec4>(t)) << std::endl;
     // std::exit(1);
 
     Env         environment;

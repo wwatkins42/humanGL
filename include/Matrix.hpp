@@ -149,10 +149,20 @@ public:
             data[i] -= rhs[i];
         return (*this);
     }
-    // Mat2d   &operator*=( const Mat2d& rhs ) {
-    //     // NOTE: well we would have to reshape the matrix
-    //     return (*this);
-    // }
+    /* element wise multiply */
+    Mat2d<T,H,W>    multiply( const Mat2d<T,H,W>& m ) const {
+        Mat2d<T,H,W>    res;
+        for (size_t i = 0; i < H * W; ++i)
+            res(i) = (*this)[i] * m[i];
+        return (res);
+    }
+    /* element wise divide */
+    Mat2d<T,H,W>    divide( const Mat2d<T,H,W>& m ) const {
+        Mat2d<T,H,W>    res;
+        for (size_t i = 0; i < H * W; ++i)
+            res(i) = (*this)[i] / m[i];
+        return (res);
+    }
 
     const T*                    getRawData( void ) const { return (data.data()); };
     const std::array<T, W * H>& getData( void ) const { return (data); };
@@ -167,13 +177,21 @@ public:
         }
         return (stream);
     }
+    // allows implicit cast for vector types to vector types (of different types)
+    template<size_t _H>
+    operator Mat2d<T,_H,1>() const {
+        Mat2d<T,_H,1>    res;
+        for (size_t i = 0; i < (_H<H?_H:H); ++i)
+            res(i) = this->data[i];
+        return (res);
+    }
 
     size_t  w;
     size_t  h;
     size_t  size;
 
 private:
-    std::array<T, W * H> data; // maybe we'll change that for when we implement reshape
+    std::array<T, W * H> data; // maybe we'll change that for if we implement reshape
 
 };
 
@@ -200,6 +218,37 @@ namespace mtls {
     float   degrees( const float rad );
 
     vec3    createAxisUnitVec3( size_t index );
+
+    // template<typename T, size_t H>
+    // Mat2d<T,H,1>  sign( const Mat2d<T,H,1>& v ) {
+    //     Mat2d<T,H,1>    res;
+    //     for (size_t i = 0; i < H; ++i)
+    //         res(i) = static_cast<T>(v[i] < static_cast<T>(0) ? -1 : 1);
+    //     return (res);
+    // }
+    template<size_t H>
+    Mat2d<float,H,1>  sign( const Mat2d<float,H,1>& v ) {
+        Mat2d<float,H,1>    res;
+        for (size_t i = 0; i < H; ++i)
+            res(i) = (v[i] < 0.0f ? -1 : v[i] == 0.0f ? 0 : 1);
+        return (res);
+    }
+    /* element wise multiply */
+    template<typename T, size_t H, size_t W>
+    Mat2d<T,H,W>    multiply( const Mat2d<T,H,W>& a, const Mat2d<T,H,W>& b ) {
+        Mat2d<T,H,W>    res;
+        for (size_t i = 0; i < H * W; ++i)
+            res(i) = a[i] * b[i];
+        return (res);
+    }
+    /* element wise divide */
+    template<typename T, size_t H, size_t W>
+    Mat2d<T,H,W>    divide( const Mat2d<T,H,W>& a, const Mat2d<T,H,W>& b ) {
+        Mat2d<T,H,W>    res;
+        for (size_t i = 0; i < H * W; ++i)
+            res(i) = a[i] / b[i];
+        return (res);
+    }
 
     mat4    &scale( mat4& m, const vec3& s );
     mat4    &translate( mat4& m, const vec3& t );

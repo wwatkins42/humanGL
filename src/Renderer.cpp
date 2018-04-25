@@ -41,14 +41,6 @@ void	Renderer::loop( void ) {
 }
 
 void    Renderer::updateShaderUniforms( void ) {
-    float timeValue = glfwGetTime();
-    this->shader.setVecUniformValue(
-        "customColor",
-        0.5f,
-        (std::sin(timeValue) / 2.0f) + 0.5f,
-        (std::cos(timeValue)) + 0.5f,
-        1.0f
-    );
     this->shader.setMat4UniformValue("view", this->camera.getViewMatrix());
     this->shader.setMat4UniformValue("projection", this->camera.getProjectionMatrix());
 }
