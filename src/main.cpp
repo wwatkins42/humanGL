@@ -24,7 +24,6 @@ int main( void ) {
     // });
     // std::cout << mtls::multiply(static_cast<vec4>(t), b) << std::endl;
     // std::cout << b.multiply(static_cast<vec4>(t)) << std::endl;
-    // std::exit(1);
 
     Env         environment;
     Renderer    renderer(&environment);

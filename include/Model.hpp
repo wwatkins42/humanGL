@@ -40,6 +40,10 @@ public:
     const vec3&     getRotation( void ) const { return (rotation); };
     const vec3&     getJoint( void ) const { return (joint); };
 
+    // NEW
+    void            setExternalTransform( const mat4& transform ) { externalTransform = transform; };
+    const mat4&     getExternalTransform( void ) const { return (externalTransform); };
+
 private:
     GLuint      vao; // Vertex Array Object
     GLuint      vbo; // Vertex Buffer Object
@@ -47,11 +51,26 @@ private:
 
     mat4        nst;        // the non-scaled version of the transform matrix
     mat4        transform;  // model matrix (for object transformations)
-    /* decomposed values for transformations */
+
     vec3        translation;
     vec3        scale;
     vec3        rotation;
-    vec3        joint;      // the center of rotation and used for rescaling of parts
+    vec3        joint;
+
+    mat4        externalTransform; // NOTE: name temporary
+
+    /*  _those are base values for the model, they are updated relative to the parent local-space:
+         | position
+         | orientation
+         | scale
+         | joint
+        _those are the transformations, they are updated relative to this model's local-space:
+         | translation
+         | rotation
+         | scaling
+         they could be only a simple mat4
+         | mat4 externalTransform
+    */
 
     vec4        color;
 

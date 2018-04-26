@@ -233,6 +233,11 @@ namespace mtls {
             res(i) = a[i] / b[i];
         return (res);
     }
+    /* linear interpolation for vector of size H, SHOULD WE DO ALL MATRICES ??? */
+    template<size_t H>
+    Mat2d<float,H,1>    lerp(Mat2d<float,H,1> v0, Mat2d<float,H,1> v1, float t) {
+        return v0 * (1 - t) + v1 * t;
+    }
 
     mat4    &scale( mat4& m, const vec3& s );
     mat4    &translate( mat4& m, const vec3& t );

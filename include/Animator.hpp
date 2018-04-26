@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-// #include <> // time
+#include <chrono>
 
 #include "Exception.hpp"
 #include "Skeleton.hpp"
@@ -29,15 +29,20 @@ public:
 
     void        update( void );
 
+    std::chrono::duration<double, std::milli>      getElapsed( void );
+    size_t      getElapsedMilliseconds( void );
+
+
     Skeleton*                       getSkeleton( void ) const { return (skeleton); };
     size_t                          getFrameDuration( void ) const { return (frameDuration); };
     // const std::list<const tFrame>&  getFrames( void ) const { return (frames); };
 
 private:
-    Skeleton*               skeleton;
-    tAnimationFrames*       frames;
-    size_t                  frameDuration; // the duration of a frame in milliseconds
-    // or float framesPerSecond instead
+    Skeleton*                               skeleton;
+    tAnimationFrames*                       frames;
+    size_t                                  frameDuration; // the duration of a frame in milliseconds
+    size_t                                  cFrame;
+    std::chrono::steady_clock::time_point   pTimepoint;
 
 };
 

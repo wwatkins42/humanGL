@@ -1,6 +1,8 @@
 #include "Animator.hpp"
 
 Animator::Animator( Skeleton* skeleton, tAnimationFrames* animation, size_t frameDuration ) : skeleton(skeleton), frames(animation), frameDuration(frameDuration) {
+    this->pTimepoint = std::chrono::steady_clock::now();
+    this->cFrame = 0;
 }
 
 Animator::Animator( const Animator& rhs ) {
@@ -19,58 +21,70 @@ Animator::~Animator( void ) {
 }
 
 void    Animator::update( void ) {
-    size_t frame = 0; // TMP
-    // mat4    transform;
+    mat4    transform;
 
-    for (std::vector<tBoneTransform>::iterator it = (*this->frames)[frame]->begin(); it != (*this->frames)[frame]->end(); it++) {
-        const std::string boneId = it->boneId;
-        std::cout << boneId << std::endl;
-        // (*this->skeleton)[boneId]->getModel()->setTranslation(it->translation);
-        // (*this->skeleton)[boneId]->getModel()->setRotation(it->rotation);
-        this->skeleton->update();
+    if (this->getElapsedMilliseconds() > this->frameDuration) {
+        this->pTimepoint = std::chrono::steady_clock::now();
+        this->cFrame = (this->cFrame + 1 >= this->frames->size() ? 0 : this->cFrame + 1);
     }
 
-    // for (size_t bone = 0; bone < this->frames[frame]->size(); ++bone) {
-        // const std::string boneId = (*this->frames[frame])[bone]->boneId;
-        // this->skeleton[boneId]->getModel()->setTranslation((*this->frames[frame])[bone]->translation);
-        // this->skeleton[boneId]->getModel()->setRotation((*this->frames[frame])[bone]->rotation);
-    // }
+    // float t = 1.0f - ((this->frameDuration - this->getElapsedMilliseconds()) / (float)this->frameDuration);
+    float t = 1.0f - ((this->frameDuration - static_cast<double>(this->getElapsed().count())) / (float)this->frameDuration);
+    std::cout << t << std::endl;
+
+    // for (std::vector<tBoneTransform>::iterator it = (*this->frames)[this->cFrame]->begin(); it != (*this->frames)[this->cFrame]->end(); it++) {
+    for (size_t i = 0; i < (*this->frames)[this->cFrame]->size(); ++i) {
+
+        tBoneTransform curr = (*(*this->frames)[this->cFrame])[i];
+        tBoneTransform next = (*(*this->frames)[this->cFrame+1])[i];
+        const std::string boneId = curr.boneId;
+
+        vec3    translation = mtls::lerp(curr.translation, next.translation, t);
+        vec3    rotation = mtls::lerp(curr.rotation, next.rotation, t);
+
+        transform.identity();
+        transform = mtls::translate(transform, translation);
+        transform = mtls::rotate(transform, rotation, (*this->skeleton)[boneId]->getModel()->getJoint());
+        (*this->skeleton)[boneId]->getModel()->setExternalTransform(transform);
+        this->skeleton->update();
+    }
 }
 
-/*  Animator could also be above Animation which are object in themselves
+size_t  Animator::getElapsedMilliseconds( void ) {
+    std::chrono::duration<double, std::milli> elapsed = (std::chrono::steady_clock::now() - this->pTimepoint);
+    return (std::chrono::duration_cast<std::chrono::milliseconds>(elapsed).count());
+}
 
-    an animation is a list of list of frames containing member to transform:
-    [
-    [["upperArmLeft", vec3(), vec3()], ["upperArmRight", vec3(), vec3()]],
-    [["upperArmLeft", vec3(), vec3()], ["upperArmRight", vec3(), vec3()]],
-    [["upperArmLeft", vec3(), vec3()], ["upperArmRight", vec3(), vec3()]],
-    ]
+std::chrono::duration<double, std::milli>  Animator::getElapsed( void ) {
+    return (std::chrono::steady_clock::now() - this->pTimepoint);
+}
 
-    std::string boneId = this->animation[frame].boneId;
+// void    Animator::update( void ) {
+//     mat4    transform;
+//     if (this->getElapsedMilliseconds() > this->frameDuration) {
+//         this->pTimepoint = std::chrono::steady_clock::now();
+//         this->cFrame = (this->cFrame + 1 >= this->frames->size() ? 0 : this->cFrame + 1);
+//         for (std::vector<tBoneTransform>::iterator it = (*this->frames)[this->cFrame]->begin(); it != (*this->frames)[this->cFrame]->end(); it++) {
+//             const std::string boneId = it->boneId;
+//             vec3    t = (*this->skeleton)[boneId]->getModel()->getTranslation();
+//             vec3    r = (*this->skeleton)[boneId]->getModel()->getRotation();
+//             (*this->skeleton)[boneId]->getModel()->setTranslation(t + it->translation);
+//             (*this->skeleton)[boneId]->getModel()->setRotation(r + it->rotation);
+//             this->skeleton->update();
+//         }
+//     }
+// }
 
-    this->skeleton[boneId]->update(this->frames[frame].pos);
-    this->skeleton[boneId]->update(this->frames[frame].rotation);
+/*
+    - the skeleton contains bones.
+    - bones contain informations about their translation/rotation/scale,
+      * the translation is position in its parent local-space
+      * the rotation is in the bone local-space, and relative to the joint (which is in the bone local-space)
+      * the scale is an absolute value
+      their initial value is the state of the skeleton at rest.
+    - animations sit on op of that by showing the transformation for each frame with
+      translation/rotation
 
-    this->animator->playback()
-
-    walkingAnimation = new std::array<std::array<tBoneTransform>* >({{
-        // 1st frame
-        new std::array<tBoneTransform>({{
-            static_cast<tBoneTransform>({"upperArmRight", vec3({0, 0, 0}), vec3({0, 0, 0})})),
-            static_cast<tBoneTransform>({"upperArmLeft",  vec3({0, 0, 0}), vec3({0, 0, 0})})),
-            static_cast<tBoneTransform>({"lowerArmRight", vec3({0, 0, 0}), vec3({0, 0, 0})})),
-            static_cast<tBoneTransform>({"lowerArmLeft",  vec3({0, 0, 0}), vec3({0, 0, 0})})),
-        }},
-        // 2nd frame
-        new std::array<tBoneTransform>({{
-            static_cast<tBoneTransform>({"upperArmRight", vec3({0, 0, 0}), vec3({0, 0, 0})})),
-            static_cast<tBoneTransform>({"upperArmLeft",  vec3({0, 0, 0}), vec3({0, 0, 0})})),
-            static_cast<tBoneTransform>({"lowerArmRight", vec3({0, 0, 0}), vec3({0, 0, 0})})),
-            static_cast<tBoneTransform>({"lowerArmLeft",  vec3({0, 0, 0}), vec3({0, 0, 0})})),
-        }},
-        // ...
-    }});
-    this->animator = new Animator(character, walkingAnimation, 50);
-
-    list of frames -> list of tBoneTransform
+    the bones have a default transform for the base character.
+    and another transform for animation translation/rotation
 */
