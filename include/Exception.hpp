@@ -4,9 +4,6 @@
 #include <sstream>
 #include <string>
 
-// enum eOpTypes { add, sub, mul, div };
-// const std::array<std::string, 4> aOpTypes = {{ "addition", "subtraction", "multiplication", "division" }};
-
 namespace Exception {
     class InitError : public std::exception {
 
@@ -122,4 +119,21 @@ namespace Exception {
     private:
         std::string msg;
     };
+
+    class SkeletonMapAccessError : public std::exception {
+
+    public:
+        SkeletonMapAccessError( const std::string& id ) {
+            std::stringstream ss;
+            ss << "SkeletonMapAccessError : id " << id << " is invalid, skeleton does not contain such a key";
+            msg = ss.str();
+        }
+        virtual const char* what() const noexcept {
+            return (msg.c_str());
+        }
+
+    private:
+        std::string msg;
+    };
+
 }

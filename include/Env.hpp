@@ -9,6 +9,7 @@
 #include <regex>
 
 #include "Exception.hpp"
+// #include "Animator.hpp"
 #include "Skeleton.hpp"
 #include "Bone.hpp"
 
@@ -32,6 +33,7 @@ public:
 private:
     t_window    window;
     Skeleton*   character;
+    // Animator*   animator;
 
     void        initGlfwEnvironment( const std::string& glVersion = "4.0" );
     void        initGlfwWindow( size_t width, size_t height );
@@ -39,4 +41,5 @@ private:
     static void framebufferSizeCallback( GLFWwindow* window, int width, int height );
 
     std::unordered_map<std::string, Bone*>    createCharacterSkeleton( void );
+    // std::unordered_map<std::string, Bone*>    createWalkingAnimation( void );
 };

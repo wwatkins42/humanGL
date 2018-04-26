@@ -42,16 +42,28 @@ public:
             data[i] = (!(i % (w + 1)) ? 1 : 0);
         return (*this);
     }
-    Mat2d<T, W, H>   transpose( void ) {
-        Mat2d<T, W, H> res;
+    Mat2d<T,W,H>    transpose( void ) {
+        Mat2d<T,W,H> res;
         for (int i = 0; i < h; ++i)
             for (int j = 0; j < w; ++j)
                 res(j,i) = (*this)(i,j);
         return (res);
     }
-
-    /*  MUTABLE ACCESSORS
-    */
+    /* element wise multiply */
+    Mat2d<T,H,W>    multiply( const Mat2d<T,H,W>& m ) const {
+        Mat2d<T,H,W>    res;
+        for (size_t i = 0; i < H * W; ++i)
+            res(i) = (*this)[i] * m[i];
+        return (res);
+    }
+    /* element wise divide */
+    Mat2d<T,H,W>    divide( const Mat2d<T,H,W>& m ) const {
+        Mat2d<T,H,W>    res;
+        for (size_t i = 0; i < H * W; ++i)
+            res(i) = (*this)[i] / m[i];
+        return (res);
+    }
+    /* mutable accessors */
     T& operator()( size_t j, size_t i ) {
         if (j < 0 || j > h - 1 || i < 0 || i > w - 1)
             throw Exception::MatrixAccessError(j, i, h, w);
@@ -62,15 +74,13 @@ public:
             throw Exception::MatrixAccessError(i, size);
         return (data[i]);
     }
-    /*  IMMUTABLE ACCESSOR
-    */
+    /* immutable accessors */
     const T& operator[]( size_t i ) const {
         if (i < 0 || i > size - 1)
             throw Exception::MatrixAccessError(i, size);
         return (data[i]);
     }
-    /*  SCALAR OPERATORS
-    */
+    /* scalar operations */
     Mat2d   operator+( T scalar ) const {
         auto res = *this;
         return (res += scalar);
@@ -87,32 +97,6 @@ public:
         auto res = *this;
         return (res /= scalar);
     }
-    /*  OTHER MATRIX INSTANCE OPERATORS
-    */
-    Mat2d   operator+( const Mat2d& rhs ) const {
-        auto res = *this;
-        return (res += rhs);
-    }
-    Mat2d   operator-( const Mat2d& rhs ) const {
-        auto res = *this;
-        return (res -= rhs);
-    }
-    template<typename _T, size_t _H, size_t _W>
-    Mat2d<_T, H,_W>   operator*( const Mat2d<_T,_H,_W>& rhs ) const {
-        if (rhs.h != w)
-            throw Exception::MatrixOperationError(h, w, rhs.h, rhs.w);
-        Mat2d<_T, H,_W>  res;
-        for (size_t i = 0; i < h; ++i)
-            for (size_t j = 0; j < rhs.w; ++j) {
-                res(i,j) = 0;
-                for (size_t k = 0; k < w; ++k)
-                    res(i,j) += (*this)[i * w + k] * rhs[k * rhs.w + j];
-                    // res(i,j) += (*this)(i,k) * rhs[k * rhs.w + j]; // not const
-            }
-        return (res);
-    }
-    /*  OTHER MATRIX INSTANCE OPERATORS
-    */
     Mat2d&  operator+=( T scalar ) {
         for (size_t i = 0; i < size; ++i)
             data[i] += scalar;
@@ -133,8 +117,28 @@ public:
             data[i] /= scalar;
         return (*this);
     }
-    /*  OTHER MATRIX INSTANCE OPERATORS
-    */
+    /* matrix/matrix operations */
+    Mat2d   operator+( const Mat2d& rhs ) const {
+        auto res = *this;
+        return (res += rhs);
+    }
+    Mat2d   operator-( const Mat2d& rhs ) const {
+        auto res = *this;
+        return (res -= rhs);
+    }
+    template<typename _T, size_t _H, size_t _W>
+    Mat2d<_T, H,_W>   operator*( const Mat2d<_T,_H,_W>& rhs ) const {
+        if (rhs.h != w)
+            throw Exception::MatrixOperationError(h, w, rhs.h, rhs.w);
+        Mat2d<_T, H,_W>  res;
+        for (size_t i = 0; i < h; ++i)
+            for (size_t j = 0; j < rhs.w; ++j) {
+                res(i,j) = 0;
+                for (size_t k = 0; k < w; ++k)
+                    res(i,j) += (*this)[i * w + k] * rhs[k * rhs.w + j];
+            }
+        return (res);
+    }
     Mat2d&  operator+=( const Mat2d& rhs ) {
         if (rhs.size != size)
             throw Exception::MatrixOperationError(size, rhs.size);
@@ -149,24 +153,10 @@ public:
             data[i] -= rhs[i];
         return (*this);
     }
-    /* element wise multiply */
-    Mat2d<T,H,W>    multiply( const Mat2d<T,H,W>& m ) const {
-        Mat2d<T,H,W>    res;
-        for (size_t i = 0; i < H * W; ++i)
-            res(i) = (*this)[i] * m[i];
-        return (res);
-    }
-    /* element wise divide */
-    Mat2d<T,H,W>    divide( const Mat2d<T,H,W>& m ) const {
-        Mat2d<T,H,W>    res;
-        for (size_t i = 0; i < H * W; ++i)
-            res(i) = (*this)[i] / m[i];
-        return (res);
-    }
-
+    /* getters */
     const T*                    getRawData( void ) const { return (data.data()); };
-    const std::array<T, W * H>& getData( void ) const { return (data); };
-    std::array<T, W * H>        getDataCpy( void ) const { return (data); };
+    const std::array<T, W*H>&   getData( void ) const { return (data); };
+    std::array<T, W*H>          getDataCpy( void ) const { return (data); };
 
     friend std::ostream&    operator<<( std::ostream& stream, const Mat2d& mat ) {
         stream << "[[";
@@ -177,11 +167,11 @@ public:
         }
         return (stream);
     }
-    // allows implicit cast for vector types to vector types (of different types)
-    template<size_t _H>
-    operator Mat2d<T,_H,1>() const {
-        Mat2d<T,_H,1>    res;
-        for (size_t i = 0; i < (_H<H?_H:H); ++i)
+    /* implicit cast for reshaping matrices of same type T */
+    template<size_t _H, size_t _W>
+    operator Mat2d<T,_H,_W>() const {
+        Mat2d<T,_H,_W>  res;
+        for (size_t i = 0; i < (_H*_W<H*W?_H*_W:H*W); ++i)
             res(i) = this->data[i];
         return (res);
     }
@@ -191,7 +181,7 @@ public:
     size_t  size;
 
 private:
-    std::array<T, W * H> data; // maybe we'll change that for if we implement reshape
+    std::array<T, W*H>  data;
 
 };
 
@@ -219,6 +209,7 @@ namespace mtls {
 
     vec3    createAxisUnitVec3( size_t index );
 
+    /* return the sign of the values (and zero for zeros) */
     template<size_t H>
     Mat2d<float,H,1>  sign( const Mat2d<float,H,1>& v ) {
         Mat2d<float,H,1>    res;

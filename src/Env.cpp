@@ -8,6 +8,7 @@ Env::Env( void ) : character() {
         if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
             throw Exception::InitError("glad initialization failed");
         this->character = new Skeleton(this->createCharacterSkeleton(), "torso");
+        // this->animator = new Animator(this->character, this->createWalkingAnimation(), 50);
     } catch (const std::exception& err) {
         std::cout << err.what() << std::endl;
     }
@@ -23,6 +24,8 @@ Env & Env::operator=( const Env& rhs ) {
 }
 
 Env::~Env( void ) {
+    delete this->character;
+    // delete this->animator;
     glfwDestroyWindow(this->window.ptr);
     glfwTerminate();
 }
