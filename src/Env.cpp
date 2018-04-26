@@ -57,6 +57,38 @@ void    Env::framebufferSizeCallback( GLFWwindow* window, int width, int height 
     glViewport(0, 0, width, height);
 }
 
+tAnimationFrames*   Env::createWalkingAnimation( void ) {
+    tAnimationFrames*   walkingAnimation = new tAnimationFrames({{
+        // 1st frame
+        new std::vector<tBoneTransform>({{
+            {"upperArmLeft",  vec3({0, 0, 0}), vec3({   1,   0, 0.5})},
+            {"lowerArmLeft",  vec3({0, 0, 0}), vec3({ 0.5,   0,-0.5})},
+            {"upperArmRight", vec3({0, 0, 0}), vec3({  -1,   0,   0})},
+            {"lowerArmRight", vec3({0, 0, 0}), vec3({-1.5,   0,   0})},
+            {"torso",         vec3({0, 0, 0}), vec3({   0,-0.2,   0})},
+            {"head",          vec3({0, 0, 0}), vec3({   0,0.15,   0})},
+            {"upperLegLeft",  vec3({0, 0, 0}), vec3({  -1,   0,   0})},
+            {"lowerLegLeft",  vec3({0, 0, 0}), vec3({  -1,   0,   0})},
+            {"upperLegRight", vec3({0, 0, 0}), vec3({ 1.2,   0,   0})},
+            {"lowerLegRight", vec3({0, 0, 0}), vec3({   0,   0,   0})},
+        }}),
+        // 2nd frame
+        new std::vector<tBoneTransform>({{
+            {"upperArmLeft",  vec3({0, 0, 0}), vec3({  -1,    0,   0})},
+            {"lowerArmLeft",  vec3({0, 0, 0}), vec3({-1.5,    0,   0})},
+            {"upperArmRight", vec3({0, 0, 0}), vec3({   1,    0,-0.5})},
+            {"lowerArmRight", vec3({0, 0, 0}), vec3({ 0.5,    0, 0.5})},
+            {"torso",         vec3({0, 0, 0}), vec3({   0,  0.2,   0})},
+            {"head",          vec3({0, 0, 0}), vec3({   0,-0.15,   0})},
+            {"upperLegLeft",  vec3({0, 0, 0}), vec3({ 1.2,    0,   0})},
+            {"lowerLegLeft",  vec3({0, 0, 0}), vec3({   0,    0,   0})},
+            {"upperLegRight", vec3({0, 0, 0}), vec3({  -1,    0,   0})},
+            {"lowerLegRight", vec3({0, 0, 0}), vec3({  -1,    0,   0})},
+        }}),
+    }});
+    return (walkingAnimation);
+}
+
 std::unordered_map<std::string, Bone*>  Env::createCharacterSkeleton( void ) {
     std::unordered_map<std::string, Bone*>  bones;
     bones["head"] = new Bone(
@@ -86,7 +118,7 @@ std::unordered_map<std::string, Bone*>  Env::createCharacterSkeleton( void ) {
     bones["upperLegLeft"] = new Bone(
         (std::forward_list<Bone*>){ bones["lowerLegLeft"] },
         "upperLegLeft",
-        vec3({-0.625, -2.25, 0}),
+        vec3({-0.624, -2.25, 0}),
         vec3({0.75, 1.5, 0.75}),
         vec3({0, 0, 0}), vec3({-0.375, 0.75, 0}),
         0x3F5D6A
@@ -94,7 +126,7 @@ std::unordered_map<std::string, Bone*>  Env::createCharacterSkeleton( void ) {
     bones["upperLegRight"] = new Bone(
         (std::forward_list<Bone*>){ bones["lowerLegRight"] },
         "upperLegRight",
-        vec3({0.625, -2.25, 0}),
+        vec3({0.624, -2.25, 0}),
         vec3({0.75, 1.5, 0.75}),
         vec3({0, 0, 0}), vec3({0.375, 0.75, 0}),
         0x3F5D6A
@@ -140,48 +172,4 @@ std::unordered_map<std::string, Bone*>  Env::createCharacterSkeleton( void ) {
         0x43876A
     );
     return (bones);
-}
-
-tAnimationFrames*   Env::createWalkingAnimation( void ) {
-    // tAnimationFrames*   walkingAnimation = new tAnimationFrames({{
-    //     // 1st frame
-    //     new std::vector<tBoneTransform>({{
-    //         {"upperArmRight", vec3({0, 0, 0}), vec3({0, 0, 0}), vec3({0, 0, 0})},
-    //         {"upperArmLeft",  vec3({0, 0, 0}), vec3({0, 1, 0}), vec3({0, 0, 0})},
-    //         {"lowerArmRight", vec3({0, 0, 0}), vec3({0, 0, 0}), vec3({0, 0, 0})},
-    //         {"lowerArmLeft",  vec3({0, 0, 0}), vec3({0, 0, 0}), vec3({0, 0, 0})},
-    //     }}),
-    //     // 2nd frame
-    //     new std::vector<tBoneTransform>({{
-    //         {"upperArmRight", vec3({0, 0, 0}), vec3({0, 0, 0}), vec3({0, 0, 0})},
-    //         {"upperArmLeft",  vec3({0, 0, 0}), vec3({1, 0, 0}), vec3({0, 0, 0})},
-    //         {"lowerArmRight", vec3({0, 0, 0}), vec3({0, 0, 0}), vec3({0, 0, 0})},
-    //         {"lowerArmLeft",  vec3({0, 0, 0}), vec3({0, 0, 0}), vec3({0, 0, 0})},
-    //     }}),
-    //     // ...
-    // }});
-    tAnimationFrames*   walkingAnimation = new tAnimationFrames({{
-        new std::vector<tBoneTransform>({{{"upperArmLeft", vec3({0, 0, 0}), vec3({   1, 0, 0}), vec3({0, 0, 0})} }}),
-        new std::vector<tBoneTransform>({{{"upperArmLeft", vec3({0, 0, 0}), vec3({ 0.8, 0, 0}), vec3({0, 0, 0})} }}),
-        new std::vector<tBoneTransform>({{{"upperArmLeft", vec3({0, 0, 0}), vec3({ 0.6, 0, 0}), vec3({0, 0, 0})} }}),
-        new std::vector<tBoneTransform>({{{"upperArmLeft", vec3({0, 0, 0}), vec3({ 0.4, 0, 0}), vec3({0, 0, 0})} }}),
-        new std::vector<tBoneTransform>({{{"upperArmLeft", vec3({0, 0, 0}), vec3({ 0.2, 0, 0}), vec3({0, 0, 0})} }}),
-        new std::vector<tBoneTransform>({{{"upperArmLeft", vec3({0, 0, 0}), vec3({   0, 0, 0}), vec3({0, 0, 0})} }}),
-        new std::vector<tBoneTransform>({{{"upperArmLeft", vec3({0, 0, 0}), vec3({-0.2, 0, 0}), vec3({0, 0, 0})} }}),
-        new std::vector<tBoneTransform>({{{"upperArmLeft", vec3({0, 0, 0}), vec3({-0.4, 0, 0}), vec3({0, 0, 0})} }}),
-        new std::vector<tBoneTransform>({{{"upperArmLeft", vec3({0, 0, 0}), vec3({-0.6, 0, 0}), vec3({0, 0, 0})} }}),
-        new std::vector<tBoneTransform>({{{"upperArmLeft", vec3({0, 0, 0}), vec3({-0.8, 0, 0}), vec3({0, 0, 0})} }}),
-        new std::vector<tBoneTransform>({{{"upperArmLeft", vec3({0, 0, 0}), vec3({  -1, 0, 0}), vec3({0, 0, 0})} }}),
-        new std::vector<tBoneTransform>({{{"upperArmLeft", vec3({0, 0, 0}), vec3({-0.8, 0, 0}), vec3({0, 0, 0})} }}),
-        new std::vector<tBoneTransform>({{{"upperArmLeft", vec3({0, 0, 0}), vec3({-0.6, 0, 0}), vec3({0, 0, 0})} }}),
-        new std::vector<tBoneTransform>({{{"upperArmLeft", vec3({0, 0, 0}), vec3({-0.4, 0, 0}), vec3({0, 0, 0})} }}),
-        new std::vector<tBoneTransform>({{{"upperArmLeft", vec3({0, 0, 0}), vec3({-0.2, 0, 0}), vec3({0, 0, 0})} }}),
-        new std::vector<tBoneTransform>({{{"upperArmLeft", vec3({0, 0, 0}), vec3({   0, 0, 0}), vec3({0, 0, 0})} }}),
-        new std::vector<tBoneTransform>({{{"upperArmLeft", vec3({0, 0, 0}), vec3({ 0.2, 0, 0}), vec3({0, 0, 0})} }}),
-        new std::vector<tBoneTransform>({{{"upperArmLeft", vec3({0, 0, 0}), vec3({ 0.4, 0, 0}), vec3({0, 0, 0})} }}),
-        new std::vector<tBoneTransform>({{{"upperArmLeft", vec3({0, 0, 0}), vec3({ 0.6, 0, 0}), vec3({0, 0, 0})} }}),
-        new std::vector<tBoneTransform>({{{"upperArmLeft", vec3({0, 0, 0}), vec3({ 0.8, 0, 0}), vec3({0, 0, 0})} }}),
-    }});
-
-    return (walkingAnimation);
 }

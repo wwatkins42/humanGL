@@ -4,20 +4,27 @@
 #include <string>
 #include <vector>
 #include <chrono>
+#include <iterator>// ??
 
 #include "Exception.hpp"
 #include "Skeleton.hpp"
 #include "Matrix.hpp"
 #include "Bone.hpp"
 
+// enum eAnimationPlay {
+//     once,
+//     loop,
+//     reverse
+// };
+
 typedef struct  sBoneTransform {
     std::string boneId;
     vec3        translation;
     vec3        rotation;
-    vec3        scale;
 }               tBoneTransform;
 
-typedef std::vector<std::vector<tBoneTransform>*>  tAnimationFrames;
+typedef std::vector<std::vector<tBoneTransform>*> tAnimationFrames;
+typedef std::chrono::duration<double,std::milli> tMilliseconds;
 
 class Animator {
 
@@ -27,24 +34,21 @@ public:
     Animator& operator=( const Animator& rhs );
     ~Animator( void );
 
-    void        update( void );
+    void                    update( void );
+    size_t                  getNextFrame( void );
+    float                   getInterpolation( void );
 
-    std::chrono::duration<double, std::milli>      getElapsed( void );
-    size_t      getElapsedMilliseconds( void );
+    tMilliseconds           getElapsedMilliseconds( void );
 
-
-    Skeleton*                       getSkeleton( void ) const { return (skeleton); };
-    size_t                          getFrameDuration( void ) const { return (frameDuration); };
-    // const std::list<const tFrame>&  getFrames( void ) const { return (frames); };
+    Skeleton*               getSkeleton( void ) const { return (skeleton); };
+    size_t                  getFrameDuration( void ) const { return (frameDuration); };
+    const tAnimationFrames* getFrames( void ) const { return (frames); };
 
 private:
     Skeleton*                               skeleton;
     tAnimationFrames*                       frames;
-    size_t                                  frameDuration; // the duration of a frame in milliseconds
+    size_t                                  frameDuration; // the duration of a frame in milliseconds, cycleDuration
     size_t                                  cFrame;
     std::chrono::steady_clock::time_point   pTimepoint;
 
 };
-
-// vec< vec< obj >* >*
-// pointer to vec | of pointers to vec | of obj

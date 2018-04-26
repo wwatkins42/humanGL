@@ -2,7 +2,7 @@
 
 Skeleton::Skeleton( std::unordered_map<std::string, Bone*> bones, const std::string& parentBoneId ) : bones(bones), parentBoneId(parentBoneId) {
     this->parentBone = this->bones[this->parentBoneId];
-    this->parentBone->getModel()->setRotation(vec3({0, -0.8f, 0}));
+    this->parentBone->getModel()->setRotation(vec3({0, -0.7f, 0}));
 }
 
 Skeleton::Skeleton( const Skeleton& rhs ) {
@@ -11,9 +11,6 @@ Skeleton::Skeleton( const Skeleton& rhs ) {
 
 Skeleton& Skeleton::operator=( const Skeleton& rhs ) {
     (void)rhs;
-    // this->parentBone = rhs.getParentBone();
-    // this->parentBoneId = rhs.getParentBoneId();
-    // this->bones = rhs.getBones();
     return (*this);
 }
 
@@ -24,9 +21,9 @@ Skeleton::~Skeleton( void ) {
 void    Skeleton::update( void ) {
     this->parentBone->update(mtls::mat4identity);
 
-    // this->bones["upperArmLeft"]->getModel()->setRotation(vec3({0, 0, (float)std::cos(glfwGetTime()*4)*3.15f+3.15f}));
+    // this->bones["upperArmLeft"]->getModel()->setRotation(vec3({0, 0, (float)std::cos(glfwGetTime()*4)*0.99f+0.99f}));
     // this->bones["torso"]->getModel()->setRotation(vec3({0, (float)std::cos(glfwGetTime()*5)*0.25f, 0}));
-    // /* dynamic rescale, I'll do that with switch during animation */
+    /* dynamic rescale, I'll do that with switch during animation */
     // this->bones["torso"]->rescale(vec3({
     //     2.0f+(float)std::cos(glfwGetTime()*0.5)*1.5f+1.5f,
     //     3.0f+(float)std::cos(glfwGetTime()*5)*1.5f+1.5f,
