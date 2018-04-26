@@ -22,7 +22,7 @@ std::array<unsigned int, 36> indices = {{
     3, 2, 6,  6, 7, 3, // top
 }};
 
-Model::Model( const vec3& pos, const vec3& scale, const vec3& rotation, const vec3& joint, const int64_t color ) : pos(pos), scale(scale), rotation(rotation), joint(joint), color(hex2vec(color)) {
+Model::Model( const vec3& translation, const vec3& scale, const vec3& rotation, const vec3& joint, const int64_t color ) : translation(translation), scale(scale), rotation(rotation), joint(joint), color(hex2vec(color)) {
     this->initBufferObjects(GL_STATIC_DRAW);
 }
 
@@ -53,7 +53,7 @@ vec4    Model::hex2vec( int64_t hex ) {
 void    Model::update( const mat4& parentTransform ) {
     /* this is the non-scaled transform passed as parentTransform for children */
     this->nst.identity();
-    this->nst = mtls::translate(this->nst, this->pos);
+    this->nst = mtls::translate(this->nst, this->translation);
     this->nst = mtls::rotate(this->nst, this->rotation, this->joint);
     this->nst = this->nst * parentTransform;
     /* the transformation matrix used to display the model */

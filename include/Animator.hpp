@@ -7,12 +7,14 @@
 
 #include "Exception.hpp"
 #include "Skeleton.hpp"
+#include "Matrix.hpp"
 #include "Bone.hpp"
 
 typedef struct  sBoneTransform {
     std::string boneId;
-    vec3        pos;
+    vec3        translation;
     vec3        rotation;
+    vec3        scale;
 }               tBoneTransform;
 
 typedef std::vector<std::vector<tBoneTransform>*>  tAnimationFrames;
@@ -35,5 +37,9 @@ private:
     Skeleton*               skeleton;
     tAnimationFrames*       frames;
     size_t                  frameDuration; // the duration of a frame in milliseconds
+    // or float framesPerSecond instead
 
 };
+
+// vec< vec< obj >* >*
+// pointer to vec | of pointers to vec | of obj

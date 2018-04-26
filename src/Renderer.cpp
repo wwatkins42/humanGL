@@ -34,7 +34,8 @@ void	Renderer::loop( void ) {
         this->keyHandler();
         this->shader.use();
         this->updateShaderUniforms();
-        this->env->getCharacter()->update();
+        // this->env->getCharacter()->update();
+        this->env->getAnimator()->update();
         this->env->getCharacter()->render(&this->shader);
         glfwSwapBuffers(this->env->getWindow().ptr);
     }

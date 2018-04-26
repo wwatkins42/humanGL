@@ -19,23 +19,22 @@ Animator::~Animator( void ) {
 }
 
 void    Animator::update( void ) {
-    // this->parentBone->update(mtls::mat4identity);
-    //
-    // this->bones["upperArmLeft"]->getModel()->setRotation(vec3({0, 0, (float)std::cos(glfwGetTime()*4)*0.99f+0.99f}));
-    // this->bones["torso"]->getModel()->setRotation(vec3({0, (float)std::cos(glfwGetTime()*5)*0.25f, 0}));
-    // /* dynamic rescale, I'll do that with switch during animation */
-    // this->bones["torso"]->rescale(vec3({
-    //     2.0f+(float)std::cos(glfwGetTime()*0.5)*1.5f+1.5f,
-    //     3.0f+(float)std::cos(glfwGetTime()*5)*1.5f+1.5f,
-    //     0.9f+(float)std::cos(glfwGetTime()*3)*0.5f+0.5f
-    // }));
-    // this->bones["upperArmLeft"]->rescale(vec3({
-    //     0.6f+(float)std::cos(glfwGetTime())*0.5f+0.5f,
-    //     1.5f+(float)std::cos(glfwGetTime()*5.0f)*1.5f+1.5f,
-    //     0.6f+(float)std::cos(glfwGetTime())*0.5f+0.5f
-    // }));
+    size_t frame = 0; // TMP
+    // mat4    transform;
 
+    for (std::vector<tBoneTransform>::iterator it = (*this->frames)[frame]->begin(); it != (*this->frames)[frame]->end(); it++) {
+        const std::string boneId = it->boneId;
+        std::cout << boneId << std::endl;
+        // (*this->skeleton)[boneId]->getModel()->setTranslation(it->translation);
+        // (*this->skeleton)[boneId]->getModel()->setRotation(it->rotation);
+        this->skeleton->update();
+    }
 
+    // for (size_t bone = 0; bone < this->frames[frame]->size(); ++bone) {
+        // const std::string boneId = (*this->frames[frame])[bone]->boneId;
+        // this->skeleton[boneId]->getModel()->setTranslation((*this->frames[frame])[bone]->translation);
+        // this->skeleton[boneId]->getModel()->setRotation((*this->frames[frame])[bone]->rotation);
+    // }
 }
 
 /*  Animator could also be above Animation which are object in themselves

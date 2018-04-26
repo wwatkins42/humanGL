@@ -8,7 +8,7 @@ Env::Env( void ) : character() {
         if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
             throw Exception::InitError("glad initialization failed");
         this->character = new Skeleton(this->createCharacterSkeleton(), "torso");
-        // this->animator = new Animator(this->character, this->createWalkingAnimation(), 50);
+        this->animator = new Animator(this->character, this->createWalkingAnimation(), 50);
     } catch (const std::exception& err) {
         std::cout << err.what() << std::endl;
     }
@@ -25,7 +25,7 @@ Env & Env::operator=( const Env& rhs ) {
 
 Env::~Env( void ) {
     delete this->character;
-    // delete this->animator;
+    delete this->animator;
     glfwDestroyWindow(this->window.ptr);
     glfwTerminate();
 }
@@ -140,4 +140,25 @@ std::unordered_map<std::string, Bone*>  Env::createCharacterSkeleton( void ) {
         0x43876A
     );
     return (bones);
+}
+
+tAnimationFrames*   Env::createWalkingAnimation( void ) {
+    tAnimationFrames*   walkingAnimation = new tAnimationFrames({{
+        // 1st frame
+        new std::vector<tBoneTransform>({{
+            {"upperArmRight", vec3({0, 0, 0}), vec3({0, 0, 0}), vec3({0, 0, 0})},
+            {"upperArmLeft",  vec3({0, 0, 0}), vec3({0, 0, 0}), vec3({0, 0, 0})},
+            {"lowerArmRight", vec3({0, 0, 0}), vec3({0, 0, 0}), vec3({0, 0, 0})},
+            {"lowerArmLeft",  vec3({0, 0, 0}), vec3({0, 0, 0}), vec3({0, 0, 0})},
+        }}),
+        // 2nd frame
+        new std::vector<tBoneTransform>({{
+            {"upperArmRight", vec3({0, 0, 0}), vec3({0, 0, 0}), vec3({0, 0, 0})},
+            {"upperArmLeft",  vec3({0, 0, 0}), vec3({0, 0, 0}), vec3({0, 0, 0})},
+            {"lowerArmRight", vec3({0, 0, 0}), vec3({0, 0, 0}), vec3({0, 0, 0})},
+            {"lowerArmLeft",  vec3({0, 0, 0}), vec3({0, 0, 0}), vec3({0, 0, 0})},
+        }}),
+        // ...
+    }});
+    return (walkingAnimation);
 }
