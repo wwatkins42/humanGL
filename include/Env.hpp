@@ -43,4 +43,5 @@ private:
 
     std::unordered_map<std::string, Bone*>  createCharacterSkeleton( void );
     tAnimationFrames*                       createWalkingAnimation( void );
+    tAnimationFrames*                       createJumpingAnimation( void );
 };

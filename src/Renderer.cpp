@@ -7,7 +7,7 @@ shader("./shader/vertex.glsl", "./shader/fragment.glsl") {
 }
 
 Renderer::Renderer( const Renderer& rhs ) :
-camera(60, (float)env->getWindow().width / (float)env->getWindow().height, projection::perspective),
+camera(90, (float)env->getWindow().width / (float)env->getWindow().height, projection::perspective),
 shader("./shader/vertex.glsl", "./shader/fragment.glsl") {
     *this = rhs;
 }

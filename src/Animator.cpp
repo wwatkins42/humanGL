@@ -1,7 +1,8 @@
 #include "Animator.hpp"
 
-Animator::Animator( Skeleton* skeleton, tAnimationFrames* animation, size_t frameDuration ) : skeleton(skeleton), frames(animation), frameDuration(frameDuration) {
+Animator::Animator( Skeleton* skeleton, tAnimationFrames* animation, size_t cycleDuration ) : skeleton(skeleton), frames(animation) {
     this->pTimepoint = std::chrono::steady_clock::now();
+    this->frameDuration = cycleDuration / static_cast<float>(this->frames->size());
     this->cFrame = 0;
 }
 
@@ -25,7 +26,7 @@ void    Animator::update( void ) {
         this->pTimepoint = std::chrono::steady_clock::now();
         this->cFrame = this->getNextFrame();
     }
-    float   t = this->getInterpolation();
+    float   t = this->getFrameInterpolation(none);
     mat4    transform;
     for (size_t i = 0; i < (*this->frames)[this->cFrame]->size(); ++i) {
         tBoneTransform curr = (*(*this->frames)[this->cFrame])[i];
@@ -46,6 +47,14 @@ size_t  Animator::getNextFrame( void ) {
     return (this->cFrame + 1 >= this->frames->size() ? 0 : this->cFrame + 1);
 }
 
-float   Animator::getInterpolation( void ) {
-    return (1 - (this->frameDuration - this->getElapsedMilliseconds().count()) / (float)this->frameDuration);
+float   Animator::getFrameInterpolation( eFrameInterpolation interpolation ) {
+    float t = (1 - (this->frameDuration - this->getElapsedMilliseconds().count()) / this->frameDuration);
+    switch (interpolation) {
+        case sinerp:       return(std::sin(t * M_PI * 0.5f));
+        case coserp:       return(std::cos(t * M_PI * 0.5f));
+        case smoothstep:   return(t * t * (3.0f - 2.0f * t));
+        case smootherstep: return(t * t * t * (t * (t * 6.0f - 15.0f) + 10.0f));
+        default: break;
+    };
+    return (t);
 }
