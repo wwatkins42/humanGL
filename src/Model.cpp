@@ -1,49 +1,66 @@
 #include "Model.hpp"
 
-// NOTE: Change that to a parser of .obj, like in scop but cleaner
-/* Cube */
-std::array<GLfloat, 24> vertices = {{
-    // front
-    -0.5, -0.5,  0.5, // bottom-left
-     0.5, -0.5,  0.5, // bottom-right
-     0.5,  0.5,  0.5, // top-right
-    -0.5,  0.5,  0.5, // top-left
-    // back
-    -0.5, -0.5, -0.5,
-     0.5, -0.5, -0.5,
-     0.5,  0.5, -0.5,
-    -0.5,  0.5, -0.5,
-}};
-std::array<unsigned int, 36> indices = {{
-    0, 1, 2,  2, 3, 0, // front
-    1, 5, 6,  6, 2, 1, // right
-    7, 6, 5,  5, 4, 7, // back
-    4, 0, 3,  3, 7, 4, // left
-    4, 5, 1,  1, 0, 4, // bottom
-    3, 2, 6,  6, 7, 3, // top
-}};
+inline void push_indices(std::vector<GLuint>& indices, int sectors, int r, int s) {
+    int currRow = r * sectors;
+    int nextRow = (r + 1) * sectors;
+    int nextS = (s + 1) % sectors;
 
-/* Polyhedron */
-// std::array<GLfloat, 18> vertices = {{
-//     -0.5, 0.0, -0.5, // front-left  | 0
-//      0.5, 0.0, -0.5, // front-right | 1
-//     -0.5, 0.0,  0.5, // back-left   | 2
-//      0.5, 0.0,  0.5, // back-right  | 3
-//      0.0, 0.5,  0.0, // top         | 4
-//      0.0,-0.5,  0.0, // bottom      | 5
-// }};
-// std::array<unsigned int, 24> indices = {{
-//     0, 1, 4,// top-front
-//     0, 2, 4,// top-left
-//     2, 3, 4,// top-back
-//     3, 1, 4,// top-right
-//     0, 1, 5,// bottom-front
-//     0, 2, 5,// bottom-left
-//     2, 3, 5,// bottom-back
-//     3, 1, 5,// bottom-right
-// }};
+    indices.push_back(currRow + s);
+    indices.push_back(nextRow + s);
+    indices.push_back(nextRow + nextS);
+
+    indices.push_back(currRow + s);
+    indices.push_back(nextRow + nextS);
+    indices.push_back(currRow + nextS);
+}
+
+void    createSphere(std::vector<GLfloat>& vertices, std::vector<GLuint>& indices, float radius, unsigned int rings, unsigned int sectors) {
+    float const R = 1.0f / static_cast<float>(rings - 1);
+    float const S = 1.0f / static_cast<float>(sectors - 1);
+    vec3    v;
+
+    for (size_t r = 0; r < rings; ++r) {
+        for (size_t s = 0; s < sectors; ++s) {
+            v = vec3({
+                static_cast<float>(std::cos(2 * M_PI * s * S) * std::sin(M_PI * r * R)),
+                static_cast<float>(std::sin(-M_PI_2 + M_PI * r * R)),
+                static_cast<float>(std::sin(2 * M_PI * s * S) * std::sin(M_PI * r * R))
+            });
+            v = v * radius;
+
+            // texcoords.push_back(vec2(s*S, r*R));
+            vertices.push_back(v[0]);
+            vertices.push_back(v[1]);
+            vertices.push_back(v[2]);
+            if (r < rings-1)
+                push_indices(indices, sectors, r, s);
+        }
+    }
+}
+
+void    createCube(std::vector<GLfloat>& vertices, std::vector<GLuint>& indices) {
+    vertices = {{
+        -0.5, -0.5,  0.5,
+         0.5, -0.5,  0.5,
+         0.5,  0.5,  0.5,
+        -0.5,  0.5,  0.5,
+        -0.5, -0.5, -0.5,
+         0.5, -0.5, -0.5,
+         0.5,  0.5, -0.5,
+        -0.5,  0.5, -0.5,
+    }};
+    indices = {{
+        0, 1, 2,  2, 3, 0, // front
+        1, 5, 6,  6, 2, 1, // right
+        7, 6, 5,  5, 4, 7, // back
+        4, 0, 3,  3, 7, 4, // left
+        4, 5, 1,  1, 0, 4, // bottom
+        3, 2, 6,  6, 7, 3, // top
+    }};
+}
 
 Model::Model( const vec3& position, const vec3& orientation, const vec3& scale, const vec3& joint, const int64_t color ) : position(position), orientation(orientation), scale(scale), joint(joint), color(hex2vec(color)) {
+    this->nIndices = 0;
     this->initBufferObjects(GL_STATIC_DRAW);
     this->externalTransform.identity();
 }
@@ -78,10 +95,17 @@ void    Model::render( Shader* shader ) {
     shader->setVec4UniformValue("customColor", this->color);
     shader->setMat4UniformValue("model", this->transform);
     glBindVertexArray(this->vao);
-    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, this->nIndices, GL_UNSIGNED_INT, 0);
 }
 
 void    Model::initBufferObjects( int mode ) {
+    std::vector<GLfloat>    vertices;
+    std::vector<GLuint>     indices;
+
+    // createCube(vertices, indices);
+    createSphere(vertices, indices, 1.25f, 40, 40);
+    this->nIndices = indices.size();
+
     // gen buffers and vertex arrays
 	glGenVertexArrays(1, &this->vao);
     glGenBuffers(1, &this->vbo);
@@ -91,10 +115,10 @@ void    Model::initBufferObjects( int mode ) {
 	glBindVertexArray(this->vao);
     // copy our vertices array in a buffer for OpenGL to use
 	glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), vertices.data(), mode);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * vertices.size(), vertices.data(), mode);
     // copy our indices array in a buffer for OpenGL to use
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indices.size(), indices.data(), mode);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * indices.size(), indices.data(), mode);
     // set the vertex attribute pointers
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), static_cast<GLvoid*>(0));
 	glEnableVertexAttribArray(0);

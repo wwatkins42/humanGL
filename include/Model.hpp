@@ -7,6 +7,7 @@
 #include <string>
 #include <array>
 #include <forward_list>
+#include <vector>
 
 #include "Exception.hpp"
 #include "Matrix.hpp"
@@ -46,6 +47,7 @@ public:
     vec4            hex2vec( int64_t hex );
 
 private:
+    int         nIndices;
     GLuint      vao;               // Vertex Array Object
     GLuint      vbo;               // Vertex Buffer Object
     GLuint      ebo;               // Element Buffer Object (or indices buffer object, ibo)

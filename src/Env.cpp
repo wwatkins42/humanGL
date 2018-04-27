@@ -7,10 +7,11 @@ Env::Env( void ) : character() {
         // glad : load all OpenGL function pointers
         if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
             throw Exception::InitError("glad initialization failed");
-        this->character = new Skeleton(this->createCharacterSkeleton(), "torso");
+        // this->character = new Skeleton(this->createCharacterSkeleton(), "torso");
+        this->character = new Skeleton(this->createBetterCharacterSkeleton(), "torso");
         // this->animator  = new Animator(this->character, this->createIdleAnimation(), 1800);
-        // this->animator  = new Animator(this->character, this->createWalkingAnimation(), 650);
-        this->animator  = new Animator(this->character, this->createJumpingAnimation(), 1100);
+        this->animator  = new Animator(this->character, this->createBetterWalkingAnimation(), 700);
+        // this->animator  = new Animator(this->character, this->createJumpingAnimation(), 1100);
     } catch (const std::exception& err) {
         std::cout << err.what() << std::endl;
     }
@@ -89,9 +90,127 @@ tAnimationFrames*   Env::createIdleAnimation( void ) {
     return (idleAnimation);
 }
 
+tAnimationFrames*   Env::createBetterWalkingAnimation( void ) {
+    tAnimationFrames*   walkingAnimation = new tAnimationFrames({{
+        // contact
+        new std::vector<tBoneTransform>({{
+            {"upperArmLeft",  vec3({0, 0, 0}), vec3({-0.7, 0, 0}), vec3({ 0, 0, 0 })},
+            {"lowerArmLeft",  vec3({0, 0, 0}), vec3({ 0.7, 0, 0}), vec3({ 0, 0, 0 })},
+            {"upperArmRight", vec3({0, 0, 0}), vec3({ 0.7, 0.9,-0.1}), vec3({ 0, 0, 0 })},
+            {"lowerArmRight", vec3({0, 0, 0}), vec3({ 0.5, 0, 0}), vec3({ 0, 0, 0 })},
+            {"torso",         vec3({0, 0, 0}), vec3({-0.2, 0.1, 0.025}), vec3({ 0, 0, 0 })},
+            {"pelvis",        vec3({0, 0, 0}), vec3({ 0.2, 0, -0.025}), vec3({ 0, 0, 0 })},
+            {"head",          vec3({0, 0, 0}), vec3({ 0, 0, 0}), vec3({ 0, 0, 0 })},
+            {"upperLegLeft",  vec3({0, 0, 0}), vec3({ 0.7, 0, 0}), vec3({ 0, 0, 0 })},
+            {"lowerLegLeft",  vec3({0, 0, 0}), vec3({-0.1, 0, 0}), vec3({ 0, 0, 0 })},
+            {"upperLegRight", vec3({0, 0, 0}), vec3({-0.4, 0, 0}), vec3({ 0, 0, 0 })},
+            {"lowerLegRight", vec3({0, 0, 0}), vec3({-0.2, 0, 0}), vec3({ 0, 0, 0 })},
+        }}),
+        // going down
+        new std::vector<tBoneTransform>({{
+            {"upperArmLeft",  vec3({0, 0, 0}), vec3({-0.8, 0, 0}), vec3({ 0, 0, 0 })},
+            {"lowerArmLeft",  vec3({0, 0, 0}), vec3({ 0.6, 0, 0}), vec3({ 0, 0, 0 })},
+            {"upperArmRight", vec3({0, 0, 0}), vec3({ 0.8, 0.5,-0.05}), vec3({ 0, 0, 0 })},
+            {"lowerArmRight", vec3({0, 0, 0}), vec3({ 0.3, 0, 0}), vec3({ 0, 0, 0 })},
+            {"torso",         vec3({0, 0, 0}), vec3({-0.2, 0.2, 0}), vec3({ 0, 0, 0 })},
+            {"pelvis",        vec3({0, 0, 0}), vec3({ 0.2, 0, 0}), vec3({ 0, 0, 0 })},
+            {"head",          vec3({0, 0, 0}), vec3({ 0, 0, 0}), vec3({ 0, 0, 0 })},
+            {"upperLegLeft",  vec3({0, 0, 0}), vec3({ 0.8, 0, 0}), vec3({ 0, 0, 0 })},
+            {"lowerLegLeft",  vec3({0, 0, 0}), vec3({-0.8, 0, 0}), vec3({ 0, 0, 0 })},
+            {"upperLegRight", vec3({0, 0, 0}), vec3({-0.6, 0, 0}), vec3({ 0, 0, 0 })},
+            {"lowerLegRight", vec3({0, 0, 0}), vec3({-0.2, 0, 0}), vec3({ 0, 0, 0 })},
+        }}),
+        // average pose
+        new std::vector<tBoneTransform>({{
+            {"upperArmLeft",  vec3({0, 0, 0}), vec3({-0.03, 0, 0}), vec3({ 0, 0, 0 })},
+            {"lowerArmLeft",  vec3({0, 0, 0}), vec3({ 0.25, 0, 0}), vec3({ 0, 0, 0 })},
+            {"upperArmRight", vec3({0, 0, 0}), vec3({ 0.3, 0.2, 0}), vec3({ 0, 0, 0 })},
+            {"lowerArmRight", vec3({0, 0, 0}), vec3({ 0.3, 0, 0}), vec3({ 0, 0, 0 })},
+            {"torso",         vec3({0, 0, 0}), vec3({-0.2, 0.1, -0.03}), vec3({ 0, 0, 0 })},
+            {"pelvis",        vec3({0, 0, 0}), vec3({ 0.2, 0, 0.07}), vec3({ 0, 0, 0 })},
+            {"head",          vec3({0, 0, 0}), vec3({ 0, 0, 0.09}), vec3({ 0, 0, 0 })},
+            {"upperLegLeft",  vec3({0, 0, 0}), vec3({-0.1, 0, 0}), vec3({ 0, 0, 0 })},
+            {"lowerLegLeft",  vec3({0, 0, 0}), vec3({ 0, 0, 0}), vec3({ 0, 0, 0 })},
+            {"upperLegRight", vec3({0, 0, 0}), vec3({ 0.5, 0, 0}), vec3({ 0, 0, 0 })},
+            {"lowerLegRight", vec3({0, 0, 0}), vec3({-1.8, 0, 0}), vec3({ 0, 0, 0 })},
+        }}),
+        // going up
+        new std::vector<tBoneTransform>({{
+            {"upperArmLeft",  vec3({0, 0, 0}), vec3({ 0.4, 0, 0}), vec3({ 0, 0, 0 })},
+            {"lowerArmLeft",  vec3({0, 0, 0}), vec3({ 0.2, 0, 0}), vec3({ 0, 0, 0 })},
+            {"upperArmRight", vec3({0, 0, 0}), vec3({-0.2, 0, 0}), vec3({ 0, 0, 0 })},
+            {"lowerArmRight", vec3({0, 0, 0}), vec3({ 0.3, 0, 0}), vec3({ 0, 0, 0 })},
+            {"torso",         vec3({0, 0, 0}), vec3({-0.2, 0, -0.07}), vec3({ 0, 0, 0 })},
+            {"pelvis",        vec3({0, 0, 0}), vec3({ 0.2, 0, 0.13}), vec3({ 0, 0, 0 })},
+            {"head",          vec3({0, 0, 0}), vec3({ 0, 0, 0.19}), vec3({ 0, 0, 0 })},
+            {"upperLegLeft",  vec3({0, 0, 0}), vec3({-0.2, 0, 0}), vec3({ 0, 0, 0 })},
+            {"lowerLegLeft",  vec3({0, 0, 0}), vec3({-0.1, 0, 0}), vec3({ 0, 0, 0 })},
+            {"upperLegRight", vec3({0, 0, 0}), vec3({ 0.9, 0, 0}), vec3({ 0, 0, 0 })},
+            {"lowerLegRight", vec3({0, 0, 0}), vec3({-1.2, 0, 0}), vec3({ 0, 0, 0 })},
+        }}),
+        // contact, DO IT AGAIN
+        new std::vector<tBoneTransform>({{
+            {"upperArmLeft",  vec3({0, 0, 0}), vec3({ 0.7,-0.9, 0.1}), vec3({ 0, 0, 0 })},
+            {"lowerArmLeft",  vec3({0, 0, 0}), vec3({ 0.5, 0, 0}), vec3({ 0, 0, 0 })},
+            {"upperArmRight", vec3({0, 0, 0}), vec3({-0.7, 0, 0}), vec3({ 0, 0, 0 })},
+            {"lowerArmRight", vec3({0, 0, 0}), vec3({ 0.7, 0, 0}), vec3({ 0, 0, 0 })},
+            {"torso",         vec3({0, 0, 0}), vec3({-0.2, -0.1, -0.025}), vec3({ 0, 0, 0 })},
+            {"pelvis",        vec3({0, 0, 0}), vec3({ 0.2, 0, 0.025}), vec3({ 0, 0, 0 })},
+            {"head",          vec3({0, 0, 0}), vec3({ 0, 0, 0}), vec3({ 0, 0, 0 })},
+            {"upperLegLeft",  vec3({0, 0, 0}), vec3({-0.4, 0, 0}), vec3({ 0, 0, 0 })},
+            {"lowerLegLeft",  vec3({0, 0, 0}), vec3({-0.2, 0, 0}), vec3({ 0, 0, 0 })},
+            {"upperLegRight", vec3({0, 0, 0}), vec3({ 0.7, 0, 0}), vec3({ 0, 0, 0 })},
+            {"lowerLegRight", vec3({0, 0, 0}), vec3({-0.1, 0, 0}), vec3({ 0, 0, 0 })},
+        }}),
+        // going down
+        new std::vector<tBoneTransform>({{
+            {"upperArmLeft",  vec3({0, 0, 0}), vec3({ 0.8,-0.5, 0.05}), vec3({ 0, 0, 0 })},
+            {"lowerArmLeft",  vec3({0, 0, 0}), vec3({ 0.6, 0, 0}), vec3({ 0, 0, 0 })},
+            {"upperArmRight", vec3({0, 0, 0}), vec3({-0.8, 0, 0}), vec3({ 0, 0, 0 })},
+            {"lowerArmRight", vec3({0, 0, 0}), vec3({ 0.3, 0, 0}), vec3({ 0, 0, 0 })},
+            {"torso",         vec3({0, 0, 0}), vec3({-0.2, -0.2, 0}), vec3({ 0, 0, 0 })},
+            {"pelvis",        vec3({0, 0, 0}), vec3({ 0.2, 0, 0}), vec3({ 0, 0, 0 })},
+            {"head",          vec3({0, 0, 0}), vec3({ 0, 0, 0}), vec3({ 0, 0, 0 })},
+            {"upperLegLeft",  vec3({0, 0, 0}), vec3({-0.6, 0, 0}), vec3({ 0, 0, 0 })},
+            {"lowerLegLeft",  vec3({0, 0, 0}), vec3({-0.2, 0, 0}), vec3({ 0, 0, 0 })},
+            {"upperLegRight", vec3({0, 0, 0}), vec3({ 0.8, 0, 0}), vec3({ 0, 0, 0 })},
+            {"lowerLegRight", vec3({0, 0, 0}), vec3({-0.8, 0, 0}), vec3({ 0, 0, 0 })},
+        }}),
+        // average pose
+        new std::vector<tBoneTransform>({{
+            {"upperArmLeft",  vec3({0, 0, 0}), vec3({ 0.3,-0.2, 0}), vec3({ 0, 0, 0 })},
+            {"lowerArmLeft",  vec3({0, 0, 0}), vec3({ 0.3, 0, 0}), vec3({ 0, 0, 0 })},
+            {"upperArmRight", vec3({0, 0, 0}), vec3({-0.03, 0, 0}), vec3({ 0, 0, 0 })},
+            {"lowerArmRight", vec3({0, 0, 0}), vec3({ 0.25, 0, 0}), vec3({ 0, 0, 0 })},
+            {"torso",         vec3({0, 0, 0}), vec3({-0.2, -0.1, 0.03}), vec3({ 0, 0, 0 })},
+            {"pelvis",        vec3({0, 0, 0}), vec3({ 0.2, 0, -0.07}), vec3({ 0, 0, 0 })},
+            {"head",          vec3({0, 0, 0}), vec3({ 0, 0, -0.09}), vec3({ 0, 0, 0 })},
+            {"upperLegLeft",  vec3({0, 0, 0}), vec3({ 0.5, 0, 0}), vec3({ 0, 0, 0 })},
+            {"lowerLegLeft",  vec3({0, 0, 0}), vec3({-1.8, 0, 0}), vec3({ 0, 0, 0 })},
+            {"upperLegRight", vec3({0, 0, 0}), vec3({-0.1, 0, 0}), vec3({ 0, 0, 0 })},
+            {"lowerLegRight", vec3({0, 0, 0}), vec3({   0, 0, 0}), vec3({ 0, 0, 0 })},
+        }}),
+        // going up
+        new std::vector<tBoneTransform>({{
+            {"upperArmLeft",  vec3({0, 0, 0}), vec3({-0.2, 0, 0}), vec3({ 0, 0, 0 })},
+            {"lowerArmLeft",  vec3({0, 0, 0}), vec3({ 0.3, 0, 0}), vec3({ 0, 0, 0 })},
+            {"upperArmRight", vec3({0, 0, 0}), vec3({ 0.4, 0, 0}), vec3({ 0, 0, 0 })},
+            {"lowerArmRight", vec3({0, 0, 0}), vec3({ 0.2, 0, 0}), vec3({ 0, 0, 0 })},
+            {"torso",         vec3({0, 0, 0}), vec3({-0.2, 0, 0.07}), vec3({ 0, 0, 0 })},
+            {"pelvis",        vec3({0, 0, 0}), vec3({ 0.2, 0, -0.13}), vec3({ 0, 0, 0 })},
+            {"head",          vec3({0, 0, 0}), vec3({ 0, 0, -0.19}), vec3({ 0, 0, 0 })},
+            {"upperLegLeft",  vec3({0, 0, 0}), vec3({ 0.9, 0, 0}), vec3({ 0, 0, 0 })},
+            {"lowerLegLeft",  vec3({0, 0, 0}), vec3({-1.2, 0, 0}), vec3({ 0, 0, 0 })},
+            {"upperLegRight", vec3({0, 0, 0}), vec3({-0.2, 0, 0}), vec3({ 0, 0, 0 })},
+            {"lowerLegRight", vec3({0, 0, 0}), vec3({-0.1, 0, 0}), vec3({ 0, 0, 0 })},
+        }}),
+
+    }});
+    return (walkingAnimation);
+}
+
 tAnimationFrames*   Env::createWalkingAnimation( void ) {
     tAnimationFrames*   walkingAnimation = new tAnimationFrames({{
-        // 1st frame
         new std::vector<tBoneTransform>({{
             {"upperArmLeft",  vec3({0, 0, 0}), vec3({   1,   0, 0.5}), vec3({ 0, 0, 0 })},
             {"lowerArmLeft",  vec3({0, 0, 0}), vec3({ 2.4,   0,-0.5}), vec3({ 0, 0, 0 })},
@@ -104,7 +223,6 @@ tAnimationFrames*   Env::createWalkingAnimation( void ) {
             {"upperLegRight", vec3({0, 0, 0}), vec3({ 1.2,   0,   0}), vec3({ 0, 0, 0 })},
             {"lowerLegRight", vec3({0, 0, 0}), vec3({   0,   0,   0}), vec3({ 0, 0, 0 })},
         }}),
-        // 2nd frame
         new std::vector<tBoneTransform>({{
             {"upperArmLeft",  vec3({0, 0, 0}), vec3({  -1,    0,   0}), vec3({ 0, 0, 0 })},
             {"lowerArmLeft",  vec3({0, 0, 0}), vec3({ 0.4,    0,   0}), vec3({ 0, 0, 0 })},
@@ -233,10 +351,10 @@ std::unordered_map<std::string, Bone*>  Env::createCharacterSkeleton( void ) {
     bones["head"] = new Bone(
         (std::forward_list<Bone*>){{}},
         "head",
-        vec3({0, 2, 0}),    // position
-        vec3({0, 0, 0}),    // orientation
-        vec3({1, 1, 1}),    // scale
-        vec3({0, -0.5, 0}), // joint
+        vec3({0, 2, 0}),
+        vec3({0, 0, 0}),
+        vec3({1, 1, 1}),
+        vec3({0, -0.5, 0}),
         0xEEAD7E
     );
     bones["lowerLegLeft"] = new Bone(
@@ -317,6 +435,200 @@ std::unordered_map<std::string, Bone*>  Env::createCharacterSkeleton( void ) {
         vec3({0, -0.5, 0}),
         vec3({0, 0, 0}),
         vec3({2, 3, 0.9}),
+        vec3({0, 0, 0}),
+        0x43876A
+    );
+    return (bones);
+}
+
+std::unordered_map<std::string, Bone*>  Env::createBetterCharacterSkeleton( void ) { // NOTE: add hands
+    std::unordered_map<std::string, Bone*>  bones;
+    bones["head"] = new Bone(
+        (std::forward_list<Bone*>){{}},
+        "head",
+        vec3({0, 0.85, 0}),
+        vec3({0, 0, 0}),
+        vec3({0.8, 0.85, 0.8}),
+        vec3({0, -0.45, 0}),
+        0xEEAD7E
+    );
+    bones["neck"] = new Bone(
+        (std::forward_list<Bone*>){ bones["head"] },
+        "neck",
+        vec3({0, 1, 0}),
+        vec3({0, 0, 0}),
+        vec3({0.3, 0.3, 0.3}),
+        vec3({0, 0, 0}),
+        0xEEAD7E
+    );
+    bones["lowerLegLeft"] = new Bone(
+        (std::forward_list<Bone*>){{}},
+        "lowerLegLeft",
+        vec3({0, -1, 0}),
+        vec3({0, 0, 0}),
+        vec3({0.4, 1, 0.4}),
+        vec3({0, 1, 0}),
+        0x3F5D6A
+    );
+    bones["lowerLegRight"] = new Bone(
+        (std::forward_list<Bone*>){{}},
+        "lowerLegRight",
+        vec3({0, -1, 0}),
+        vec3({0, 0, 0}),
+        vec3({0.4, 1, 0.4}),
+        vec3({0, 1, 0}),
+        0x3F5D6A
+    );
+    bones["kneeLeft"] = new Bone(
+        (std::forward_list<Bone*>){ bones["lowerLegLeft"] },
+        "kneeLeft",
+        vec3({0, -1, 0}),
+        vec3({0, 0, 0}),
+        vec3({0.4, 0.4, 0.4}),
+        vec3({0, 0, 0}),
+        0xA4B37F
+    );
+    bones["kneeRight"] = new Bone(
+        (std::forward_list<Bone*>){ bones["lowerLegRight"] },
+        "kneeRight",
+        vec3({0, -1, 0}),
+        vec3({0, 0, 0}),
+        vec3({0.4, 0.4, 0.4}),
+        vec3({0, 0, 0}),
+        0xA4B37F
+    );
+    bones["upperLegLeft"] = new Bone(
+        (std::forward_list<Bone*>){ bones["kneeLeft"] },
+        "upperLegLeft",
+        vec3({0, -1, 0}),
+        vec3({0, 0, 0}),
+        vec3({0.5, 1, 0.5}),
+        vec3({0, 1, 0}),
+        0x3F5D6A
+    );
+    bones["upperLegRight"] = new Bone(
+        (std::forward_list<Bone*>){ bones["kneeRight"] },
+        "upperLegRight",
+        vec3({0, -1, 0}),
+        vec3({0, 0, 0}),
+        vec3({0.5, 1, 0.5}),
+        vec3({0, 1, 0}),
+        0x3F5D6A
+    );
+    bones["hipLeft"] = new Bone(
+        (std::forward_list<Bone*>){ bones["upperLegLeft"] },
+        "hipLeft",
+        vec3({-0.6, -0.8, 0}),
+        vec3({0, 0, 0}),
+        vec3({0.4, 0.4, 0.4}),
+        vec3({0, 0, 0}),
+        0xA4B37F
+    );
+    bones["hipRight"] = new Bone(
+        (std::forward_list<Bone*>){ bones["upperLegRight"] },
+        "hipRight",
+        vec3({0.6, -0.8, 0}),
+        vec3({0, 0, 0}),
+        vec3({0.4, 0.4, 0.4}),
+        vec3({0, 0, 0}),
+        0xA4B37F
+    );
+    bones["lowerArmLeft"] = new Bone(
+        (std::forward_list<Bone*>){{}},
+        "lowerArmLeft",
+        vec3({0, -0.8, 0}),
+        vec3({0, 0, 0}),
+        vec3({0.35, 0.8, 0.35}),
+        vec3({0, 0.8, 0}),
+        0xEEAD7E
+    );
+    bones["lowerArmRight"] = new Bone(
+        (std::forward_list<Bone*>){{}},
+        "lowerArmRight",
+        vec3({0, -0.8, 0}),
+        vec3({0, 0, 0}),
+        vec3({0.35, 0.8, 0.35}),
+        vec3({0, 0.8, 0}),
+        0xEEAD7E
+    );
+    bones["elbowLeft"] = new Bone(
+        (std::forward_list<Bone*>){ bones["lowerArmLeft"] },
+        "elbowLeft",
+        vec3({0, -1, 0}),
+        vec3({0, 0, 0}),
+        vec3({0.35, 0.35, 0.35}),
+        vec3({0, 0, 0}),
+        0xA4B37F
+    );
+    bones["elbowRight"] = new Bone(
+        (std::forward_list<Bone*>){ bones["lowerArmRight"] },
+        "elbowRight",
+        vec3({0, -1, 0}),
+        vec3({0, 0, 0}),
+        vec3({0.35, 0.35, 0.35}),
+        vec3({0, 0, 0}),
+        0xA4B37F
+    );
+    bones["upperArmLeft"] = new Bone(
+        (std::forward_list<Bone*>){ bones["elbowLeft"] },
+        "upperArmLeft",
+        vec3({0, -0.9, 0}),
+        vec3({0, 0, 0}),
+        vec3({0.4, 0.9, 0.4}),
+        vec3({0, 0.9, 0}),
+        0x408467
+    );
+    bones["upperArmRight"] = new Bone(
+        (std::forward_list<Bone*>){ bones["elbowRight"] },
+        "upperArmRight",
+        vec3({0, -0.9, 0}),
+        vec3({0, 0, 0}),
+        vec3({0.4, 0.9, 0.4}),
+        vec3({0, 0.9, 0}),
+        0x408467
+    );
+    bones["shoulderLeft"] = new Bone(
+        (std::forward_list<Bone*>){ bones["upperArmLeft"] },
+        "shoulderLeft",
+        vec3({-1.7, 0, 0}),
+        vec3({0, 0, 0}),
+        vec3({0.4, 0.4, 0.4}),
+        vec3({0, 0, 0}),
+        0xA4B37F
+    );
+    bones["shoulderRight"] = new Bone(
+        (std::forward_list<Bone*>){ bones["upperArmRight"] },
+        "shoulderRight",
+        vec3({1.7, 0, 0}),
+        vec3({0, 0, 0}),
+        vec3({0.4, 0.4, 0.4}),
+        vec3({0, 0, 0}),
+        0xA4B37F
+    );
+    bones["pelvis"] = new Bone(
+        (std::forward_list<Bone*>){{ bones["hipLeft"], bones["hipRight"] }},
+        "pelvis",
+        vec3({0, -0.95, 0}),
+        vec3({0, 0, 0}),
+        vec3({0.95, 0.95, 0.8}),
+        vec3({0, 0, 0}),
+        0x43876A
+    );
+    bones["stomach"] = new Bone(
+        (std::forward_list<Bone*>){ bones["pelvis"] },
+        "stomach",
+        vec3({0, -1, 0}),
+        vec3({0, 0, 0}),
+        vec3({0.8, 0.8, 0.9}),
+        vec3({0, 0, 0}),
+        0xA4B37F
+    );
+    bones["torso"] = new Bone(
+        (std::forward_list<Bone*>){{ bones["neck"], bones["stomach"], bones["shoulderLeft"], bones["shoulderRight"] }},//, bones["shoulderLeft"], bones["shoulderRight"], bones["hipLeft"], bones["hipRight"] }},
+        "torso",
+        vec3({0, 0.5, 0}),
+        vec3({0, 0, 0}),
+        vec3({1.5, 1, 1}),
         vec3({0, 0, 0}),
         0x43876A
     );

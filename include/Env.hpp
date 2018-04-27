@@ -41,8 +41,10 @@ private:
     // callback to be called each time the window is resized to update the viewport size as well
     static void framebufferSizeCallback( GLFWwindow* window, int width, int height );
 
+    std::unordered_map<std::string, Bone*>  createBetterCharacterSkeleton( void );
     std::unordered_map<std::string, Bone*>  createCharacterSkeleton( void );
     tAnimationFrames*                       createIdleAnimation( void );
     tAnimationFrames*                       createWalkingAnimation( void );
+    tAnimationFrames*                       createBetterWalkingAnimation( void );
     tAnimationFrames*                       createJumpingAnimation( void );
 };

@@ -31,7 +31,9 @@ void    Animator::update( void ) {
     for (size_t i = 0; i < (*this->frames)[this->cFrame]->size(); ++i) {
         tBoneTransform curr = (*(*this->frames)[this->cFrame])[i];
         tBoneTransform next = (*(*this->frames)[this->getNextFrame()])[i];
-        (*this->skeleton)[curr.boneId]->rescale(mtls::lerp(curr.scale, next.scale, t)); // NEW
+        if (this->skeleton->getBones().find(curr.boneId) == this->skeleton->getBones().end())
+            continue;
+        (*this->skeleton)[curr.boneId]->rescale(mtls::lerp(curr.scale, next.scale, t));
         transform.identity();
         mtls::translate(transform, mtls::lerp(curr.translation, next.translation, t));
         mtls::rotate(transform, mtls::lerp(curr.rotation, next.rotation, t), (*this->skeleton)[curr.boneId]->getModel()->getJoint());

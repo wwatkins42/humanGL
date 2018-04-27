@@ -2,7 +2,9 @@
 
 Skeleton::Skeleton( std::unordered_map<std::string, Bone*> bones, const std::string& parentBoneId ) : bones(bones), parentBoneId(parentBoneId) {
     this->parentBone = this->bones[this->parentBoneId];
-    // this->parentBone->getModel()->setOrientation(vec3({0, -0.6f, 0}));
+    this->parentBone->getModel()->setPosition(vec3({0, 2, -2}));
+    this->parentBone->getModel()->setOrientation(vec3({0, -(float)(M_PI/6.0f), 0}));
+    // this->parentBone->getModel()->setOrientation(vec3({0, -(float)(M_PI/2.0f), 0}));
 }
 
 Skeleton::Skeleton( const Skeleton& rhs ) {

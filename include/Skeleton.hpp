@@ -24,7 +24,7 @@ public:
 
     Bone*       getParentBone( void ) const { return (parentBone); };
     std::string getParentBoneId( void ) const { return (parentBoneId); };
-    std::unordered_map<std::string, Bone*>  getBones( void ) const { return (bones); };
+    const std::unordered_map<std::string, Bone*>&  getBones( void ) const { return (bones); };
 
     Bone*   operator[]( const std::string& id );
 
