@@ -8,8 +8,9 @@ Env::Env( void ) : character() {
         if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
             throw Exception::InitError("glad initialization failed");
         this->character = new Skeleton(this->createCharacterSkeleton(), "torso");
-        // this->animator  = new Animator(this->character, this->createWalkingAnimation(), 600);
-        this->animator  = new Animator(this->character, this->createJumpingAnimation(), 1000);
+        // this->animator  = new Animator(this->character, this->createIdleAnimation(), 1800);
+        // this->animator  = new Animator(this->character, this->createWalkingAnimation(), 650);
+        this->animator  = new Animator(this->character, this->createJumpingAnimation(), 1100);
     } catch (const std::exception& err) {
         std::cout << err.what() << std::endl;
     }
@@ -58,33 +59,63 @@ void    Env::framebufferSizeCallback( GLFWwindow* window, int width, int height 
     glViewport(0, 0, width, height);
 }
 
+tAnimationFrames*   Env::createIdleAnimation( void ) {
+    tAnimationFrames*   idleAnimation = new tAnimationFrames({{
+        new std::vector<tBoneTransform>({{
+            {"upperArmLeft",  vec3({0, 0, 0}), vec3({   0, 0, 0 }), vec3({ 0, 0, 0 })},
+            {"lowerArmLeft",  vec3({0, 0, 0}), vec3({   0, 0, 0 }), vec3({ 0, 0, 0 })},
+            {"upperArmRight", vec3({0, 0, 0}), vec3({   0, 0, 0 }), vec3({ 0, 0, 0 })},
+            {"lowerArmRight", vec3({0, 0, 0}), vec3({   0, 0, 0 }), vec3({ 0, 0, 0 })},
+            {"torso",         vec3({0, 0, 0}), vec3({   0, 0, 0 }), vec3({ 0, 0, 0 })},
+            {"head",          vec3({0, 0, 0}), vec3({-0.1, 0, 0 }), vec3({ 0, 0, 0 })},
+            {"upperLegLeft",  vec3({0, 0, 0}), vec3({   0, 0, 0 }), vec3({ 0, 0, 0 })},
+            {"lowerLegLeft",  vec3({0, 0, 0}), vec3({   0, 0, 0 }), vec3({ 0, 0, 0 })},
+            {"upperLegRight", vec3({0, 0, 0}), vec3({   0, 0, 0 }), vec3({ 0, 0, 0 })},
+            {"lowerLegRight", vec3({0, 0, 0}), vec3({   0, 0, 0 }), vec3({ 0, 0, 0 })},
+        }}),
+        new std::vector<tBoneTransform>({{
+            {"upperArmLeft",  vec3({   0,0.05, 0}), vec3({    0,-0.06, 0.08 }), vec3({   0,    0,   0 })},
+            {"lowerArmLeft",  vec3({   0,   0, 0}), vec3({ 0.03,    0,    0 }), vec3({   0,    0,   0 })},
+            {"upperArmRight", vec3({   0,0.05, 0}), vec3({    0, 0.06,-0.08 }), vec3({   0,    0,   0 })},
+            {"lowerArmRight", vec3({   0,   0, 0}), vec3({ 0.03,    0,    0 }), vec3({   0,    0,   0 })},
+            {"torso",         vec3({   0,   0, 0}), vec3({    0,    0,    0 }), vec3({ 0.2, 0.15, 0.1 })},
+            {"head",          vec3({   0,   0, 0}), vec3({    0,    0,    0 }), vec3({   0,    0,   0 })},
+            {"upperLegLeft",  vec3({ 0.1,   0, 0}), vec3({    0,    0,    0 }), vec3({   0,    0,   0 })},
+            {"lowerLegLeft",  vec3({   0,   0, 0}), vec3({    0,    0,    0 }), vec3({   0,    0,   0 })},
+            {"upperLegRight", vec3({-0.1,   0, 0}), vec3({    0,    0,    0 }), vec3({   0,    0,   0 })},
+            {"lowerLegRight", vec3({   0,   0, 0}), vec3({    0,    0,    0 }), vec3({   0,    0,   0 })},
+        }}),
+    }});
+    return (idleAnimation);
+}
+
 tAnimationFrames*   Env::createWalkingAnimation( void ) {
     tAnimationFrames*   walkingAnimation = new tAnimationFrames({{
         // 1st frame
         new std::vector<tBoneTransform>({{
-            {"upperArmLeft",  vec3({0, 0, 0}), vec3({   1,   0, 0.5})},
-            {"lowerArmLeft",  vec3({0, 0, 0}), vec3({ 2.4,   0,-0.5})},
-            {"upperArmRight", vec3({0, 0, 0}), vec3({  -1,   0,   0})},
-            {"lowerArmRight", vec3({0, 0, 0}), vec3({ 0.4,   0,   0})},
-            {"torso",         vec3({0, 0, 0}), vec3({   0,-0.2,   0})},
-            {"head",          vec3({0, 0, 0}), vec3({   0,0.15,   0})},
-            {"upperLegLeft",  vec3({0, 0, 0}), vec3({  -1,   0,   0})},
-            {"lowerLegLeft",  vec3({0, 0, 0}), vec3({  -1,   0,   0})},
-            {"upperLegRight", vec3({0, 0, 0}), vec3({ 1.2,   0,   0})},
-            {"lowerLegRight", vec3({0, 0, 0}), vec3({   0,   0,   0})},
+            {"upperArmLeft",  vec3({0, 0, 0}), vec3({   1,   0, 0.5}), vec3({ 0, 0, 0 })},
+            {"lowerArmLeft",  vec3({0, 0, 0}), vec3({ 2.4,   0,-0.5}), vec3({ 0, 0, 0 })},
+            {"upperArmRight", vec3({0, 0, 0}), vec3({  -1,   0,   0}), vec3({ 0, 0, 0 })},
+            {"lowerArmRight", vec3({0, 0, 0}), vec3({ 0.4,   0,   0}), vec3({ 0, 0, 0 })},
+            {"torso",         vec3({0, 0, 0}), vec3({   0,-0.2,   0}), vec3({ 0, 0, 0 })},
+            {"head",          vec3({0, 0, 0}), vec3({   0,0.15,   0}), vec3({ 0, 0, 0 })},
+            {"upperLegLeft",  vec3({0, 0, 0}), vec3({  -1,   0,   0}), vec3({ 0, 0, 0 })},
+            {"lowerLegLeft",  vec3({0, 0, 0}), vec3({  -1,   0,   0}), vec3({ 0, 0, 0 })},
+            {"upperLegRight", vec3({0, 0, 0}), vec3({ 1.2,   0,   0}), vec3({ 0, 0, 0 })},
+            {"lowerLegRight", vec3({0, 0, 0}), vec3({   0,   0,   0}), vec3({ 0, 0, 0 })},
         }}),
         // 2nd frame
         new std::vector<tBoneTransform>({{
-            {"upperArmLeft",  vec3({0, 0, 0}), vec3({  -1,    0,   0})},
-            {"lowerArmLeft",  vec3({0, 0, 0}), vec3({ 0.4,    0,   0})},
-            {"upperArmRight", vec3({0, 0, 0}), vec3({   1,    0,-0.5})},
-            {"lowerArmRight", vec3({0, 0, 0}), vec3({ 2.4,    0, 0.5})},
-            {"torso",         vec3({0, 0, 0}), vec3({   0,  0.2,   0})},
-            {"head",          vec3({0, 0, 0}), vec3({   0,-0.15,   0})},
-            {"upperLegLeft",  vec3({0, 0, 0}), vec3({ 1.2,    0,   0})},
-            {"lowerLegLeft",  vec3({0, 0, 0}), vec3({   0,    0,   0})},
-            {"upperLegRight", vec3({0, 0, 0}), vec3({  -1,    0,   0})},
-            {"lowerLegRight", vec3({0, 0, 0}), vec3({  -1,    0,   0})},
+            {"upperArmLeft",  vec3({0, 0, 0}), vec3({  -1,    0,   0}), vec3({ 0, 0, 0 })},
+            {"lowerArmLeft",  vec3({0, 0, 0}), vec3({ 0.4,    0,   0}), vec3({ 0, 0, 0 })},
+            {"upperArmRight", vec3({0, 0, 0}), vec3({   1,    0,-0.5}), vec3({ 0, 0, 0 })},
+            {"lowerArmRight", vec3({0, 0, 0}), vec3({ 2.4,    0, 0.5}), vec3({ 0, 0, 0 })},
+            {"torso",         vec3({0, 0, 0}), vec3({   0,  0.2,   0}), vec3({ 0, 0, 0 })},
+            {"head",          vec3({0, 0, 0}), vec3({   0,-0.15,   0}), vec3({ 0, 0, 0 })},
+            {"upperLegLeft",  vec3({0, 0, 0}), vec3({ 1.2,    0,   0}), vec3({ 0, 0, 0 })},
+            {"lowerLegLeft",  vec3({0, 0, 0}), vec3({   0,    0,   0}), vec3({ 0, 0, 0 })},
+            {"upperLegRight", vec3({0, 0, 0}), vec3({  -1,    0,   0}), vec3({ 0, 0, 0 })},
+            {"lowerLegRight", vec3({0, 0, 0}), vec3({  -1,    0,   0}), vec3({ 0, 0, 0 })},
         }}),
     }});
     return (walkingAnimation);
@@ -92,91 +123,107 @@ tAnimationFrames*   Env::createWalkingAnimation( void ) {
 
 tAnimationFrames*   Env::createJumpingAnimation( void ) {
     tAnimationFrames*   jumpingAnimation = new tAnimationFrames({{
-        new std::vector<tBoneTransform>({{ // or add a delay between playback cycles in Animator
-            {"upperArmLeft",  vec3({0, 0, 0}), vec3({  0,  0,  0})},
-            {"lowerArmLeft",  vec3({0, 0, 0}), vec3({  0,  0,  0})},
-            {"upperArmRight", vec3({0, 0, 0}), vec3({  0,  0,  0})},
-            {"lowerArmRight", vec3({0, 0, 0}), vec3({  0,  0,  0})},
-            {"torso",         vec3({0, 0, 0}), vec3({  0,  0,  0})},
-            {"head",          vec3({0, 0, 0}), vec3({  0,  0,  0})},
-            {"upperLegLeft",  vec3({0, 0, 0}), vec3({  0,  0,  0})},
-            {"lowerLegLeft",  vec3({0, 0, 0}), vec3({  0,  0,  0})},
-            {"upperLegRight", vec3({0, 0, 0}), vec3({  0,  0,  0})},
-            {"lowerLegRight", vec3({0, 0, 0}), vec3({  0,  0,  0})},
-        }}),
-        // start
+        // frame 1: start
         new std::vector<tBoneTransform>({{
-            {"upperArmLeft",  vec3({0, 0, 0}), vec3({   0.2,   0,   0.2})},
-            {"lowerArmLeft",  vec3({0, 0, 0}), vec3({   0.3,   0,  -0.3})},
-            {"upperArmRight", vec3({0, 0, 0}), vec3({   0.2,   0,  -0.2})},
-            {"lowerArmRight", vec3({0, 0, 0}), vec3({   0.3,   0,   0.3})},
-            {"torso",         vec3({0,-0.25, 0}), vec3({  -0.4,   0,   0})},
-            {"head",          vec3({0, 0, 0}), vec3({  -0.1,   0,   0})},
-            {"upperLegLeft",  vec3({0, 0, 0}), vec3({   0.8,   0,   0})},
-            {"lowerLegLeft",  vec3({0, 0, 0}), vec3({  -0.4,   0,   0})},
-            {"upperLegRight", vec3({0, 0, 0}), vec3({   0.8,   0,   0})},
-            {"lowerLegRight", vec3({0, 0, 0}), vec3({  -0.4,   0,   0})},
+            {"upperArmLeft",  vec3({0,    0, 0}), vec3({  0.2,   0, 0.2 }), vec3({ 0, 0, 0 })},
+            {"lowerArmLeft",  vec3({0,    0, 0}), vec3({  0.3,   0,-0.3 }), vec3({ 0, 0, 0 })},
+            {"upperArmRight", vec3({0,    0, 0}), vec3({  0.2,   0,-0.2 }), vec3({ 0, 0, 0 })},
+            {"lowerArmRight", vec3({0,    0, 0}), vec3({  0.3,   0, 0.3 }), vec3({ 0, 0, 0 })},
+            {"torso",         vec3({0,-0.25, 0}), vec3({ -0.4,   0,   0 }), vec3({ 0, 0, 0 })},
+            {"head",          vec3({0,    0, 0}), vec3({ -0.1,   0,   0 }), vec3({ 0, 0, 0 })},
+            {"upperLegLeft",  vec3({0,    0, 0}), vec3({  0.8,   0,   0 }), vec3({ 0, 0, 0 })},
+            {"lowerLegLeft",  vec3({0,    0, 0}), vec3({ -0.4,   0,   0 }), vec3({ 0, 0, 0 })},
+            {"upperLegRight", vec3({0,    0, 0}), vec3({  0.8,   0,   0 }), vec3({ 0, 0, 0 })},
+            {"lowerLegRight", vec3({0,    0, 0}), vec3({ -0.4,   0,   0 }), vec3({ 0, 0, 0 })},
         }}),
         new std::vector<tBoneTransform>({{
-            {"upperArmLeft",  vec3({0,   0, 0}), vec3({  -0.4, 0.3,   0.3})},
-            {"lowerArmLeft",  vec3({0,   0, 0}), vec3({   0.1,   0,  -0.2})},
-            {"upperArmRight", vec3({0,   0, 0}), vec3({  -0.4,-0.3,  -0.3})},
-            {"lowerArmRight", vec3({0,   0, 0}), vec3({   0.1,   0,   0.2})},
-            {"torso",         vec3({0,-0.4, 0}), vec3({  -0.6,   0,   0})},
-            {"head",          vec3({0,   0, 0}), vec3({  -0.1,   0,   0})},
-            {"upperLegLeft",  vec3({0,   0, 0}), vec3({   1.2,   0,   0})},
-            {"lowerLegLeft",  vec3({0,   0, 0}), vec3({  -0.6,   0,   0})},
-            {"upperLegRight", vec3({0,   0, 0}), vec3({   1.2,   0,   0})},
-            {"lowerLegRight", vec3({0,   0, 0}), vec3({  -0.6,   0,   0})},
+            {"upperArmLeft",  vec3({0,   0, 0}), vec3({ -0.4, 0.3,   0.3 }), vec3({ 0, 0, 0 })},
+            {"lowerArmLeft",  vec3({0,   0, 0}), vec3({  0.1,   0,  -0.2 }), vec3({ 0, 0, 0 })},
+            {"upperArmRight", vec3({0,   0, 0}), vec3({ -0.4,-0.3,  -0.3 }), vec3({ 0, 0, 0 })},
+            {"lowerArmRight", vec3({0,   0, 0}), vec3({  0.1,   0,   0.2 }), vec3({ 0, 0, 0 })},
+            {"torso",         vec3({0,-0.4, 0}), vec3({ -0.6,   0,     0 }), vec3({ 0, 0, 0 })},
+            {"head",          vec3({0,   0, 0}), vec3({ -0.1,   0,     0 }), vec3({ 0, 0, 0 })},
+            {"upperLegLeft",  vec3({0,   0, 0}), vec3({  1.2,   0,     0 }), vec3({ 0, 0, 0 })},
+            {"lowerLegLeft",  vec3({0,   0, 0}), vec3({ -0.6,   0,     0 }), vec3({ 0, 0, 0 })},
+            {"upperLegRight", vec3({0,   0, 0}), vec3({  1.2,   0,     0 }), vec3({ 0, 0, 0 })},
+            {"lowerLegRight", vec3({0,   0, 0}), vec3({ -0.6,   0,     0 }), vec3({ 0, 0, 0 })},
         }}),
         new std::vector<tBoneTransform>({{
-            {"upperArmLeft",  vec3({0,   0, 0}), vec3({  -0.8, 0.3,   0.4})},
-            {"lowerArmLeft",  vec3({0,   0, 0}), vec3({   0.3,   0,  -0.2})},
-            {"upperArmRight", vec3({0,   0, 0}), vec3({  -0.8, -0.3,  -0.4})},
-            {"lowerArmRight", vec3({0,   0, 0}), vec3({   0.3,   0,   0.2})},
-            {"torso",         vec3({0,-0.5, 0}), vec3({  -0.7,   0,   0})},
-            {"head",          vec3({0,   0, 0}), vec3({  -0.3,   0,   0})},
-            {"upperLegLeft",  vec3({0,   0, 0}), vec3({   1.3,   0,   0})},
-            {"lowerLegLeft",  vec3({0,   0, 0}), vec3({  -0.6,   0,   0})},
-            {"upperLegRight", vec3({0,   0, 0}), vec3({   1.3,   0,   0})},
-            {"lowerLegRight", vec3({0,   0, 0}), vec3({  -0.6,   0,   0})},
+            {"upperArmLeft",  vec3({0,   0, 0}), vec3({ -0.8,  0.3,  0.4 }), vec3({ 0, 0, 0 })},
+            {"lowerArmLeft",  vec3({0,   0, 0}), vec3({  0.3,    0, -0.2 }), vec3({ 0, 0, 0 })},
+            {"upperArmRight", vec3({0,   0, 0}), vec3({ -0.8, -0.3, -0.4 }), vec3({ 0, 0, 0 })},
+            {"lowerArmRight", vec3({0,   0, 0}), vec3({  0.3,    0,  0.2 }), vec3({ 0, 0, 0 })},
+            {"torso",         vec3({0,-0.5, 0}), vec3({ -0.7,    0,    0 }), vec3({ 0, 0, 0 })},
+            {"head",          vec3({0,   0, 0}), vec3({ -0.5,    0,    0 }), vec3({ 0, 0, 0 })},
+            {"upperLegLeft",  vec3({0,   0, 0}), vec3({  1.3,    0,    0 }), vec3({ 0, 0, 0 })},
+            {"lowerLegLeft",  vec3({0,   0, 0}), vec3({ -0.6,    0,    0 }), vec3({ 0, 0, 0 })},
+            {"upperLegRight", vec3({0,   0, 0}), vec3({  1.3,    0,    0 }), vec3({ 0, 0, 0 })},
+            {"lowerLegRight", vec3({0,   0, 0}), vec3({ -0.6,    0,    0 }), vec3({ 0, 0, 0 })},
+        }}),
+        // frame 4 : jumping
+        new std::vector<tBoneTransform>({{
+            {"upperArmLeft",  vec3({0,   0, 0}), vec3({    1,-0.3,-0.2 }), vec3({ 0, 0, 0 })},
+            {"lowerArmLeft",  vec3({0,   0, 0}), vec3({  0.5,   0,-0.1 }), vec3({ 0, 0, 0 })},
+            {"upperArmRight", vec3({0,   0, 0}), vec3({    1, 0.3, 0.2 }), vec3({ 0, 0, 0 })},
+            {"lowerArmRight", vec3({0,   0, 0}), vec3({  0.5,   0, 0.1 }), vec3({ 0, 0, 0 })},
+            {"torso",         vec3({0, 0.5, 0}), vec3({    0,   0,   0 }), vec3({ 0, 0, 0 })},
+            {"head",          vec3({0,   0, 0}), vec3({ -0.2,   0,   0 }), vec3({ 0, 0, 0 })},
+            {"upperLegLeft",  vec3({0,   0, 0}), vec3({  0.1,   0,   0 }), vec3({ 0, 0, 0 })},
+            {"lowerLegLeft",  vec3({0,   0, 0}), vec3({ -0.4,   0,   0 }), vec3({ 0, 0, 0 })},
+            {"upperLegRight", vec3({0,   0, 0}), vec3({  0.1,   0,   0 }), vec3({ 0, 0, 0 })},
+            {"lowerLegRight", vec3({0,   0, 0}), vec3({ -0.4,   0,   0 }), vec3({ 0, 0, 0 })},
         }}),
         new std::vector<tBoneTransform>({{
-            {"upperArmLeft",  vec3({0,   0, 0}), vec3({   1,-0.3,  -0.2})},
-            {"lowerArmLeft",  vec3({0,   0, 0}), vec3({ 0.5,   0,  -0.1})},
-            {"upperArmRight", vec3({0,   0, 0}), vec3({   1, 0.3,   0.2})},
-            {"lowerArmRight", vec3({0,   0, 0}), vec3({ 0.5,   0,   0.1})},
-            {"torso",         vec3({0,  0.5, 0}), vec3({   0,   0,   0})},
-            {"head",          vec3({0,   0, 0}), vec3({-0.2,   0,   0})},
-            {"upperLegLeft",  vec3({0,   0, 0}), vec3({   0,   0,   0})},
-            {"lowerLegLeft",  vec3({0,   0, 0}), vec3({   0,   0,   0})},
-            {"upperLegRight", vec3({0,   0, 0}), vec3({   0,   0,   0})},
-            {"lowerLegRight", vec3({0,   0, 0}), vec3({   0,   0,   0})},
+            {"upperArmLeft",  vec3({0,   0, 0}), vec3({  0.1,   0, 0.1 }), vec3({ 0, 0, 0 })},
+            {"lowerArmLeft",  vec3({0,   0, 0}), vec3({  0.3,   0,-0.1 }), vec3({ 0, 0, 0 })},
+            {"upperArmRight", vec3({0,   0, 0}), vec3({  0.1,   0,-0.1 }), vec3({ 0, 0, 0 })},
+            {"lowerArmRight", vec3({0,   0, 0}), vec3({  0.3,   0, 0.1 }), vec3({ 0, 0, 0 })},
+            {"torso",         vec3({0, 2.1, 0}), vec3({    0,   0,   0 }), vec3({ 0, 0, 0 })},
+            {"head",          vec3({0,   0, 0}), vec3({ -0.1,   0,   0 }), vec3({ 0, 0, 0 })},
+            {"upperLegLeft",  vec3({0,   0, 0}), vec3({  0.6,   0,   0 }), vec3({ 0, 0, 0 })},
+            {"lowerLegLeft",  vec3({0,   0, 0}), vec3({ -1.2,   0,   0 }), vec3({ 0, 0, 0 })},
+            {"upperLegRight", vec3({0,   0, 0}), vec3({  0.6,   0,   0 }), vec3({ 0, 0, 0 })},
+            {"lowerLegRight", vec3({0,   0, 0}), vec3({ -1.2,   0,   0 }), vec3({ 0, 0, 0 })},
         }}),
+        // frame 6: reaching jump peak
         new std::vector<tBoneTransform>({{
-            {"upperArmLeft",  vec3({0,   0, 0}), vec3({   0.1,   0,   0.1})},
-            {"lowerArmLeft",  vec3({0,   0, 0}), vec3({   0.3,   0,  -0.1})},
-            {"upperArmRight", vec3({0,   0, 0}), vec3({   0.1,   0,  -0.1})},
-            {"lowerArmRight", vec3({0,   0, 0}), vec3({   0.3,   0,   0.1})},
-            {"torso",         vec3({0, 2.1, 0}), vec3({   0,   0,   0})},
-            {"head",          vec3({0,   0, 0}), vec3({   -0.1,   0,   0})},
-            {"upperLegLeft",  vec3({0,   0, 0}), vec3({   0,   0,   0})},
-            {"lowerLegLeft",  vec3({0,   0, 0}), vec3({  0,   0,   0})},
-            {"upperLegRight", vec3({0,   0, 0}), vec3({   0,   0,   0})},
-            {"lowerLegRight", vec3({0,   0, 0}), vec3({  0,   0,   0})},
+            {"upperArmLeft",  vec3({0,   0, 0}), vec3({ -0.2,-0.3,   0.4 }), vec3({ 0, 0, 0 })},
+            {"lowerArmLeft",  vec3({0,   0, 0}), vec3({  0.1,   0,  -0.1 }), vec3({ 0, 0, 0 })},
+            {"upperArmRight", vec3({0,   0, 0}), vec3({ -0.2, 0.3,  -0.4 }), vec3({ 0, 0, 0 })},
+            {"lowerArmRight", vec3({0,   0, 0}), vec3({  0.1,   0,   0.1 }), vec3({ 0, 0, 0 })},
+            {"torso",         vec3({0, 2.8, 0}), vec3({    0,   0,     0 }), vec3({ 0, 0, 0 })},
+            {"head",          vec3({0,   0, 0}), vec3({    0,   0,     0 }), vec3({ 0, 0, 0 })},
+            {"upperLegLeft",  vec3({0,   0, 0}), vec3({  0.4,   0,     0 }), vec3({ 0, 0, 0 })},
+            {"lowerLegLeft",  vec3({0,   0, 0}), vec3({ -0.8,   0,     0 }), vec3({ 0, 0, 0 })},
+            {"upperLegRight", vec3({0,   0, 0}), vec3({  0.4,   0,     0 }), vec3({ 0, 0, 0 })},
+            {"lowerLegRight", vec3({0,   0, 0}), vec3({ -0.8,   0,     0 }), vec3({ 0, 0, 0 })},
         }}),
-        // new std::vector<tBoneTransform>({{
-        //     {"upperArmLeft",  vec3({0,   0, 0}), vec3({   0.1,   0,   0})},
-        //     {"lowerArmLeft",  vec3({0,   0, 0}), vec3({   0.1,   0,  -0})},
-        //     {"upperArmRight", vec3({0,   0, 0}), vec3({   0.1,   0,  -0})},
-        //     {"lowerArmRight", vec3({0,   0, 0}), vec3({   0.1,   0,   0})},
-        //     {"torso",         vec3({0, 2.3, 0}), vec3({   0,   0,   0})},
-        //     {"head",          vec3({0,   0, 0}), vec3({  0,   0,   0})},
-        //     {"upperLegLeft",  vec3({0,   0, 0}), vec3({   0,   0,   0})},
-        //     {"lowerLegLeft",  vec3({0,   0, 0}), vec3({  0,   0,   0})},
-        //     {"upperLegRight", vec3({0,   0, 0}), vec3({   0,   0,   0})},
-        //     {"lowerLegRight", vec3({0,   0, 0}), vec3({  0,   0,   0})},
-        // }}),
+        // frame 7: falling
+        new std::vector<tBoneTransform>({{
+            {"upperArmLeft",  vec3({0,   0, 0}), vec3({ -0.4,-0.35,  0.6 }), vec3({ 0, 0, 0 })},
+            {"lowerArmLeft",  vec3({0,   0, 0}), vec3({  0.3,    0, -0.2 }), vec3({ 0, 0, 0 })},
+            {"upperArmRight", vec3({0,   0, 0}), vec3({ -0.4, 0.35, -0.6 }), vec3({ 0, 0, 0 })},
+            {"lowerArmRight", vec3({0,   0, 0}), vec3({  0.3,    0,  0.2 }), vec3({ 0, 0, 0 })},
+            {"torso",         vec3({0, 1.5, 0}), vec3({    0,    0,    0 }), vec3({ 0, 0, 0 })},
+            {"head",          vec3({0,   0, 0}), vec3({    0,    0,    0 }), vec3({ 0, 0, 0 })},
+            {"upperLegLeft",  vec3({0,   0, 0}), vec3({    0,    0,    0 }), vec3({ 0, 0, 0 })},
+            {"lowerLegLeft",  vec3({0,   0, 0}), vec3({    0,    0,    0 }), vec3({ 0, 0, 0 })},
+            {"upperLegRight", vec3({0,   0, 0}), vec3({    0,    0,    0 }), vec3({ 0, 0, 0 })},
+            {"lowerLegRight", vec3({0,   0, 0}), vec3({    0,    0,    0 }), vec3({ 0, 0, 0 })},
+        }}),
+        // frame 8: landing
+        new std::vector<tBoneTransform>({{
+            {"upperArmLeft",  vec3({0,   0, 0}), vec3({  0.1, 0, 0 }), vec3({ 0, 0, 0 })},
+            {"lowerArmLeft",  vec3({0,   0, 0}), vec3({  0.1, 0, 0 }), vec3({ 0, 0, 0 })},
+            {"upperArmRight", vec3({0,   0, 0}), vec3({  0.1, 0, 0 }), vec3({ 0, 0, 0 })},
+            {"lowerArmRight", vec3({0,   0, 0}), vec3({  0.1, 0, 0 }), vec3({ 0, 0, 0 })},
+            {"torso",         vec3({0,-0.2, 0}), vec3({ -0.2, 0, 0 }), vec3({ 0, 0, 0 })},
+            {"head",          vec3({0,   0, 0}), vec3({ -0.4, 0, 0 }), vec3({ 0, 0, 0 })},
+            {"upperLegLeft",  vec3({0,   0, 0}), vec3({  0.6, 0, 0 }), vec3({ 0, 0, 0 })},
+            {"lowerLegLeft",  vec3({0,   0, 0}), vec3({ -0.6, 0, 0 }), vec3({ 0, 0, 0 })},
+            {"upperLegRight", vec3({0,   0, 0}), vec3({  0.6, 0, 0 }), vec3({ 0, 0, 0 })},
+            {"lowerLegRight", vec3({0,   0, 0}), vec3({ -0.6, 0, 0 }), vec3({ 0, 0, 0 })},
+        }}),
     }});
     return (jumpingAnimation);
 }
@@ -186,81 +233,91 @@ std::unordered_map<std::string, Bone*>  Env::createCharacterSkeleton( void ) {
     bones["head"] = new Bone(
         (std::forward_list<Bone*>){{}},
         "head",
-        vec3({0, 2, 0}),
-        vec3({1, 1, 1}),
-        vec3({0, 0, 0}), vec3({0, -0.5, 0}),
+        vec3({0, 2, 0}),    // position
+        vec3({0, 0, 0}),    // orientation
+        vec3({1, 1, 1}),    // scale
+        vec3({0, -0.5, 0}), // joint
         0xEEAD7E
     );
     bones["lowerLegLeft"] = new Bone(
         (std::forward_list<Bone*>){{}},
         "lowerLegLeft",
         vec3({0, -1.5, 0}),
+        vec3({0, 0, 0}),
         vec3({0.75, 1.5, 0.75}),
-        vec3({0, 0, 0}), vec3({0, 0.75, 0}),
+        vec3({0, 0.75, 0}),
         0x3F5D6A
     );
     bones["lowerLegRight"] = new Bone(
         (std::forward_list<Bone*>){{}},
         "lowerLegRight",
         vec3({0, -1.5, 0}),
+        vec3({0, 0, 0}),
         vec3({0.75, 1.5, 0.75}),
-        vec3({0, 0, 0}), vec3({0, 0.75, 0}),
+        vec3({0, 0.75, 0}),
         0x3F5D6A
     );
     bones["upperLegLeft"] = new Bone(
         (std::forward_list<Bone*>){ bones["lowerLegLeft"] },
         "upperLegLeft",
         vec3({-0.624, -2.25, 0}),
+        vec3({0, 0, 0}),
         vec3({0.75, 1.5, 0.75}),
-        vec3({0, 0, 0}), vec3({-0.375, 0.75, 0}),
+        vec3({-0.375, 0.75, 0}),
         0x3F5D6A
     );
     bones["upperLegRight"] = new Bone(
         (std::forward_list<Bone*>){ bones["lowerLegRight"] },
         "upperLegRight",
         vec3({0.624, -2.25, 0}),
+        vec3({0, 0, 0}),
         vec3({0.75, 1.5, 0.75}),
-        vec3({0, 0, 0}), vec3({0.375, 0.75, 0}),
+        vec3({0.375, 0.75, 0}),
         0x3F5D6A
     );
     bones["lowerArmLeft"] = new Bone(
         (std::forward_list<Bone*>){{}},
         "lowerArmLeft",
         vec3({0, -1.5, 0}),
+        vec3({0, 0, 0}),
         vec3({0.6, 1.5, 0.6}),
-        vec3({0, 0, 0}), vec3({0, 0.75, 0}),
+        vec3({0, 0.75, 0}),
         0xEEAD7E
     );
     bones["lowerArmRight"] = new Bone(
         (std::forward_list<Bone*>){{}},
         "lowerArmRight",
         vec3({0, -1.5, 0}),
+        vec3({0, 0, 0}),
         vec3({0.6, 1.5, 0.6}),
-        vec3({0, 0, 0}), vec3({0, 0.75, 0}),
+        vec3({0, 0.75, 0}),
         0xEEAD7E
     );
     bones["upperArmLeft"] = new Bone(
         (std::forward_list<Bone*>){ bones["lowerArmLeft"] },
         "upperArmLeft",
         vec3({-1.3, 0.75, 0}),
+        vec3({0, 0, 0}),
         vec3({0.6, 1.5, 0.6}),
-        vec3({0, 0, 0}), vec3({0.3, 0.75, 0}),
+        vec3({0.3, 0.75, 0}),
         0x408467
     );
     bones["upperArmRight"] = new Bone(
         (std::forward_list<Bone*>){ bones["lowerArmRight"] },
         "upperArmRight",
         vec3({1.3, 0.75, 0}),
+        vec3({0, 0, 0}),
         vec3({0.6, 1.5, 0.6}),
-        vec3({0, 0, 0}), vec3({-0.3, 0.75, 0}),
+        vec3({-0.3, 0.75, 0}),
         0x408467
     );
     bones["torso"] = new Bone(
         (std::forward_list<Bone*>){{ bones["head"], bones["upperArmLeft"], bones["upperArmRight"], bones["upperLegLeft"], bones["upperLegRight"] }},
         "torso",
+        vec3({0, -0.5, 0}),
         vec3({0, 0, 0}),
         vec3({2, 3, 0.9}),
-        vec3({0, 0, 0}), vec3({0, 0, 0}),
+        vec3({0, 0, 0}),
         0x43876A
     );
     return (bones);

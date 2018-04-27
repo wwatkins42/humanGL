@@ -28,6 +28,7 @@ typedef struct  sBoneTransform {
     std::string boneId;
     vec3        translation;
     vec3        rotation;
+    vec3        scale;
 }               tBoneTransform;
 
 typedef std::vector<std::vector<tBoneTransform>*> tAnimationFrames;
@@ -45,7 +46,7 @@ public:
     size_t                  getNextFrame( void );
     float                   getFrameInterpolation( eFrameInterpolation interpolation = none );
     tMilliseconds           getElapsedMilliseconds( void );
-    
+
     Skeleton*               getSkeleton( void ) const { return (skeleton); };
     size_t                  getFrameDuration( void ) const { return (frameDuration); };
     const tAnimationFrames* getFrames( void ) const { return (frames); };

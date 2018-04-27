@@ -42,6 +42,7 @@ private:
     static void framebufferSizeCallback( GLFWwindow* window, int width, int height );
 
     std::unordered_map<std::string, Bone*>  createCharacterSkeleton( void );
+    tAnimationFrames*                       createIdleAnimation( void );
     tAnimationFrames*                       createWalkingAnimation( void );
     tAnimationFrames*                       createJumpingAnimation( void );
 };

@@ -1,12 +1,13 @@
 #include "Model.hpp"
 
 // NOTE: Change that to a parser of .obj, like in scop but cleaner
+/* Cube */
 std::array<GLfloat, 24> vertices = {{
     // front
-    -0.5, -0.5,  0.5,
-     0.5, -0.5,  0.5,
-     0.5,  0.5,  0.5,
-    -0.5,  0.5,  0.5,
+    -0.5, -0.5,  0.5, // bottom-left
+     0.5, -0.5,  0.5, // bottom-right
+     0.5,  0.5,  0.5, // top-right
+    -0.5,  0.5,  0.5, // top-left
     // back
     -0.5, -0.5, -0.5,
      0.5, -0.5, -0.5,
@@ -22,7 +23,27 @@ std::array<unsigned int, 36> indices = {{
     3, 2, 6,  6, 7, 3, // top
 }};
 
-Model::Model( const vec3& translation, const vec3& scale, const vec3& rotation, const vec3& joint, const int64_t color ) : translation(translation), scale(scale), rotation(rotation), joint(joint), color(hex2vec(color)) {
+/* Polyhedron */
+// std::array<GLfloat, 18> vertices = {{
+//     -0.5, 0.0, -0.5, // front-left  | 0
+//      0.5, 0.0, -0.5, // front-right | 1
+//     -0.5, 0.0,  0.5, // back-left   | 2
+//      0.5, 0.0,  0.5, // back-right  | 3
+//      0.0, 0.5,  0.0, // top         | 4
+//      0.0,-0.5,  0.0, // bottom      | 5
+// }};
+// std::array<unsigned int, 24> indices = {{
+//     0, 1, 4,// top-front
+//     0, 2, 4,// top-left
+//     2, 3, 4,// top-back
+//     3, 1, 4,// top-right
+//     0, 1, 5,// bottom-front
+//     0, 2, 5,// bottom-left
+//     2, 3, 5,// bottom-back
+//     3, 1, 5,// bottom-right
+// }};
+
+Model::Model( const vec3& position, const vec3& orientation, const vec3& scale, const vec3& joint, const int64_t color ) : position(position), orientation(orientation), scale(scale), joint(joint), color(hex2vec(color)) {
     this->initBufferObjects(GL_STATIC_DRAW);
     this->externalTransform.identity();
 }
@@ -45,13 +66,12 @@ Model::~Model( void ) {
 void    Model::update( const mat4& parentTransform ) {
     /* this is the non-scaled transform passed as parentTransform for children */
     this->nst.identity();
-    this->nst = mtls::translate(this->nst, this->translation);
-    this->nst = mtls::rotate(this->nst, this->rotation, this->joint);
-    // this->nst = this->nst *  parentTransform;
+    this->nst = mtls::translate(this->nst, this->position);
+    this->nst = mtls::rotate(this->nst, this->orientation, this->joint);
     this->nst = this->externalTransform * this->nst * parentTransform;
     /* the transformation matrix used to display the model */
     this->transform = this->nst;
-    this->transform = mtls::scale(this->transform, this->scale);
+    this->transform = mtls::scale(this->transform, this->scale + this->scaling);
 }
 
 void    Model::render( Shader* shader ) {

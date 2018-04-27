@@ -2,7 +2,7 @@
 
 Skeleton::Skeleton( std::unordered_map<std::string, Bone*> bones, const std::string& parentBoneId ) : bones(bones), parentBoneId(parentBoneId) {
     this->parentBone = this->bones[this->parentBoneId];
-    this->parentBone->getModel()->setRotation(vec3({0, -0.6f, 0}));
+    // this->parentBone->getModel()->setOrientation(vec3({0, -0.6f, 0}));
 }
 
 Skeleton::Skeleton( const Skeleton& rhs ) {
@@ -20,6 +20,7 @@ Skeleton::~Skeleton( void ) {
 
 void    Skeleton::update( void ) {
     this->parentBone->update(mtls::mat4identity);
+    this->bones["torso"]->getModel()->setOrientation(vec3({0, (float)glfwGetTime()*0.5f, 0}));
     // this->bones["upperArmLeft"]->getModel()->setRotation(vec3({0, 0, (float)std::cos(glfwGetTime()*4)*0.99f+0.99f}));
     // this->bones["torso"]->getModel()->setRotation(vec3({0, -0.5f+(float)std::cos(glfwGetTime()*2)*0.55f, 0}));
     /* dynamic rescale, I'll do that with switch during animation */
