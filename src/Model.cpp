@@ -103,7 +103,8 @@ void    Model::initBufferObjects( int mode ) {
     std::vector<GLuint>     indices;
 
     // createCube(vertices, indices);
-    createSphere(vertices, indices, 1.25f, 40, 40);
+    createSphere(vertices, indices, 1.2f, 4, 40); // 4, 20 is nice
+    // createSphere(vertices, indices, 1.25f, 40, 40);
     this->nIndices = indices.size();
 
     // gen buffers and vertex arrays
