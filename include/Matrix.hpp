@@ -217,6 +217,30 @@ namespace mtls {
             res(i) = (v[i] < 0.0f ? -1 : v[i] == 0.0f ? 0 : 1);
         return (res);
     }
+    /* divide a vector by its magnitude */
+    template<size_t H>
+    float   magnitude( const Mat2d<float,H,1>& v ) {
+        float   res = 0;
+        for (size_t i = 0; i < H; ++i)
+            res += (v[i] * v[i]);
+        return (std::sqrt(res));
+    }
+    /* divide a vector by its magnitude */
+    template<size_t H>
+    Mat2d<float,H,1>  normalize( const Mat2d<float,H,1>& v ) {
+        float magnitude = mtls::magnitude(v);
+        if (magnitude == 0.0f)
+            return (v);
+        return (v / magnitude);
+    }
+    /* dot product of two vectors */
+    template<size_t H>
+    float   dot(Mat2d<float,H,1> v0, Mat2d<float,H,1> v1) {
+        float   res = 0;
+        for (size_t i = 0; i < H; ++i)
+            res += (v0[i] * v1[i]);
+        return (res);
+    }
     /* element wise multiply */
     template<typename T, size_t H, size_t W>
     Mat2d<T,H,W>    multiply( const Mat2d<T,H,W>& a, const Mat2d<T,H,W>& b ) {

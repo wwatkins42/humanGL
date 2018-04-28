@@ -14,6 +14,7 @@
 #include "Shader.hpp"
 #include "Matrix.hpp"
 #include "Camera.hpp"
+#include "Controller.hpp"
 
 class Renderer {
 
@@ -23,13 +24,15 @@ public:
     Renderer& operator=( const Renderer& rhs );
     ~Renderer( void );
 
-    void	keyHandler( void );
     void	loop( void );
 
+    Env*    getEnv( void ) const { return (env); };
+
 private:
-    Env*    env;
-    Shader  shader;
-    Camera  camera;
+    Env*        env;
+    Shader      shader;
+    Camera      camera;
+    Controller  controller;
 
     void    updateShaderUniforms( void );
 
