@@ -10,7 +10,6 @@
 #include <chrono>
 
 #include "Exception.hpp"
-#include "Env.hpp"
 #include "Animator.hpp"
 #include "Camera.hpp"
 #include "Matrix.hpp"
@@ -44,27 +43,27 @@ typedef struct  sMouse {
 class Controller {
 
 public:
-    Controller( Env* environment );
+    Controller( GLFWwindow* window );
     ~Controller( void );
 
-    void    mouseHandler( void );
-    void	keyHandler( void );
-
-    void    keyUpdate( int k );
-    void    keyToggle( int k, int value );
-    void    keyCooldown( int k, int value );
-
+    void            update( void );
     void            setKeyProperties( int k, keyMode::eKeyMode type, uint cooldown );
-    tMilliseconds   getElapsedMilliseconds( tTimePoint prev );
-
+    /* getters */
     short           getKeyValue( int k ) const { return (key[k].value); };
     short           getMouseButtonValue( int b ) const { return (mouse.button[b]); };
     const vec2d&    getMousePosition( void ) const { return (mouse.pos); };
 
 private:
-    Env*                    env;
+    GLFWwindow*             window;
     std::array<tKey, N_KEY> key;
     tTimePoint              ref;
     tMouse                  mouse;
+
+    void            mouseHandler( void );
+    void            keyHandler( void );
+    void            keyUpdate( int k );
+    void            keyToggle( int k, int value );
+    void            keyCooldown( int k, int value );
+    tMilliseconds   getElapsedMilliseconds( tTimePoint prev );
 
 };

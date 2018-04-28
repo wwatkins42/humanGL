@@ -7,11 +7,13 @@ Env::Env( void ) : character() {
         // glad : load all OpenGL function pointers
         if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
             throw Exception::InitError("glad initialization failed");
+        this->controller = new Controller(this->window.ptr);
         // this->character = new Skeleton(this->createCharacterSkeleton(), "torso");
         this->character = new Skeleton(this->createBetterCharacterSkeleton(), "torso");
         // this->animator  = new Animator(this->character, this->createIdleAnimation(), 1800);
         this->animator  = new Animator(this->character, this->createBetterWalkingAnimation(), 700);
         // this->animator  = new Animator(this->character, this->createJumpingAnimation(), 1100);
+        this->setupController();
     } catch (const std::exception& err) {
         std::cout << err.what() << std::endl;
     }
@@ -29,6 +31,7 @@ Env & Env::operator=( const Env& rhs ) {
 Env::~Env( void ) {
     delete this->character;
     delete this->animator;
+    delete this->controller;
     glfwDestroyWindow(this->window.ptr);
     glfwTerminate();
 }
@@ -54,6 +57,15 @@ void	Env::initGlfwWindow( size_t width, size_t height ) {
 	glfwSetInputMode(this->window.ptr, GLFW_STICKY_KEYS, 1);
     this->window.width = width;
     this->window.height = height;
+}
+
+void    Env::setupController( void ) {
+    /* animations pick keys */
+    this->controller->setKeyProperties(GLFW_KEY_1, keyMode::cooldown, 350);
+    this->controller->setKeyProperties(GLFW_KEY_2, keyMode::cooldown, 350);
+    this->controller->setKeyProperties(GLFW_KEY_3, keyMode::cooldown, 350);
+    /* other */
+    this->controller->setKeyProperties(GLFW_KEY_SPACE, keyMode::toggle, 250);
 }
 
 void    Env::framebufferSizeCallback( GLFWwindow* window, int width, int height ) {

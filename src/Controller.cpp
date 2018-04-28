@@ -1,28 +1,32 @@
 #include "Controller.hpp"
 
-Controller::Controller( Env* env ) : env(env) {
+Controller::Controller( GLFWwindow* window ) : window(window) {
     this->ref = std::chrono::steady_clock::now();
-    this->setKeyProperties(GLFW_KEY_SPACE, keyMode::toggle, 250);
 }
 
 Controller::~Controller( void ) {
 }
 
+void    Controller::update( void ) {
+    this->mouseHandler();
+    this->keyHandler();
+}
+
 void    Controller::mouseHandler( void ) {
-    glfwGetCursorPos(this->env->getWindow().ptr, &(this->mouse.pos(0)), &(this->mouse.pos(1)));
+    glfwGetCursorPos(this->window, &(this->mouse.pos(0)), &(this->mouse.pos(1)));
     for (size_t b = 0; b < N_MOUSE_BUTTON; ++b)
-        this->mouse.button[b] = (glfwGetMouseButton(this->env->getWindow().ptr, b) == GLFW_PRESS);
+        this->mouse.button[b] = (glfwGetMouseButton(this->window, b) == GLFW_PRESS);
 }
 
 void    Controller::keyHandler( void ) {
-	if (glfwGetKey(this->env->getWindow().ptr, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-		glfwSetWindowShouldClose(this->env->getWindow().ptr, GL_TRUE);
+	if (glfwGetKey(this->window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+		glfwSetWindowShouldClose(this->window, GL_TRUE);
     for (size_t k = 0; k < N_KEY; ++k)
         this->keyUpdate(k);
 }
 
 void	Controller::keyUpdate( int k ) {
-    const short value = (glfwGetKey(this->env->getWindow().ptr, k) == GLFW_PRESS);
+    const short value = (glfwGetKey(this->window, k) == GLFW_PRESS);
     switch (this->key[k].type) {
         case keyMode::toggle: this->keyToggle(k, value); break;
         case keyMode::cooldown: this->keyCooldown(k, value); break;
@@ -46,6 +50,7 @@ void    Controller::keyCooldown( int k, int value ) {
     }
     if (getElapsedMilliseconds(this->key[k].last).count() > this->key[k].cooldown)
         this->key[k].value = 0;
+    std::cout << this->key[k].value << std::endl;
 }
 
 void    Controller::setKeyProperties( int k, keyMode::eKeyMode type, uint cooldown ) {
