@@ -10,8 +10,8 @@ Env::Env( void ) : character() {
         this->controller = new Controller(this->window.ptr);
         // this->character = new Skeleton(this->createCharacterSkeleton(), "torso");
         this->character = new Skeleton(this->createBetterCharacterSkeleton(), "torso");
-        // this->animator  = new Animator(this->character, this->createIdleAnimation(), 1800);
-        this->animator  = new Animator(this->character, this->createBetterWalkingAnimation(), 700);
+        this->animator  = new Animator(this->character, this->createIdleAnimation(), 1800);
+        // this->animator  = new Animator(this->character, this->createBetterWalkingAnimation(), 700);
         // this->animator  = new Animator(this->character, this->createJumpingAnimation(), 1100);
         this->setupController();
     } catch (const std::exception& err) {

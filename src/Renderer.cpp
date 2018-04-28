@@ -2,12 +2,12 @@
 
 Renderer::Renderer( Env* env ) :
     env(env),
-    camera(90, (float)env->getWindow().width / (float)env->getWindow().height, projection::perspective),
+    camera(90, (float)env->getWindow().width / (float)env->getWindow().height),
     shader("./shader/vertex.glsl", "./shader/fragment.glsl") {
 }
 
 Renderer::Renderer( const Renderer& rhs ) :
-    camera(90, (float)env->getWindow().width / (float)env->getWindow().height, projection::perspective),
+    camera(90, (float)env->getWindow().width / (float)env->getWindow().height),
     shader("./shader/vertex.glsl", "./shader/fragment.glsl") {
     *this = rhs;
 }
@@ -27,6 +27,17 @@ void	Renderer::loop( void ) {
         glClearColor(0.09f, 0.08f, 0.15f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         this->env->getController()->update();
+
+        // float radius = 10.0f;
+        // float camX = std::sin(glfwGetTime()*3) * radius;
+        // float camZ = std::cos(glfwGetTime()*3) * radius;
+        // std::cout << vec3({camX, 10.0, camZ}) << std::endl;
+        // mat4 view = mtls::lookAt(vec3({camX, 2, camZ}), vec3({0.0, 0.0, 0.0}));
+        // this->camera.getViewMatrix() = view;
+
+        // mat4 view = mtls::lookAt(vec3({camX, 2, camZ}), vec3({0.0, 0.0, 0.0}));
+        // this->camera.getViewMatrix() = view;
+
         this->shader.use();
         this->updateShaderUniforms();
         this->env->getAnimator()->update();

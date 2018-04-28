@@ -10,17 +10,10 @@
 #include "Exception.hpp"
 #include "Matrix.hpp"
 
-namespace projection {
-    enum eProjectionType {
-        orthographic,
-        perspective,
-    };
-}
-
 class Camera {
 
 public:
-    Camera( float fov, float aspect, short projectionType = projection::perspective );
+    Camera( float fov, float aspect );
     Camera( const Camera& rhs );
     Camera& operator=( const Camera& rhs );
     ~Camera( void );
@@ -35,12 +28,14 @@ public:
     float       getAspect( void ) const { return (aspect); };
 
     static mat4 createPerspectiveProjectionMatrix( float fov, float aspect, float near = 0.1, float far = 100.0 );
-    static mat4 createOrthographicProjectionMatrix( float aspect, float near = 0.1, float far = 100.0 );
 
 private:
     mat4    projectionMatrix;
     mat4    viewMatrix;
     float   fov;
     float   aspect;
+
+    vec3    position;
+    vec3    direction;
 
 };

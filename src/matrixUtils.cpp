@@ -14,6 +14,14 @@ vec3    mtls::createAxisUnitVec3( size_t index ) {
     return (res);
 }
 
+vec3    mtls::cross( const vec3& v0, const vec3& v1 ) {
+    return vec3({
+        v0[1] * v1[2] - v0[2] * v1[1],
+        v0[2] * v1[0] - v0[0] * v1[2],
+        v0[0] * v1[1] - v0[1] * v1[0]
+    });
+}
+
 mat4    &mtls::scale( mat4& m, const vec3& s ) {
     const mat4    tmp({
         s[0], 0, 0, 0,
@@ -34,6 +42,21 @@ mat4    &mtls::translate( mat4& m, const vec3& t ) {
     });
     m = tmp * m;
     return (m);
+}
+
+/*  creates a view matrix that looks at a target from a position,
+    could have issues with camera looking straight up or down.
+*/
+mat4    mtls::lookAt( const vec3& from, const vec3& to, const vec3& tmp ) {
+    vec3 forward = normalize(from - to);
+    vec3 right   = normalize(cross(tmp, forward));
+    vec3 up      = cross(forward, right);
+    return mat4({
+                 right[0],          up[0],          forward[0], 0,
+                 right[1],          up[1],          forward[1], 0,
+                 right[2],          up[2],          forward[2], 0,
+        -dot(right, from), -dot(up, from), -dot(forward, from), 1
+    });
 }
 
 /* rotate around an offset position */

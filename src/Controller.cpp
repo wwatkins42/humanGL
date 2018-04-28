@@ -27,6 +27,7 @@ void    Controller::keyHandler( void ) {
 
 void	Controller::keyUpdate( int k ) {
     const short value = (glfwGetKey(this->window, k) == GLFW_PRESS);
+
     switch (this->key[k].type) {
         case keyMode::toggle: this->keyToggle(k, value); break;
         case keyMode::cooldown: this->keyCooldown(k, value); break;
@@ -34,7 +35,7 @@ void	Controller::keyUpdate( int k ) {
     };
 }
 
-void    Controller::keyToggle( int k, int value ) {
+void    Controller::keyToggle( int k, short value ) {
     if (value && getElapsedMilliseconds(this->key[k].last).count() > this->key[k].cooldown) {
         this->key[k].value = ~(this->key[k].value) & 0x1;
         this->key[k].last = std::chrono::steady_clock::now();
@@ -43,14 +44,13 @@ void    Controller::keyToggle( int k, int value ) {
         this->key[k].last = this->ref;
 }
 
-void    Controller::keyCooldown( int k, int value ) {
+void    Controller::keyCooldown( int k, short value ) {
     if (value && !this->key[k].value) {
         this->key[k].value = 1;
         this->key[k].last = std::chrono::steady_clock::now();
     }
     if (getElapsedMilliseconds(this->key[k].last).count() > this->key[k].cooldown)
         this->key[k].value = 0;
-    std::cout << this->key[k].value << std::endl;
 }
 
 void    Controller::setKeyProperties( int k, keyMode::eKeyMode type, uint cooldown ) {

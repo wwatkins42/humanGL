@@ -62,8 +62,8 @@ private:
     void            mouseHandler( void );
     void            keyHandler( void );
     void            keyUpdate( int k );
-    void            keyToggle( int k, int value );
-    void            keyCooldown( int k, int value );
+    void            keyToggle( int k, short value );
+    void            keyCooldown( int k, short value );
     tMilliseconds   getElapsedMilliseconds( tTimePoint prev );
 
 };
