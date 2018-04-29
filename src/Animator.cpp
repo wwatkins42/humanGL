@@ -1,43 +1,63 @@
 #include "Animator.hpp"
 
-Animator::Animator( Skeleton* skeleton, tAnimationFrames* animation, size_t cycleDuration ) : skeleton(skeleton), frames(animation) {
+Animator::Animator( Skeleton* skeleton, std::vector<tAnimation> animations ) : skeleton(skeleton), animations(animations) {
+    if (animations.size() == 0)
+        throw Exception::RuntimeError("Animator should contain at least one tAnimation");
     this->pTimepoint = std::chrono::steady_clock::now();
-    this->frameDuration = cycleDuration / static_cast<float>(this->frames->size());
+    this->cAnim = 0;
     this->cFrame = 0;
-}
-
-Animator::Animator( const Animator& rhs ) {
-    *this = rhs;
-}
-
-Animator& Animator::operator=( const Animator& rhs ) {
-    (void)rhs;
-    return (*this);
+    this->cFrameDuration = this->animations[0].cycleDuration / static_cast<float>(this->animations[0].frames->size());
+    this->selectAnim(0);
 }
 
 Animator::~Animator( void ) {
-    for (size_t i = 0; i < this->frames->size(); ++i)
-        delete (*this->frames)[i];
-    delete this->frames;
+    for (size_t a = 0; a < this->animations.size(); ++a) {
+        for (size_t i = 0; i < this->animations[a].frames->size(); ++i)
+            delete (*this->animations[a].frames)[i];
+        delete this->animations[a].frames;
+    }
+}
+
+void    Animator::selectAnim( size_t id ) {
+    if (id >= this->animations.size())
+        id = this->animations.size() - 1;
+    // Maybe do a smooth transition between animations ??
+    if (this->cAnim != id) {
+        /* reset all the bones' externalTransform to identity matrix */
+        if (this->animations[cAnim].frames->size() > 1) {
+            for (size_t i = 0; i < (*this->animations[cAnim].frames)[this->cFrame]->size(); ++i) {
+                tBoneTransform curr = (*(*this->animations[cAnim].frames)[this->cFrame])[i];
+                (*this->skeleton)[curr.boneId]->rescale(vec3({0, 0, 0}));
+                (*this->skeleton)[curr.boneId]->getModel()->setExternalTransform(mtls::mat4identity);
+            }
+            this->skeleton->update();
+        }
+        /* update the current variables */
+        this->cAnim = id;
+        this->cFrame = 0;
+        this->cFrameDuration = this->animations[id].cycleDuration / static_cast<float>(this->animations[id].frames->size());
+    }
 }
 
 void    Animator::update( void ) {
-    if (this->getElapsedMilliseconds().count() > this->frameDuration) {
+    if (this->getElapsedMilliseconds().count() > this->cFrameDuration) {
         this->pTimepoint = std::chrono::steady_clock::now();
         this->cFrame = this->getNextFrame();
     }
-    float   t = this->getFrameInterpolation(none);
-    mat4    transform;
-    for (size_t i = 0; i < (*this->frames)[this->cFrame]->size(); ++i) {
-        tBoneTransform curr = (*(*this->frames)[this->cFrame])[i];
-        tBoneTransform next = (*(*this->frames)[this->getNextFrame()])[i];
-        if (this->skeleton->getBones().find(curr.boneId) == this->skeleton->getBones().end())
-            continue;
-        (*this->skeleton)[curr.boneId]->rescale(mtls::lerp(curr.scale, next.scale, t));
-        transform.identity();
-        mtls::translate(transform, mtls::lerp(curr.translation, next.translation, t));
-        mtls::rotate(transform, mtls::lerp(curr.rotation, next.rotation, t), (*this->skeleton)[curr.boneId]->getModel()->getJoint());
-        (*this->skeleton)[curr.boneId]->getModel()->setExternalTransform(transform);
+    if (this->animations[cAnim].frames->size() > 1) {
+        float   t = this->getFrameInterpolation(none);
+        mat4    transform;
+        for (size_t i = 0; i < (*this->animations[cAnim].frames)[this->cFrame]->size(); ++i) {
+            tBoneTransform curr = (*(*this->animations[cAnim].frames)[this->cFrame])[i];
+            tBoneTransform next = (*(*this->animations[cAnim].frames)[this->getNextFrame()])[i];
+            if (this->skeleton->getBones().find(curr.boneId) == this->skeleton->getBones().end())
+                continue;
+            (*this->skeleton)[curr.boneId]->rescale(mtls::lerp(curr.scale, next.scale, t));
+            transform.identity();
+            mtls::translate(transform, mtls::lerp(curr.translation, next.translation, t));
+            mtls::rotate(transform, mtls::lerp(curr.rotation, next.rotation, t), (*this->skeleton)[curr.boneId]->getModel()->getJoint());
+            (*this->skeleton)[curr.boneId]->getModel()->setExternalTransform(transform);
+        }
     }
     this->skeleton->update();
 }
@@ -47,11 +67,11 @@ tMilliseconds   Animator::getElapsedMilliseconds( void ) {
 }
 
 size_t  Animator::getNextFrame( void ) {
-    return (this->cFrame + 1 >= this->frames->size() ? 0 : this->cFrame + 1);
+    return (this->cFrame + 1 >= this->animations[cAnim].frames->size() ? 0 : this->cFrame + 1);
 }
 
 float   Animator::getFrameInterpolation( eFrameInterpolation interpolation ) {
-    float t = (1 - (this->frameDuration - this->getElapsedMilliseconds().count()) / this->frameDuration);
+    float t = (1 - (this->cFrameDuration - this->getElapsedMilliseconds().count()) / this->cFrameDuration);
     switch (interpolation) {
         case sinerp:       return(std::sin(t * M_PI * 0.5f));
         case coserp:       return(std::cos(t * M_PI * 0.5f));

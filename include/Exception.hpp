@@ -136,4 +136,21 @@ namespace Exception {
         std::string msg;
     };
 
+    class RuntimeError : public std::exception {
+
+    public:
+        RuntimeError( const std::string& str ) {
+            std::stringstream ss;
+            ss << "RuntimeError : " << str;
+            msg = ss.str();
+        }
+        virtual const char* what() const noexcept {
+            return (msg.c_str());
+        }
+
+    private:
+        std::string msg;
+    };
+
+
 }

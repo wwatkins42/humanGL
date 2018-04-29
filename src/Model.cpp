@@ -57,6 +57,7 @@ void    createCube(std::vector<GLfloat>& vertices, std::vector<GLuint>& indices)
 Model::Model( const vec3& position, const vec3& orientation, const vec3& scale, const vec3& joint, const int64_t color ) : position(position), orientation(orientation), scale(scale), joint(joint), color(hex2vec(color)) {
     this->nIndices = 0;
     this->initBufferObjects(GL_STATIC_DRAW);
+    this->nst.identity();
     this->externalTransform.identity();
 }
 
@@ -76,14 +77,16 @@ Model::~Model( void ) {
 }
 
 void    Model::update( const mat4& parentTransform ) {
+    /* NOTE: We could pushMatrix() here, before we perform transformations
+             we wouldn't have to do identity each time then */
     /* this is the non-scaled transform passed as parentTransform for children */
-    this->nst.identity();
-    this->nst = mtls::translate(this->nst, this->position);
-    this->nst = mtls::rotate(this->nst, this->orientation, this->joint);
+    this->nst.identity(); // REMOVE
+    mtls::translate(this->nst, this->position);
+    mtls::rotate(this->nst, this->orientation, this->joint);
     this->nst = this->externalTransform * this->nst * parentTransform;
     /* the transformation matrix used to display the model */
-    this->transform = this->nst;
-    this->transform = mtls::scale(this->transform, this->scale + this->scaling);
+    this->transform = this->nst; // REMOVE
+    mtls::scale(this->transform, this->scale + this->scaling);
 }
 
 void    Model::render( Shader* shader ) {
@@ -91,6 +94,8 @@ void    Model::render( Shader* shader ) {
     shader->setMat4UniformValue("model", this->transform);
     glBindVertexArray(this->vao);
     glDrawElements(GL_TRIANGLES, this->nIndices, GL_UNSIGNED_INT, 0);
+    /* NOTE: We could popMatrix() here, to restore the matrix state after the
+             object is rendered */
 }
 
 void    Model::initBufferObjects( int mode ) {

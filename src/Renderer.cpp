@@ -35,8 +35,15 @@ void	Renderer::loop( void ) {
         // mat4 view = mtls::lookAt(vec3({camX, 2, camZ}), vec3({0.0, 0.0, 0.0}));
         // this->camera.getViewMatrix() = view;
 
-        // mat4 view = mtls::lookAt(vec3({camX, 2, camZ}), vec3({0.0, 0.0, 0.0}));
-        // this->camera.getViewMatrix() = view;
+        // TMP: animation switch
+        if (this->env->getController()->getKeyValue(GLFW_KEY_1))
+            this->env->getAnimator()->selectAnim(0);
+        else if (this->env->getController()->getKeyValue(GLFW_KEY_2))
+            this->env->getAnimator()->selectAnim(1);
+        else if (this->env->getController()->getKeyValue(GLFW_KEY_3))
+            this->env->getAnimator()->selectAnim(2);
+        else if (this->env->getController()->getKeyValue(GLFW_KEY_4))
+            this->env->getAnimator()->selectAnim(3);
 
         this->shader.use();
         this->updateShaderUniforms();

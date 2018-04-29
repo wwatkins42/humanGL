@@ -10,12 +10,6 @@
 #include "Matrix.hpp"
 #include "Bone.hpp"
 
-// enum eAnimationPlay {
-//     once,
-//     loop,
-//     reverse
-// };
-
 enum eFrameInterpolation {
     none,
     sinerp,
@@ -34,28 +28,34 @@ typedef struct  sBoneTransform {
 typedef std::vector<std::vector<tBoneTransform>*> tAnimationFrames;
 typedef std::chrono::duration<double,std::milli> tMilliseconds;
 
+typedef struct  sAnimation {
+    tAnimationFrames*   frames;
+    size_t              cycleDuration;
+}               tAnimation;
+
 class Animator {
 
 public:
-    Animator( Skeleton* skeleton, tAnimationFrames* animation, size_t cycleDuration = 500 );
-    Animator( const Animator& rhs );
-    Animator& operator=( const Animator& rhs );
+    Animator( Skeleton* skeleton, std::vector<tAnimation> animations );
     ~Animator( void );
 
+    void                    selectAnim( size_t id );
     void                    update( void );
     size_t                  getNextFrame( void );
     float                   getFrameInterpolation( eFrameInterpolation interpolation = none );
     tMilliseconds           getElapsedMilliseconds( void );
 
     Skeleton*               getSkeleton( void ) const { return (skeleton); };
-    size_t                  getFrameDuration( void ) const { return (frameDuration); };
-    const tAnimationFrames* getFrames( void ) const { return (frames); };
+    size_t                  getCAnim( void ) const { return (cAnim); };
+    size_t                  getCFrame( void ) const { return (cFrame); };
+    size_t                  getCFrameDuration( void ) const { return (cFrameDuration); };
 
 private:
     Skeleton*                               skeleton;
-    tAnimationFrames*                       frames;
-    size_t                                  frameDuration; // the duration of a frame in milliseconds
+    std::vector<tAnimation>                 animations;
+    size_t                                  cAnim;
     size_t                                  cFrame;
+    size_t                                  cFrameDuration;
     std::chrono::steady_clock::time_point   pTimepoint;
 
 };
