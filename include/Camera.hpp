@@ -6,10 +6,14 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <chrono> // NEW
 
 #include "Exception.hpp"
 #include "Matrix.hpp"
 #include "Controller.hpp"
+
+typedef std::chrono::duration<double,std::milli> tMilliseconds;
+typedef std::chrono::steady_clock::time_point tTimePoint;
 
 class Camera {
 
@@ -18,6 +22,9 @@ public:
     Camera( const Camera& rhs );
     Camera& operator=( const Camera& rhs );
     ~Camera( void );
+
+    tMilliseconds   getElapsedMilliseconds( tTimePoint last );
+    vec3        interpolate( const vec3& v0, const vec3& v1, tTimePoint last, size_t duration = 250 );
 
     void        handleKeys( const std::array<tKey, N_KEY>& keys, const vec3& lockPos );
     /* Setters */

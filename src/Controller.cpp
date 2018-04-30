@@ -39,7 +39,9 @@ void    Controller::keyToggle( int k, short value ) {
     if (value && getElapsedMilliseconds(this->key[k].last).count() > this->key[k].cooldown) {
         this->key[k].value = ~(this->key[k].value) & 0x1;
         this->key[k].last = std::chrono::steady_clock::now();
+        this->key[k].stamp = std::chrono::steady_clock::now();
     }
+    /* so that when we unpress the key we can switch immediatly */
     if (!value)
         this->key[k].last = this->ref;
 }
@@ -48,6 +50,7 @@ void    Controller::keyCooldown( int k, short value ) {
     if (value && !this->key[k].value) {
         this->key[k].value = 1;
         this->key[k].last = std::chrono::steady_clock::now();
+        this->key[k].stamp = std::chrono::steady_clock::now();
     }
     if (getElapsedMilliseconds(this->key[k].last).count() > this->key[k].cooldown)
         this->key[k].value = 0;

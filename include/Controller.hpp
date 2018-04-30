@@ -29,6 +29,7 @@ typedef struct  sKey {
     eKeyMode            type = eKeyMode::press;
     uint                cooldown = 250;
     tTimePoint          last = std::chrono::steady_clock::now();
+    tTimePoint          stamp = std::chrono::steady_clock::now();
 }               tKey;
 
 typedef struct  sMouse {
