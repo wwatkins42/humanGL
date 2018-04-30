@@ -62,6 +62,30 @@ void    Animator::update( void ) {
     this->skeleton->update();
 }
 
+
+// void    Animator::update( void ) {
+//     if (this->getElapsedMilliseconds().count() > this->cFrameDuration) {
+//         this->pTimepoint = std::chrono::steady_clock::now();
+//         this->cFrame = this->getNextFrame();
+//     }
+//     if (this->animations[cAnim].frames->size() > 1) {
+//         float   t = this->getFrameInterpolation(none);
+//         mat4    transform;
+//         for (size_t i = 0; i < (*this->animations[cAnim].frames)[this->cFrame]->size(); ++i) {
+//             tBoneTransform curr = (*(*this->animations[cAnim].frames)[this->cFrame])[i];
+//             tBoneTransform next = (*(*this->animations[cAnim].frames)[this->getNextFrame()])[i];
+//             if (this->skeleton->getBones().find(curr.boneId) == this->skeleton->getBones().end())
+//                 continue;
+//             (*this->skeleton)[curr.boneId]->rescale(mtls::lerp(curr.scale, next.scale, t));
+//             transform.identity();
+//             mtls::translate(transform, mtls::lerp(curr.translation, next.translation, t));
+//             mtls::rotate(transform, mtls::lerp(curr.rotation, next.rotation, t), (*this->skeleton)[curr.boneId]->getModel()->getJoint());
+//             (*this->skeleton)[curr.boneId]->getModel()->setExternalTransform(transform);
+//         }
+//     }
+//     this->skeleton->update();
+// }
+
 tMilliseconds   Animator::getElapsedMilliseconds( void ) {
     return (std::chrono::steady_clock::now() - this->pTimepoint);
 }

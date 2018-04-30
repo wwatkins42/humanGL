@@ -39,14 +39,22 @@ void    Bone::rescale( const vec3& v, bool child ) {
     }
 }
 
-void    Bone::update( const mat4& transform ) {
-    this->model->update(transform);
+void    Bone::update( const mat4& transform, Shader* shader ) {
+    this->model->update(transform, shader);
+    const mat4& parentTransform = this->model->getTransform();
     for (std::forward_list<Bone*>::iterator it = this->children.begin(); it != this->children.end(); ++it)
-        if (*it) (*it)->update(this->model->getTransform());
+        if (*it) (*it)->update(parentTransform, shader);
+    this->model->popMatrix(); /* revert to identity */
 }
 
-void    Bone::render( Shader* shader ) {
-    for (std::forward_list<Bone*>::iterator it = this->children.begin(); it != this->children.end(); ++it)
-        if (*it) (*it)->render(shader);
-    this->model->render(shader);
-}
+// void    Bone::update( const mat4& transform ) {
+//     this->model->update(transform);
+//     for (std::forward_list<Bone*>::iterator it = this->children.begin(); it != this->children.end(); ++it)
+//         if (*it) (*it)->update(this->model->getTransform());
+// }
+
+// void    Bone::render( Shader* shader ) {
+//     for (std::forward_list<Bone*>::iterator it = this->children.begin(); it != this->children.end(); ++it)
+//         if (*it) (*it)->render(shader);
+//     this->model->render(shader);
+// }

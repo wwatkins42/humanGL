@@ -41,6 +41,7 @@ public:
 
     void                    selectAnim( size_t id );
     void                    update( void );
+    // void                    update( Shader* shader );
     size_t                  getNextFrame( void );
     float                   getFrameInterpolation( eFrameInterpolation interpolation = none );
     tMilliseconds           getElapsedMilliseconds( void );

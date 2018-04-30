@@ -21,8 +21,9 @@ public:
     Bone& operator=( const Bone& rhs );
     ~Bone( void );
 
-    void    update( const mat4& transform );
-    void    render( Shader* shader );
+    void    update( const mat4& transform, Shader* shader );
+    // void    update( const mat4& transform );
+    // void    render( Shader* shader );
     void    rescale( const vec3& v, bool child = false );
 
     const std::string               getName( void ) const { return (name); };

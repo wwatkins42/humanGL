@@ -57,7 +57,8 @@ void    createCube(std::vector<GLfloat>& vertices, std::vector<GLuint>& indices)
 Model::Model( const vec3& position, const vec3& orientation, const vec3& scale, const vec3& joint, const int64_t color ) : position(position), orientation(orientation), scale(scale), joint(joint), color(hex2vec(color)) {
     this->nIndices = 0;
     this->initBufferObjects(GL_STATIC_DRAW);
-    this->nst.identity();
+    /* 1st element: identity */
+    this->pushMatrix(mtls::mat4identity);
     this->externalTransform.identity();
 }
 
@@ -76,27 +77,44 @@ Model::~Model( void ) {
     glDeleteBuffers(1, &this->ebo);
 }
 
-void    Model::update( const mat4& parentTransform ) {
-    /* NOTE: We could pushMatrix() here, before we perform transformations
-             we wouldn't have to do identity each time then */
-    /* this is the non-scaled transform passed as parentTransform for children */
-    this->nst.identity(); // REMOVE
-    mtls::translate(this->nst, this->position);
-    mtls::rotate(this->nst, this->orientation, this->joint);
-    this->nst = this->externalTransform * this->nst * parentTransform;
-    /* the transformation matrix used to display the model */
-    this->transform = this->nst; // REMOVE
-    mtls::scale(this->transform, this->scale + this->scaling);
+void    Model::update( const mat4& parentTransform, Shader* shader ) {
+    /* 2nd element: translate/rotate/parent/external */
+    this->pushMatrix();
+    mtls::translate(this->stack.top(), this->position);
+    mtls::rotate(this->stack.top(), this->orientation, this->joint);
+    this->stack.top() = this->externalTransform * this->stack.top() * parentTransform;
+    /* 3rd element: scaling */
+    this->pushMatrix();
+    mtls::scale(this->stack.top(), this->scale + this->scaling);
+
+    this->render(shader);
 }
 
 void    Model::render( Shader* shader ) {
     shader->setVec4UniformValue("customColor", this->color);
-    shader->setMat4UniformValue("model", this->transform);
+    shader->setMat4UniformValue("model", this->stack.top());
     glBindVertexArray(this->vao);
     glDrawElements(GL_TRIANGLES, this->nIndices, GL_UNSIGNED_INT, 0);
-    /* NOTE: We could popMatrix() here, to restore the matrix state after the
-             object is rendered */
+    this->popMatrix(); /* revert to 2nd element */
 }
+
+// void    Model::update( const mat4& parentTransform ) {
+//     /* this is the non-scaled transform passed as parentTransform for children */
+//     this->nst.identity();
+//     mtls::translate(this->nst, this->position);
+//     mtls::rotate(this->nst, this->orientation, this->joint);
+//     this->nst = this->externalTransform * this->nst * parentTransform;
+//     /* the transformation matrix used to display the model */
+//     this->transform = this->nst;
+//     mtls::scale(this->transform, this->scale + this->scaling);
+// }
+
+// void    Model::render( Shader* shader ) {
+//     shader->setVec4UniformValue("customColor", this->color);
+//     shader->setMat4UniformValue("model", this->transform);
+//     glBindVertexArray(this->vao);
+//     glDrawElements(GL_TRIANGLES, this->nIndices, GL_UNSIGNED_INT, 0);
+// }
 
 void    Model::initBufferObjects( int mode ) {
     std::vector<GLfloat>    vertices;
@@ -135,3 +153,21 @@ vec4    Model::hex2vec( int64_t hex ) {
         1
     });
 }
+
+/*  for the matrix stack we could do as follow:
+    | in the constructor:
+    * identity() // base state
+    * pushMatrix()
+
+        | in the update method:
+        * popMatrix()
+        * perform translation and rotation
+        * pushMatrix()
+        * perform scaling
+        * render()
+
+    | in the Bone update method:
+    * popMatrix() to get the non-scaled matrix
+    * we do the same all over again for the children
+
+*/

@@ -19,18 +19,20 @@ public:
     Skeleton& operator=( const Skeleton& rhs );
     ~Skeleton( void );
 
-    void    update( void );
-    void    render( Shader* shader );
+    void        update( void );
 
     Bone*       getParentBone( void ) const { return (parentBone); };
     std::string getParentBoneId( void ) const { return (parentBoneId); };
-    const std::unordered_map<std::string, Bone*>&  getBones( void ) const { return (bones); };
+    const std::unordered_map<std::string, Bone*>&   getBones( void ) const { return (bones); };
 
     Bone*   operator[]( const std::string& id );
+
+    void        setShader( Shader* s ) { shader = s; };
 
 private:
     Bone*                                   parentBone;
     std::string                             parentBoneId;
     std::unordered_map<std::string, Bone*>  bones;
+    Shader*                                 shader;
 
 };

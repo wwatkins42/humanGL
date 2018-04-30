@@ -4,6 +4,7 @@ Renderer::Renderer( Env* env ) :
     env(env),
     camera(90, (float)env->getWindow().width / (float)env->getWindow().height),
     shader("./shader/vertex.glsl", "./shader/fragment.glsl") {
+        this->env->getCharacter()->setShader(&this->shader);
 }
 
 Renderer::Renderer( const Renderer& rhs ) :
@@ -48,7 +49,7 @@ void	Renderer::loop( void ) {
         this->shader.use();
         this->updateShaderUniforms();
         this->env->getAnimator()->update();
-        this->env->getCharacter()->render(&this->shader);
+        // this->env->getCharacter()->render(&this->shader);
         glfwSwapBuffers(this->env->getWindow().ptr);
     }
 }
