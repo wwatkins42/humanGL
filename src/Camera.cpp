@@ -5,6 +5,8 @@ Camera::Camera( float fov, float aspect ) : aspect(aspect), fov(fov) {
     this->position = vec3({0, 0, 10});
     this->target = vec3({0, 0, 0});
     this->viewMatrix = mtls::lookAt(this->position, this->target);
+
+    this->translation = vec3({0, 0, 0});
 }
 
 Camera::Camera( const Camera& rhs ) {
@@ -52,3 +54,26 @@ mat4    Camera::createPerspectiveProjectionMatrix( float fov, float aspect, floa
     });
     return (projectionMatrix);
 }
+
+void    Camera::handleKeys( const std::array<tKey, N_KEY>& keys, const vec3& lockPos ) {
+    vec4    translation({
+        (float)(keys[GLFW_KEY_A].value - keys[GLFW_KEY_D].value),
+        (float)(keys[GLFW_KEY_LEFT_SHIFT].value - keys[GLFW_KEY_SPACE].value),
+        (float)(keys[GLFW_KEY_W].value - keys[GLFW_KEY_S].value),
+        1.0f
+    });
+    /* translation is in the same coordinate system as view (moves in same direction) */
+    this->translation -= static_cast<vec3>(this->viewMatrix * mtls::normalize(translation)) * 0.5f;
+    /* orbital movement */
+    if (keys[GLFW_KEY_L].value) {
+        this->target = lockPos;
+        this->viewMatrix = mtls::lookAt(this->position + this->translation, this->target);
+    }
+    /* free movement */
+    else {
+        this->target += static_cast<vec3>(this->viewMatrix * vec4({0,0,-1,0}));
+        this->viewMatrix = mtls::lookAt(this->position + this->translation, this->target);
+    }
+}
+
+// TODO: implement a raycast to select a Bone and the GLFW_KEY_EQUAL and GLFW_KEY_MINUS change the part scale

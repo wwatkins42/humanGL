@@ -9,6 +9,7 @@
 #include "Skeleton.hpp"
 #include "Matrix.hpp"
 #include "Bone.hpp"
+#include "Controller.hpp"
 
 enum class eInterpolationType {
     linear,
@@ -41,6 +42,7 @@ public:
 
     void                    selectAnim( size_t id );
     void                    update( void );
+    void                    handleKeys( const std::array<tKey, N_KEY>& keys );
     size_t                  getNextFrame( void );
     float                   getFrameInterpolation( eInterpolationType interpolation = eInterpolationType::linear );
     tMilliseconds           getElapsedMilliseconds( void );

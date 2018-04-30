@@ -9,6 +9,7 @@
 
 #include "Exception.hpp"
 #include "Matrix.hpp"
+#include "Controller.hpp"
 
 class Camera {
 
@@ -18,6 +19,7 @@ public:
     Camera& operator=( const Camera& rhs );
     ~Camera( void );
 
+    void        handleKeys( const std::array<tKey, N_KEY>& keys, const vec3& lockPos );
     /* Setters */
     void        setFov( float fov );
     void        setAspect( float aspect );
@@ -38,5 +40,7 @@ private:
     float   aspect;
     vec3    position;
     vec3    target;
+
+    vec3    translation;
 
 };

@@ -62,6 +62,17 @@ void    Animator::update( void ) {
     this->skeleton->update();
 }
 
+void    Animator::handleKeys( const std::array<tKey, N_KEY>& keys ) {
+    if (keys[GLFW_KEY_1].value)
+        this->selectAnim(0);
+    else if (keys[GLFW_KEY_2].value)
+        this->selectAnim(1);
+    else if (keys[GLFW_KEY_3].value)
+        this->selectAnim(2);
+    else if (keys[GLFW_KEY_4].value)
+        this->selectAnim(3);
+}
+
 tMilliseconds   Animator::getElapsedMilliseconds( void ) {
     return (std::chrono::steady_clock::now() - this->pTimepoint);
 }

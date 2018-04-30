@@ -64,6 +64,6 @@ private:
     vec3                scaling;            // the value changed in animation as a modifier
     vec4                color;              // the color of the model
 
-    void                initBufferObjects( int mode = GL_STATIC_DRAW, eModelType model = eModelType::cube );
+    void                initBufferObjects( int mode = GL_STATIC_DRAW, eModelType modelType = eModelType::cube );
 
 };

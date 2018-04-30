@@ -10,8 +10,6 @@
 #include <chrono>
 
 #include "Exception.hpp"
-#include "Animator.hpp"
-#include "Camera.hpp"
 #include "Matrix.hpp"
 
 #define N_KEY GLFW_KEY_LAST + 1
@@ -50,6 +48,8 @@ public:
     short           getKeyValue( int k ) const { return (key[k].value); };
     short           getMouseButtonValue( int b ) const { return (mouse.button[b]); };
     const vec2d&    getMousePosition( void ) const { return (mouse.pos); };
+
+    const std::array<tKey, N_KEY>&  getKeys( void ) const { return (key); };
 
 private:
     GLFWwindow*             window;

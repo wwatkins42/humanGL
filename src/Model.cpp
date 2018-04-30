@@ -2,7 +2,7 @@
 
 Model::Model( const vec3& position, const vec3& orientation, const vec3& scale, const vec3& joint, const int64_t color ) : position(position), orientation(orientation), scale(scale), joint(joint), color(hex2vec(color)) {
     this->nIndices = 0;
-    this->initBufferObjects(GL_STATIC_DRAW);
+    this->initBufferObjects(GL_STATIC_DRAW, eModelType::cylinder);
     /* 1st element: identity */
     this->pushMatrix(mtls::mat4identity);
     this->externalTransform.identity();
@@ -43,13 +43,16 @@ void    Model::render( Shader* shader ) {
     glDrawElements(GL_TRIANGLES, this->nIndices, GL_UNSIGNED_INT, 0);
 }
 
-void    Model::initBufferObjects( int mode, eModelType model ) {
+void    Model::initBufferObjects( int mode, eModelType modelType ) {
     std::vector<GLfloat>    vertices;
     std::vector<GLuint>     indices;
 
-    // createCube(vertices, indices);
-    createSphere(vertices, indices, 1.2f, 4, 40);
-    // createSphere(vertices, indices, 1.25f, 40, 40);
+    switch (modelType) {
+        case eModelType::cube: createCube(vertices, indices); break;
+        case eModelType::sphere: createSphere(vertices, indices, 1.0f, 40, 40); break;
+        case eModelType::cylinder: createSphere(vertices, indices, 1.2f, 4, 40); break;
+        default: break;
+    };
 
     this->nIndices = indices.size();
     // gen buffers and vertex arrays
