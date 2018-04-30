@@ -5,14 +5,18 @@
 
 #include <iostream>
 #include <string>
-#include <array>
-#include <forward_list>
 #include <vector>
 #include <stack>
 
 #include "Exception.hpp"
 #include "Matrix.hpp"
 #include "Shader.hpp"
+
+enum eModelType {
+    cube,
+    sphere,
+    cylinder
+};
 
 class Model {
 
@@ -24,32 +28,26 @@ public:
 
     void            update( const mat4& parentTransform, Shader* shader );
     void            render( Shader* shader );
+    mat4            popMatrix( void );
+    void            pushMatrix( void ) { stack.push(stack.top()); };
+    void            pushMatrix( const mat4& mat ) { stack.push(mat); };
 
-    void            setPosition( const vec3& t ) { position = t; };
-    void            setOrientation( const vec3& r ) { orientation = r; };
-    void            setScale( const vec3& s ) { scale = s; };
-    void            setJoint( const vec3& j ) { joint = j; };
-
-    void            setScaling( const vec3& s ) { scaling = s; };
-    void            setExternalTransform( const mat4& transform ) { externalTransform = transform; };
-
+    /* getters */
     const GLuint&   getVao( void ) const { return (vao); };
-    const mat4&     getTransform( void ) { return (stack.top()); };
+    const mat4&     getTransform( void ) const { return (stack.top()); };
     const mat4&     getExternalTransform( void ) const { return (externalTransform); };
-
     const vec3&     getPosition( void ) const { return (position); };
     const vec3&     getOrientation( void ) const { return (orientation); };
     const vec3&     getScale( void ) const { return (scale); };
     const vec3&     getJoint( void ) const { return (joint); };
-
     const vec3&     getScaling( void ) const { return (scaling); };
-
-    void            initBufferObjects( int mode = GL_STATIC_DRAW );
-    vec4            hex2vec( int64_t hex );
-
-    void            popMatrix( void ) { stack.pop(); };
-    void            pushMatrix( void ) { stack.push(stack.top()); };
-    void            pushMatrix( const mat4& mat ) { stack.push(mat); };
+    /* setters */
+    void            setExternalTransform( const mat4& transform ) { externalTransform = transform; };
+    void            setPosition( const vec3& t ) { position = t; };
+    void            setOrientation( const vec3& r ) { orientation = r; };
+    void            setScale( const vec3& s ) { scale = s; };
+    void            setJoint( const vec3& j ) { joint = j; };
+    void            setScaling( const vec3& s ) { scaling = s; };
 
 private:
     int                 nIndices;           // the number of triangles of the model
@@ -67,5 +65,8 @@ private:
     vec3                joint;              // the joint around which the bone rotates (local-space)
     vec3                scaling;            // the value changed in animation as a modifier
     vec4                color;              // the color of the model
+
+    void                initBufferObjects( int mode = GL_STATIC_DRAW );
+    vec4                hex2vec( int64_t hex );
 
 };

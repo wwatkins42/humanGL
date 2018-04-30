@@ -79,6 +79,12 @@ Model::~Model( void ) {
         this->stack.pop();
 }
 
+mat4    Model::popMatrix( void ) {
+    mat4 top = this->stack.top();
+    this->stack.pop();
+    return (top);
+};
+
 void    Model::update( const mat4& parentTransform, Shader* shader ) {
     /* 2nd element: translate/rotate/parent/external */
     this->pushMatrix();

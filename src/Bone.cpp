@@ -42,8 +42,7 @@ void    Bone::rescale( const vec3& v, bool child ) {
 
 void    Bone::update( const mat4& transform, Shader* shader ) {
     this->model->update(transform, shader);
-    const mat4& parentTransform = this->model->getTransform();
+    const mat4 parentTransform = this->model->popMatrix();
     for (std::forward_list<Bone*>::iterator it = this->children.begin(); it != this->children.end(); ++it)
         if (*it) (*it)->update(parentTransform, shader);
-    this->model->popMatrix(); /* revert to identity */
 }
