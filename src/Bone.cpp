@@ -1,6 +1,6 @@
 #include "Bone.hpp"
 
-Bone::Bone( std::forward_list<Bone*> children, const std::string name, const vec3& position, const vec3& orientation, const vec3& scale, const vec3& joint, const int64_t color ) : name(name), children(children) {
+Bone::Bone( std::forward_list<Bone*> children, const std::string& name, const vec3& position, const vec3& orientation, const vec3& scale, const vec3& joint, const int64_t color ) : name(name), children(children) {
     this->model = new Model(position, orientation, scale, joint, color);
 }
 
@@ -9,6 +9,7 @@ Bone::Bone( const Bone& rhs ) {
 }
 
 Bone&   Bone::operator=( const Bone& rhs ) {
+    this->name = rhs.getName();
     this->model = rhs.getModel();
     this->children = rhs.getChildren();
     return (*this);
@@ -46,15 +47,3 @@ void    Bone::update( const mat4& transform, Shader* shader ) {
         if (*it) (*it)->update(parentTransform, shader);
     this->model->popMatrix(); /* revert to identity */
 }
-
-// void    Bone::update( const mat4& transform ) {
-//     this->model->update(transform);
-//     for (std::forward_list<Bone*>::iterator it = this->children.begin(); it != this->children.end(); ++it)
-//         if (*it) (*it)->update(this->model->getTransform());
-// }
-
-// void    Bone::render( Shader* shader ) {
-//     for (std::forward_list<Bone*>::iterator it = this->children.begin(); it != this->children.end(); ++it)
-//         if (*it) (*it)->render(shader);
-//     this->model->render(shader);
-// }

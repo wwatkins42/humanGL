@@ -22,10 +22,12 @@ public:
     void        setFov( float fov );
     void        setAspect( float aspect );
     /* Getters */
-    mat4&       getProjectionMatrix( void ) { return (projectionMatrix); };
-    mat4&       getViewMatrix( void ) { return (viewMatrix); };
-    float       getFov( void ) const { return (fov); };
-    float       getAspect( void ) const { return (aspect); };
+    const mat4& getProjectionMatrix( void ) const { return (projectionMatrix); };
+    const mat4& getViewMatrix( void ) const { return (viewMatrix); };
+    const float getFov( void ) const { return (fov); };
+    const float getAspect( void ) const { return (aspect); };
+    const vec3& getPosition( void ) const { return (position); };
+    const vec3& getTarget( void ) const { return (target); };
 
     static mat4 createPerspectiveProjectionMatrix( float fov, float aspect, float near = 0.1, float far = 100.0 );
 
@@ -34,8 +36,7 @@ private:
     mat4    viewMatrix;
     float   fov;
     float   aspect;
-
     vec3    position;
-    vec3    direction;
+    vec3    target;
 
 };

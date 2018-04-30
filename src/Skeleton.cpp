@@ -17,10 +17,6 @@ Skeleton::~Skeleton( void ) {
     delete this->parentBone;
 }
 
-// void    Skeleton::update( void ) {
-//     this->parentBone->update(mtls::mat4identity);
-// }
-
 void    Skeleton::update( void ) {
     this->parentBone->update(mtls::mat4identity, this->shader);
     // this->bones["torso"]->getModel()->setOrientation(vec3({0, (float)glfwGetTime()*0.5f, 0}));

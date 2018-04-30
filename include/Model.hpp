@@ -22,7 +22,6 @@ public:
     Model& operator=( const Model& rhs );
     ~Model( void );
 
-    // void            update( const mat4& parentTransform );
     void            update( const mat4& parentTransform, Shader* shader );
     void            render( Shader* shader );
 

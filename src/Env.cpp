@@ -10,7 +10,7 @@ Env::Env( void ) : character() {
         // this->character = new Skeleton(this->createCharacterSkeleton(), "torso");
         this->character = new Skeleton(this->createBetterCharacterSkeleton(), "torso");
         this->animator = new Animator(this->character, {
-            {new tAnimationFrames({{}}), 100},
+            {new tAnimationFrames({{}}), 100}, // TODO: handle that differently
             {this->createIdleAnimation(), 1800},
             {this->createBetterWalkingAnimation(), 750},
             {this->createJumpingAnimation(), 1100},
@@ -19,15 +19,6 @@ Env::Env( void ) : character() {
     } catch (const std::exception& err) {
         std::cout << err.what() << std::endl;
     }
-}
-
-Env::Env( const Env& rhs ) {
-    *this = rhs;
-}
-
-Env & Env::operator=( const Env& rhs ) {
-    (void)rhs;
-    return (*this);
 }
 
 Env::~Env( void ) {

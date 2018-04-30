@@ -24,8 +24,6 @@ class Env {
 
 public:
     Env( void );
-    Env( const Env& rhs );
-    Env&    operator=( const Env& rhs );
     ~Env( void );
 
     const t_window& getWindow( void ) const { return (window); };

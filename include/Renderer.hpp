@@ -19,8 +19,6 @@ class Renderer {
 
 public:
     Renderer( Env* env );
-    Renderer( const Renderer& rhs );
-    Renderer& operator=( const Renderer& rhs );
     ~Renderer( void );
 
     void	loop( void );

@@ -9,15 +9,6 @@ Shader::Shader( const std::string& vertexShader, const std::string& fragmentShad
     this->id = this->createProgram({{ vertShader, fragShader }});
 }
 
-Shader::Shader( const Shader& rhs ) {
-    *this = rhs;
-}
-
-Shader& Shader::operator=( const Shader& rhs ) {
-    (void)rhs;
-    return (*this);
-}
-
 Shader::~Shader( void ) {
 }
 

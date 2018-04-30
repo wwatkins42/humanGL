@@ -2,17 +2,22 @@
 
 Camera::Camera( float fov, float aspect ) : aspect(aspect), fov(fov) {
     this->projectionMatrix = Camera::createPerspectiveProjectionMatrix(fov, aspect);
-    this->position = vec3({0, 0, 12});
-    this->viewMatrix = mtls::lookAt(this->position, vec3({0, 0, 0}));
+    this->position = vec3({0, 0, 10});
+    this->target = vec3({0, 0, 0});
+    this->viewMatrix = mtls::lookAt(this->position, this->target);
 }
 
-Camera::Camera( const Camera& rhs ) : aspect(rhs.getAspect()) {
+Camera::Camera( const Camera& rhs ) {
     *this = rhs;
 }
 
 Camera& Camera::operator=( const Camera& rhs ) {
-    aspect = rhs.getAspect();
-    fov = rhs.getFov();
+    this->projectionMatrix = rhs.getProjectionMatrix();
+    this->viewMatrix = rhs.getViewMatrix();
+    this->aspect = rhs.getAspect();
+    this->fov = rhs.getFov();
+    this->position = rhs.getPosition();
+    this->target = rhs.getTarget();
     return (*this);
 }
 

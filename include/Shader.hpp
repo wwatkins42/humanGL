@@ -16,8 +16,6 @@ class Shader {
 
 public:
     Shader( const std::string& vertexShader, const std::string& fragmentShader );
-    Shader( const Shader& rhs );
-    Shader& operator=( const Shader& rhs );
     ~Shader( void );
 
     std::string         getFromFile( const std::string& filename );
@@ -29,13 +27,12 @@ public:
 
     unsigned int        getUniformLocation( const std::string& name );
 
-    void    setMat2UniformValue( const std::string& name, const mat2& m );
-    void    setMat3UniformValue( const std::string& name, const mat3& m );
-    void    setMat4UniformValue( const std::string& name, const mat4& m );
-
-    void    setVec2UniformValue( const std::string& name, const vec2& v );
-    void    setVec3UniformValue( const std::string& name, const vec3& v );
-    void    setVec4UniformValue( const std::string& name, const vec4& v );
+    void                setMat2UniformValue( const std::string& name, const mat2& m );
+    void                setMat3UniformValue( const std::string& name, const mat3& m );
+    void                setMat4UniformValue( const std::string& name, const mat4& m );
+    void                setVec2UniformValue( const std::string& name, const vec2& v );
+    void                setVec3UniformValue( const std::string& name, const vec3& v );
+    void                setVec4UniformValue( const std::string& name, const vec4& v );
 
     GLuint  id;
 

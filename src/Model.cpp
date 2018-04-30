@@ -75,6 +75,8 @@ Model::~Model( void ) {
     glDeleteVertexArrays(1, &this->vao);
     glDeleteBuffers(1, &this->vbo);
     glDeleteBuffers(1, &this->ebo);
+    while (!this->stack.empty())
+        this->stack.pop();
 }
 
 void    Model::update( const mat4& parentTransform, Shader* shader ) {
@@ -88,6 +90,7 @@ void    Model::update( const mat4& parentTransform, Shader* shader ) {
     mtls::scale(this->stack.top(), this->scale + this->scaling);
 
     this->render(shader);
+    this->popMatrix(); /* revert to 2nd element */
 }
 
 void    Model::render( Shader* shader ) {
@@ -95,26 +98,7 @@ void    Model::render( Shader* shader ) {
     shader->setMat4UniformValue("model", this->stack.top());
     glBindVertexArray(this->vao);
     glDrawElements(GL_TRIANGLES, this->nIndices, GL_UNSIGNED_INT, 0);
-    this->popMatrix(); /* revert to 2nd element */
 }
-
-// void    Model::update( const mat4& parentTransform ) {
-//     /* this is the non-scaled transform passed as parentTransform for children */
-//     this->nst.identity();
-//     mtls::translate(this->nst, this->position);
-//     mtls::rotate(this->nst, this->orientation, this->joint);
-//     this->nst = this->externalTransform * this->nst * parentTransform;
-//     /* the transformation matrix used to display the model */
-//     this->transform = this->nst;
-//     mtls::scale(this->transform, this->scale + this->scaling);
-// }
-
-// void    Model::render( Shader* shader ) {
-//     shader->setVec4UniformValue("customColor", this->color);
-//     shader->setMat4UniformValue("model", this->transform);
-//     glBindVertexArray(this->vao);
-//     glDrawElements(GL_TRIANGLES, this->nIndices, GL_UNSIGNED_INT, 0);
-// }
 
 void    Model::initBufferObjects( int mode ) {
     std::vector<GLfloat>    vertices;
@@ -153,21 +137,3 @@ vec4    Model::hex2vec( int64_t hex ) {
         1
     });
 }
-
-/*  for the matrix stack we could do as follow:
-    | in the constructor:
-    * identity() // base state
-    * pushMatrix()
-
-        | in the update method:
-        * popMatrix()
-        * perform translation and rotation
-        * pushMatrix()
-        * perform scaling
-        * render()
-
-    | in the Bone update method:
-    * popMatrix() to get the non-scaled matrix
-    * we do the same all over again for the children
-
-*/
