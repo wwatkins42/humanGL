@@ -17,8 +17,6 @@ class Bone {
 
 public:
     Bone( std::forward_list<Bone*> children, const std::string& name, const vec3& position, const vec3& orientation, const vec3& scale, const vec3& joint = vec3({0, 0, 0}), const int64_t color = 0xFFFFFF );
-    Bone( const Bone& rhs );
-    Bone& operator=( const Bone& rhs );
     ~Bone( void );
 
     void    update( const mat4& transform, Shader* shader );

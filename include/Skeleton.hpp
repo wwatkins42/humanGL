@@ -15,19 +15,19 @@ class Skeleton {
 
 public:
     Skeleton( std::unordered_map<std::string, Bone*> bones, const std::string& parentBoneId );
-    Skeleton( const Skeleton& rhs );
-    Skeleton& operator=( const Skeleton& rhs );
     ~Skeleton( void );
 
     void        update( void );
 
-    Bone*       getParentBone( void ) const { return (parentBone); };
-    std::string getParentBoneId( void ) const { return (parentBoneId); };
+    /* setters */
+    void                                            setShader( Shader* s ) { shader = s; };
+    /* getters */
+    const Bone*                                     getParentBone( void ) const { return (parentBone); };
+    const std::string&                              getParentBoneId( void ) const { return (parentBoneId); };
     const std::unordered_map<std::string, Bone*>&   getBones( void ) const { return (bones); };
+    Shader*                                         getShader( void ) const { return (shader); };
 
     Bone*   operator[]( const std::string& id );
-
-    void        setShader( Shader* s ) { shader = s; };
 
 private:
     Bone*                                   parentBone;

@@ -10,8 +10,8 @@
 #include "Matrix.hpp"
 #include "Bone.hpp"
 
-enum eFrameInterpolation {
-    none,
+enum class eInterpolationType {
+    linear,
     sinerp,
     coserp,
     smoothstep,
@@ -42,7 +42,7 @@ public:
     void                    selectAnim( size_t id );
     void                    update( void );
     size_t                  getNextFrame( void );
-    float                   getFrameInterpolation( eFrameInterpolation interpolation = none );
+    float                   getFrameInterpolation( eInterpolationType interpolation = eInterpolationType::linear );
     tMilliseconds           getElapsedMilliseconds( void );
 
     Skeleton*               getSkeleton( void ) const { return (skeleton); };

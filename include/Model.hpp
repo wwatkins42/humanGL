@@ -5,14 +5,14 @@
 
 #include <iostream>
 #include <string>
-#include <vector>
 #include <stack>
 
 #include "Exception.hpp"
 #include "Matrix.hpp"
 #include "Shader.hpp"
+#include "utils.hpp"
 
-enum eModelType {
+enum class eModelType {
     cube,
     sphere,
     cylinder
@@ -22,8 +22,6 @@ class Model {
 
 public:
     Model( const vec3& position, const vec3& orientation, const vec3& scale, const vec3& joint, const int64_t color );
-    Model( const Model& rhs );
-    Model& operator=( const Model& rhs );
     ~Model( void );
 
     void            update( const mat4& parentTransform, Shader* shader );
@@ -66,7 +64,6 @@ private:
     vec3                scaling;            // the value changed in animation as a modifier
     vec4                color;              // the color of the model
 
-    void                initBufferObjects( int mode = GL_STATIC_DRAW );
-    vec4                hex2vec( int64_t hex );
+    void                initBufferObjects( int mode = GL_STATIC_DRAW, eModelType model = eModelType::cube );
 
 };

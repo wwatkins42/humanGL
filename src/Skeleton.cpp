@@ -4,15 +4,6 @@ Skeleton::Skeleton( std::unordered_map<std::string, Bone*> bones, const std::str
     this->parentBone = this->bones[this->parentBoneId];
 }
 
-Skeleton::Skeleton( const Skeleton& rhs ) {
-    *this = rhs;
-}
-
-Skeleton& Skeleton::operator=( const Skeleton& rhs ) {
-    (void)rhs;
-    return (*this);
-}
-
 Skeleton::~Skeleton( void ) {
     delete this->parentBone;
 }

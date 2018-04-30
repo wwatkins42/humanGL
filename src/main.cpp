@@ -1,4 +1,5 @@
-#include "humanGL.hpp"
+#include "Renderer.hpp"
+#include "Env.hpp"
 
 int main( void ) {
     Env         environment;

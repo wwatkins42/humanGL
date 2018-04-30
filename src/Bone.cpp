@@ -4,17 +4,6 @@ Bone::Bone( std::forward_list<Bone*> children, const std::string& name, const ve
     this->model = new Model(position, orientation, scale, joint, color);
 }
 
-Bone::Bone( const Bone& rhs ) {
-    *this = rhs;
-}
-
-Bone&   Bone::operator=( const Bone& rhs ) {
-    this->name = rhs.getName();
-    this->model = rhs.getModel();
-    this->children = rhs.getChildren();
-    return (*this);
-}
-
 Bone::~Bone( void ) {
     for (std::forward_list<Bone*>::iterator it = this->children.begin(); it != this->children.end(); ++it)
         delete *it;

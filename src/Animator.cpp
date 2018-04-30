@@ -45,7 +45,7 @@ void    Animator::update( void ) {
         this->cFrame = this->getNextFrame();
     }
     if (this->animations[cAnim].frames->size() > 1) {
-        float   t = this->getFrameInterpolation(none);
+        float   t = this->getFrameInterpolation(eInterpolationType::linear);
         mat4    transform;
         for (size_t i = 0; i < (*this->animations[cAnim].frames)[this->cFrame]->size(); ++i) {
             tBoneTransform curr = (*(*this->animations[cAnim].frames)[this->cFrame])[i];
@@ -70,13 +70,13 @@ size_t  Animator::getNextFrame( void ) {
     return (this->cFrame + 1 >= this->animations[cAnim].frames->size() ? 0 : this->cFrame + 1);
 }
 
-float   Animator::getFrameInterpolation( eFrameInterpolation interpolation ) {
+float   Animator::getFrameInterpolation( eInterpolationType interpolation ) {
     float t = (1 - (this->cFrameDuration - this->getElapsedMilliseconds().count()) / this->cFrameDuration);
     switch (interpolation) {
-        case sinerp:       return(std::sin(t * M_PI * 0.5f));
-        case coserp:       return(std::cos(t * M_PI * 0.5f));
-        case smoothstep:   return(t * t * (3.0f - 2.0f * t));
-        case smootherstep: return(t * t * t * (t * (t * 6.0f - 15.0f) + 10.0f));
+        case eInterpolationType::sinerp:       return(std::sin(t * M_PI * 0.5f));
+        case eInterpolationType::coserp:       return(std::cos(t * M_PI * 0.5f));
+        case eInterpolationType::smoothstep:   return(t * t * (3.0f - 2.0f * t));
+        case eInterpolationType::smootherstep: return(t * t * t * (t * (t * 6.0f - 15.0f) + 10.0f));
         default: break;
     };
     return (t);

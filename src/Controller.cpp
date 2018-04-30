@@ -29,8 +29,8 @@ void	Controller::keyUpdate( int k ) {
     const short value = (glfwGetKey(this->window, k) == GLFW_PRESS);
 
     switch (this->key[k].type) {
-        case keyMode::toggle: this->keyToggle(k, value); break;
-        case keyMode::cooldown: this->keyCooldown(k, value); break;
+        case eKeyMode::toggle: this->keyToggle(k, value); break;
+        case eKeyMode::cooldown: this->keyCooldown(k, value); break;
         default: this->key[k].value = value; break;
     };
 }
@@ -53,7 +53,7 @@ void    Controller::keyCooldown( int k, short value ) {
         this->key[k].value = 0;
 }
 
-void    Controller::setKeyProperties( int k, keyMode::eKeyMode type, uint cooldown ) {
+void    Controller::setKeyProperties( int k, eKeyMode type, uint cooldown ) {
     this->key[k].type = type;
     this->key[k].cooldown = cooldown;
 }
