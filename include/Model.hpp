@@ -26,6 +26,7 @@ public:
 
     void            update( const mat4& parentTransform, Shader* shader );
     void            render( Shader* shader );
+    void            updateWorldPosition( const mat4& parentTransform );
     mat4            popMatrix( void );
     void            pushMatrix( void ) { stack.push(stack.top()); };
     void            pushMatrix( const mat4& mat ) { stack.push(mat); };
@@ -39,6 +40,7 @@ public:
     const vec3&     getScale( void ) const { return (scale); };
     const vec3&     getJoint( void ) const { return (joint); };
     const vec3&     getScaling( void ) const { return (scaling); };
+    const vec3&     getWorldPosition( void ) const { return (worldPosition); };
     /* setters */
     void            setExternalTransform( const mat4& transform ) { externalTransform = transform; };
     void            setPosition( const vec3& t ) { position = t; };
@@ -59,6 +61,7 @@ private:
     vec3                position;           // the position (parent local-space)
     vec3                orientation;        // the orientation (parent local-space)
     vec3                scale;              // the scale
+    vec3                worldPosition;      // the position (world-space)
 
     vec3                joint;              // the joint around which the bone rotates (local-space)
     vec3                scaling;            // the value changed in animation as a modifier

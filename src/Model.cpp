@@ -2,10 +2,11 @@
 
 Model::Model( const vec3& position, const vec3& orientation, const vec3& scale, const vec3& joint, const int64_t color ) : position(position), orientation(orientation), scale(scale), joint(joint), color(hex2vec(color)) {
     this->nIndices = 0;
-    this->initBufferObjects(GL_STATIC_DRAW, eModelType::cylinder);
-    /* 1st element: identity */
+    this->initBufferObjects(GL_STATIC_DRAW, eModelType::sphere);
     this->pushMatrix(mtls::mat4identity);
     this->externalTransform.identity();
+
+    this->worldPosition = vec3({0, 0, 0}); // NEW
 }
 
 Model::~Model( void ) {
@@ -23,17 +24,15 @@ mat4    Model::popMatrix( void ) {
 };
 
 void    Model::update( const mat4& parentTransform, Shader* shader ) {
-    /* 2nd element: translate/rotate/parent/external */
     this->pushMatrix();
     mtls::translate(this->stack.top(), this->position);
     mtls::rotate(this->stack.top(), this->orientation, this->joint);
     this->stack.top() = this->externalTransform * this->stack.top() * parentTransform;
-    /* 3rd element: scaling */
     this->pushMatrix();
+    this->updateWorldPosition(parentTransform); // NEW: needed for raycast
     mtls::scale(this->stack.top(), this->scale + this->scaling);
-
     this->render(shader);
-    this->popMatrix(); /* revert to 2nd element */
+    this->popMatrix();
 }
 
 void    Model::render( Shader* shader ) {
@@ -41,6 +40,12 @@ void    Model::render( Shader* shader ) {
     shader->setMat4UniformValue("model", this->stack.top());
     glBindVertexArray(this->vao);
     glDrawElements(GL_TRIANGLES, this->nIndices, GL_UNSIGNED_INT, 0);
+}
+
+void    Model::updateWorldPosition( const mat4& parentTransform ) {
+    vec4    tmp = static_cast<vec4>(this->position);
+    tmp(3) = 1;
+    this->worldPosition = static_cast<vec3>(parentTransform.transpose() * tmp);
 }
 
 void    Model::initBufferObjects( int mode, eModelType modelType ) {
@@ -53,7 +58,6 @@ void    Model::initBufferObjects( int mode, eModelType modelType ) {
         case eModelType::cylinder: createSphere(vertices, indices, 1.2f, 4, 40); break;
         default: break;
     };
-
     this->nIndices = indices.size();
     // gen buffers and vertex arrays
 	glGenVertexArrays(1, &this->vao);

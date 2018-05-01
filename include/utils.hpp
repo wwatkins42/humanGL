@@ -6,3 +6,4 @@
 void    createSphere(std::vector<GLfloat>& vertices, std::vector<GLuint>& indices, float radius, unsigned int rings, unsigned int sectors);
 void    createCube(std::vector<GLfloat>& vertices, std::vector<GLuint>& indices);
 vec4    hex2vec( int64_t hex );
+vec2    mousePosToClipSpace( const vec2d& pos, int winWidth, int winHeight );

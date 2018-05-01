@@ -21,6 +21,7 @@ public:
     Renderer( Env* env );
     ~Renderer( void );
 
+    void    raycast( void );
     void	loop( void );
 
 private:

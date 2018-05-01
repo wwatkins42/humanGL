@@ -53,11 +53,6 @@ void	Env::initGlfwWindow( size_t width, size_t height ) {
 }
 
 void    Env::setupController( void ) {
-    /* animations pick keys */
-    this->controller->setKeyProperties(GLFW_KEY_1, eKeyMode::press, 0);
-    this->controller->setKeyProperties(GLFW_KEY_2, eKeyMode::press, 0);
-    this->controller->setKeyProperties(GLFW_KEY_3, eKeyMode::press, 0);
-    /* other */
     this->controller->setKeyProperties(GLFW_KEY_L, eKeyMode::toggle, 1000);
 }
 

@@ -42,11 +42,11 @@ public:
             data[i] = (!(i % (w + 1)) ? 1 : 0);
         return (*this);
     }
-    Mat2d<T,W,H>    transpose( void ) {
+    Mat2d<T,W,H>    transpose( void ) const {
         Mat2d<T,W,H> res;
         for (int i = 0; i < h; ++i)
             for (int j = 0; j < w; ++j)
-                res(j,i) = (*this)(i,j);
+                res(j,i) = (*this)[i * w + j];
         return (res);
     }
     /* element wise multiply */

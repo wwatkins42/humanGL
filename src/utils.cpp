@@ -62,3 +62,9 @@ vec4    hex2vec( int64_t hex ) {
         1
     });
 }
+
+vec2    mousePosToClipSpace( const vec2d& pos, int winWidth, int winHeight ) {
+    vec2    mouse = vec2({(float)pos[0] / winWidth, (float)pos[1] / winHeight}) * 2.0f - 1.0f;
+    mouse(1) = -mouse[1];
+    return (mouse);
+}
