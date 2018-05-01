@@ -7,6 +7,7 @@ Model::Model( const vec3& position, const vec3& orientation, const vec3& scale, 
     this->externalTransform.identity();
 
     this->worldPosition = vec3({0, 0, 0}); // NEW
+    this->selected = false; // NEW
 }
 
 Model::~Model( void ) {
@@ -36,7 +37,10 @@ void    Model::update( const mat4& parentTransform, Shader* shader ) {
 }
 
 void    Model::render( Shader* shader ) {
-    shader->setVec4UniformValue("customColor", this->color);
+    if (!this->selected)
+        shader->setVec4UniformValue("customColor", this->color);
+    else
+        shader->setVec4UniformValue("customColor", hex2vec(0xff0000));
     shader->setMat4UniformValue("model", this->stack.top());
     glBindVertexArray(this->vao);
     glDrawElements(GL_TRIANGLES, this->nIndices, GL_UNSIGNED_INT, 0);

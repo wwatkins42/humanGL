@@ -49,6 +49,8 @@ public:
     void            setJoint( const vec3& j ) { joint = j; };
     void            setScaling( const vec3& s ) { scaling = s; };
 
+    void            setSelected( bool b ) { selected = b; }; // DEBUG
+
 private:
     int                 nIndices;           // the number of triangles of the model
     GLuint              vao;                // Vertex Array Object
@@ -68,5 +70,7 @@ private:
     vec4                color;              // the color of the model
 
     void                initBufferObjects( int mode = GL_STATIC_DRAW, eModelType modelType = eModelType::cube );
+
+    bool                selected; // DEBUG
 
 };
