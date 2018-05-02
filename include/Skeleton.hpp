@@ -10,6 +10,7 @@
 #include "Exception.hpp"
 #include "Bone.hpp"
 #include "Shader.hpp"
+#include "Controller.hpp"
 
 class Skeleton {
 
@@ -28,6 +29,8 @@ public:
     Shader*                                         getShader( void ) const { return (shader); };
 
     Bone*   operator[]( const std::string& id );
+
+    void    scaleSelection( const std::array<tKey, N_KEY>& keys, const std::string& boneId );
 
 private:
     Bone*                                   parentBone;

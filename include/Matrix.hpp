@@ -276,6 +276,22 @@ namespace mtls {
         return (res);
     }
 
+    template<typename T, size_t H, size_t W>
+    Mat2d<T,H,W>    min( const Mat2d<T,H,W>& m, float min ) {
+        Mat2d<T,H,W>    res;
+        for (size_t i = 0; i < H * W; ++i)
+            res(i) = (m[i] < min ? m[i] : min);
+        return (res);
+    }
+
+    template<typename T, size_t H, size_t W>
+    Mat2d<T,H,W>    max( const Mat2d<T,H,W>& m, float max ) {
+        Mat2d<T,H,W>    res;
+        for (size_t i = 0; i < H * W; ++i)
+            res(i) = (m[i] > max ? m[i] : max);
+        return (res);
+    }
+
     extern const mat4  mat4identity;
     extern const mat3  mat3identity;
     extern const mat2  mat2identity;

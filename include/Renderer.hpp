@@ -21,8 +21,8 @@ public:
     Renderer( Env* env );
     ~Renderer( void );
 
-    void    raycast( void );
     void	loop( void );
+    void    raycastObjectSelect( void );
 
 private:
     Env*        env;

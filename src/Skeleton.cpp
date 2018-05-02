@@ -17,3 +17,11 @@ Bone*   Skeleton::operator[]( const std::string& id ) {
         throw Exception::SkeletonMapAccessError(id);
     return (this->bones[id]);
 }
+
+void    Skeleton::scaleSelection( const std::array<tKey, N_KEY>& keys, const std::string& boneId ) {
+    float s = (keys[GLFW_KEY_EQUAL].value - keys[GLFW_KEY_MINUS].value) * 0.05f;
+    vec3    scaling = mtls::max(this->bones[boneId]->getModel()->getScaling() + s, 0);
+    // this->bones[boneId]->getModel()->setScale(scaling);
+    this->bones[boneId]->rescale(scaling);
+    this->update();
+}

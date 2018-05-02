@@ -2,12 +2,37 @@
 
 Renderer::Renderer( Env* env ) :
     env(env),
-    camera(90, (float)env->getWindow().width / (float)env->getWindow().height),
+    camera(60, (float)env->getWindow().width / (float)env->getWindow().height),
     shader("./shader/vertex.glsl", "./shader/fragment.glsl") {
         this->env->getCharacter()->setShader(&this->shader);
 }
 
 Renderer::~Renderer( void ) {
+}
+
+void	Renderer::loop( void ) {
+    glEnable(GL_DEPTH_TEST);
+    while (!glfwWindowShouldClose(this->env->getWindow().ptr)) {
+        glfwPollEvents();
+        glClearColor(0.09f, 0.08f, 0.15f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        this->shader.use();
+        this->env->getController()->update();
+
+        this->camera.handleKeys( this->env->getController()->getKeys(), this->env->getCharacter()->getParentBone()->getModel()->getWorldPosition() );
+        this->env->getAnimator()->handleKeys( this->env->getController()->getKeys() );
+        this->env->getAnimator()->update();
+
+        this->raycastObjectSelect();
+
+        this->updateShaderUniforms();
+        glfwSwapBuffers(this->env->getWindow().ptr);
+    }
+}
+
+void    Renderer::updateShaderUniforms( void ) {
+    this->shader.setMat4UniformValue("view", this->camera.getViewMatrix());
+    this->shader.setMat4UniformValue("projection", this->camera.getProjectionMatrix());
 }
 
 inline float rayEllipsoidIntersect( const vec3& rayOrigin, const vec3& rayDir, const vec3& ellipsoidOrigin, const vec3& ellipsoidRadius ) {
@@ -28,62 +53,40 @@ inline float rayEllipsoidIntersect( const vec3& rayOrigin, const vec3& rayDir, c
     return (x1 < x2 ? x1 : x2);
 }
 
-void    Renderer::raycast( void ) {
+void    Renderer::raycastObjectSelect( void ) {
     float       dist = 10000000.0f;
     std::string objectId = "none";
+    std::unordered_map<std::string, Bone*> obj = this->env->getCharacter()->getBones();
 
-    /* put mouse position in clip-space (-1, 1) */
-    vec2    m = mousePosToClipSpace( this->env->getController()->getMousePosition(), this->env->getWindow().width, this->env->getWindow().height );
-    /* matrix to transform from clip-space to world-space */
-    mat4    toWorld = mtls::inverse(this->camera.getProjectionMatrix().transpose() * this->camera.getViewMatrix().transpose());
+    if (this->env->getController()->getMouseButtonValue(GLFW_MOUSE_BUTTON_1)) {
+        /* put mouse position in clip-space (-1, 1) */
+        vec2    m = mousePosToClipSpace( this->env->getController()->getMousePosition(), this->env->getWindow().width, this->env->getWindow().height );
+        /* matrix to transform from clip-space to world-space */
+        mat4    toWorld = mtls::inverse(this->camera.getProjectionMatrix().transpose() * this->camera.getViewMatrix().transpose());
 
-    vec4   nearWorld = toWorld * vec4({ m[0], m[1],-1, 1 });
-    vec4    farWorld = toWorld * vec4({ m[0], m[1], 1, 1 });
-    vec3    near = static_cast<vec3>(nearWorld / nearWorld[3]);
-    vec3     far = static_cast<vec3>(farWorld / farWorld[3]);
-    vec3    rayDir = mtls::normalize(far - near);
+        vec4   nearWorld = toWorld * vec4({ m[0], m[1],-1, 1 });
+        vec4    farWorld = toWorld * vec4({ m[0], m[1], 1, 1 });
+        vec3    near = static_cast<vec3>(nearWorld / nearWorld[3]);
+        vec3     far = static_cast<vec3>(farWorld / farWorld[3]);
+        vec3    rayDir = mtls::normalize(far - near);
 
-    std::unordered_map<std::string, Bone*>   obj = this->env->getCharacter()->getBones();
-    for (auto it = obj.begin(); it != obj.end(); it++) {
-        float t = rayEllipsoidIntersect(this->camera.getPosition(), rayDir, obj[it->first]->getModel()->getWorldPosition(), obj[it->first]->getModel()->getScale());
-        if (t > 0 and t < dist) {
-            dist = t;
-            objectId = it->first;
+        for (auto it = obj.begin(); it != obj.end(); it++) {
+            float t = rayEllipsoidIntersect(this->camera.getPosition(), rayDir, obj[it->first]->getModel()->getWorldPosition(), obj[it->first]->getModel()->getScale() + obj[it->first]->getModel()->getScaling());
+            if (t > 0 and t < dist) {
+                dist = t;
+                objectId = it->first;
+            }
         }
+        /* reset the selected value of all models to false */
+        for (auto it = obj.begin(); it != obj.end(); it++)
+            (*this->env->getCharacter())[it->first]->getModel()->setSelected(false);
+        /* set the selected one */
+        if (objectId != "none")
+            (*this->env->getCharacter())[objectId]->getModel()->setSelected(true);
     }
-    /* reset the selected value of all models to false */
-    for (auto it = obj.begin(); it != obj.end(); it++)
-        (*this->env->getCharacter())[it->first]->getModel()->setSelected(false);
-    /* set the selected one */
-    if (objectId != "none") {
-        (*this->env->getCharacter())[objectId]->getModel()->setSelected(true);
-        std::cout << "Intersect: " << objectId << std::endl;
+
+    for (auto it = obj.begin(); it != obj.end(); it++) {
+        if ((*this->env->getCharacter())[it->first]->getModel()->getSelected())
+            this->env->getCharacter()->scaleSelection(this->env->getController()->getKeys(), it->first);
     }
-}
-
-void	Renderer::loop( void ) {
-    glEnable(GL_DEPTH_TEST);
-    while (!glfwWindowShouldClose(this->env->getWindow().ptr)) {
-        glfwPollEvents();
-        glClearColor(0.09f, 0.08f, 0.15f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        this->shader.use();
-        this->env->getController()->update();
-
-        // this->raycast();
-
-        this->camera.handleKeys( this->env->getController()->getKeys(), this->env->getCharacter()->getParentBone()->getModel()->getWorldPosition() );
-        this->env->getAnimator()->handleKeys( this->env->getController()->getKeys() );
-        this->env->getAnimator()->update();
-
-        this->raycast();
-
-        this->updateShaderUniforms();
-        glfwSwapBuffers(this->env->getWindow().ptr);
-    }
-}
-
-void    Renderer::updateShaderUniforms( void ) {
-    this->shader.setMat4UniformValue("view", this->camera.getViewMatrix());
-    this->shader.setMat4UniformValue("projection", this->camera.getProjectionMatrix());
 }

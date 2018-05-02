@@ -13,8 +13,8 @@ Bone::~Bone( void ) {
 void    Bone::rescale( const vec3& v, bool child ) {
     if (child == false) {
         // compute the position change for the new scale relative to the joint
-        vec3 d = (v - this->model->getScaling()) * 0.5f;
-        vec3 n = d.multiply(mtls::sign(this->model->getJoint()));
+        vec3 d = (v - this->model->getScaling());
+        vec3 n = d.multiply(mtls::normalize(this->model->getJoint() - this->model->getPosition()));
         // update the translation/joint/scale values for the model
         this->model->setPosition(this->model->getPosition() - n);
         this->model->setJoint(this->model->getJoint() + n);
@@ -24,8 +24,8 @@ void    Bone::rescale( const vec3& v, bool child ) {
             if (*it) (*it)->rescale(d, true);
     } else {
         // the changes on the children are relative to their position (as it is in the parent local-space)
-        vec3 n = v.multiply(mtls::sign(this->model->getPosition()));
-        this->model->setPosition(this->model->getPosition() + n);
+        vec3 n = v.multiply(mtls::normalize(this->model->getJoint() - this->model->getPosition()));
+        this->model->setPosition(this->model->getPosition() - n);
     }
 }
 

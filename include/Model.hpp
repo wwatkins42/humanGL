@@ -49,6 +49,7 @@ public:
     void            setJoint( const vec3& j ) { joint = j; };
     void            setScaling( const vec3& s ) { scaling = s; };
 
+    const bool      getSelected( void ) const { return (selected); };
     void            setSelected( bool b ) { selected = b; }; // DEBUG
 
 private:
