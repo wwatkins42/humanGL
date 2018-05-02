@@ -1,7 +1,7 @@
 #include "Bone.hpp"
 
 Bone::Bone( std::forward_list<Bone*> children, const std::string& name, const vec3& position, const vec3& orientation, const vec3& scale, const vec3& joint, const int64_t color ) : name(name), children(children) {
-    this->model = new Model(position, orientation, scale, joint, color);
+    this->model = new Model(position * 0.5, orientation, scale, joint * 0.5, color);
 }
 
 Bone::~Bone( void ) {
@@ -13,7 +13,7 @@ Bone::~Bone( void ) {
 void    Bone::rescale( const vec3& v, bool child ) {
     if (child == false) {
         // compute the position change for the new scale relative to the joint
-        vec3 d = (v - this->model->getScaling());
+        vec3 d = (v - this->model->getScaling()) * 0.5;
         vec3 n = d.multiply(mtls::normalize(this->model->getJoint() - this->model->getPosition()));
         // update the translation/joint/scale values for the model
         this->model->setPosition(this->model->getPosition() - n);

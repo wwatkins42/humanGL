@@ -27,6 +27,8 @@ public:
     void            update( const mat4& parentTransform, Shader* shader );
     void            render( Shader* shader );
     void            updateWorldPosition( const mat4& parentTransform );
+    void            switchModel( short key );
+
     mat4            popMatrix( void );
     void            pushMatrix( void ) { stack.push(stack.top()); };
     void            pushMatrix( const mat4& mat ) { stack.push(mat); };
@@ -52,6 +54,8 @@ public:
     const bool      getSelected( void ) const { return (selected); };
     void            setSelected( bool b ) { selected = b; }; // DEBUG
 
+    vec3            scaleExternal;
+
 private:
     int                 nIndices;           // the number of triangles of the model
     GLuint              vao;                // Vertex Array Object
@@ -70,8 +74,8 @@ private:
     vec3                scaling;            // the value changed in animation as a modifier
     vec4                color;              // the color of the model
 
-    void                initBufferObjects( int mode = GL_STATIC_DRAW, eModelType modelType = eModelType::cube );
+    bool                selected;           // true if the model is selected
 
-    bool                selected; // DEBUG
+    void                initBufferObjects( int mode = GL_STATIC_DRAW, eModelType modelType = eModelType::cube );
 
 };

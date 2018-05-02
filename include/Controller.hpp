@@ -21,7 +21,8 @@ typedef std::chrono::steady_clock::time_point tTimePoint;
 enum class eKeyMode {
     press,   /* default */
     toggle,  /* press to switch the key state */
-    cooldown /* press and the state remains on for so long */
+    cooldown,/* press and the state remains on for so long */
+    instant  /* press and the state remains for a frame, wait cooldown to press again */
 };
 
 typedef struct  sKey {
@@ -63,6 +64,7 @@ private:
     void            keyUpdate( int k );
     void            keyToggle( int k, short value );
     void            keyCooldown( int k, short value );
+    void            keyInstant( int k, short value );
     tMilliseconds   getElapsedMilliseconds( tTimePoint prev );
 
 };

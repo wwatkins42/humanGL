@@ -18,14 +18,12 @@ void	Renderer::loop( void ) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         this->shader.use();
         this->env->getController()->update();
-
         this->camera.handleKeys( this->env->getController()->getKeys(), this->env->getCharacter()->getParentBone()->getModel()->getWorldPosition() );
+        this->raycastObjectSelect();
         this->env->getAnimator()->handleKeys( this->env->getController()->getKeys() );
         this->env->getAnimator()->update();
-
-        this->raycastObjectSelect();
-
         this->updateShaderUniforms();
+        this->env->getCharacter()->switchBonesModel( this->env->getController()->getKeyValue(GLFW_KEY_M) );
         glfwSwapBuffers(this->env->getWindow().ptr);
     }
 }
@@ -36,8 +34,8 @@ void    Renderer::updateShaderUniforms( void ) {
 }
 
 inline float rayEllipsoidIntersect( const vec3& rayOrigin, const vec3& rayDir, const vec3& ellipsoidOrigin, const vec3& ellipsoidRadius ) {
-    vec3 length = (rayOrigin - ellipsoidOrigin).divide(ellipsoidRadius);
-    vec3    dir = rayDir.divide(ellipsoidRadius);
+    vec3 length = (rayOrigin - ellipsoidOrigin).divide(ellipsoidRadius * 0.5);
+    vec3    dir = rayDir.divide(ellipsoidRadius * 0.5);
 
     float a = mtls::dot(dir, dir);
     float b = 2 * mtls::dot(length, dir);
@@ -54,7 +52,7 @@ inline float rayEllipsoidIntersect( const vec3& rayOrigin, const vec3& rayDir, c
 }
 
 void    Renderer::raycastObjectSelect( void ) {
-    float       dist = 10000000.0f;
+    float       dist = 100000.0f;
     std::string objectId = "none";
     std::unordered_map<std::string, Bone*> obj = this->env->getCharacter()->getBones();
 
@@ -64,11 +62,11 @@ void    Renderer::raycastObjectSelect( void ) {
         /* matrix to transform from clip-space to world-space */
         mat4    toWorld = mtls::inverse(this->camera.getProjectionMatrix().transpose() * this->camera.getViewMatrix().transpose());
 
-        vec4   nearWorld = toWorld * vec4({ m[0], m[1],-1, 1 });
-        vec4    farWorld = toWorld * vec4({ m[0], m[1], 1, 1 });
+        vec4   nearWorld = toWorld * vec4({ m[0], m[1], 1, 1 });
+        vec4    farWorld = toWorld * vec4({ m[0], m[1],-1, 1 });
         vec3    near = static_cast<vec3>(nearWorld / nearWorld[3]);
         vec3     far = static_cast<vec3>(farWorld / farWorld[3]);
-        vec3    rayDir = mtls::normalize(far - near);
+        vec3    rayDir = mtls::normalize(near - far);
 
         for (auto it = obj.begin(); it != obj.end(); it++) {
             float t = rayEllipsoidIntersect(this->camera.getPosition(), rayDir, obj[it->first]->getModel()->getWorldPosition(), obj[it->first]->getModel()->getScale() + obj[it->first]->getModel()->getScaling());
@@ -84,7 +82,7 @@ void    Renderer::raycastObjectSelect( void ) {
         if (objectId != "none")
             (*this->env->getCharacter())[objectId]->getModel()->setSelected(true);
     }
-
+    /* key handling for scaling of the selected bone */
     for (auto it = obj.begin(); it != obj.end(); it++) {
         if ((*this->env->getCharacter())[it->first]->getModel()->getSelected())
             this->env->getCharacter()->scaleSelection(this->env->getController()->getKeys(), it->first);

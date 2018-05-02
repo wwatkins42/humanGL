@@ -63,8 +63,8 @@ void    Camera::handleKeys( const std::array<tKey, N_KEY>& keys, const vec3& loc
     /* translation is in the same coordinate system as view (moves in same direction) */
     translate = this->viewMatrix * mtls::normalize(translate);
     /* change the target if we are in orbit or free mode */
-    if (keys[GLFW_KEY_L].value)
-        this->target = this->interpolate(this->target, lockPos, keys[GLFW_KEY_L].stamp, 2000);
+    if (keys[GLFW_KEY_C].value)
+        this->target = this->interpolate(this->target, lockPos, keys[GLFW_KEY_C].stamp, 2000);
     else
         this->target = this->target + static_cast<vec3>(this->viewMatrix * vec4({0,0,-1,0}));
     this->position = this->position - static_cast<vec3>(translate) * 0.5f;

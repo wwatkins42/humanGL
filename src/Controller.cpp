@@ -31,6 +31,7 @@ void	Controller::keyUpdate( int k ) {
     switch (this->key[k].type) {
         case eKeyMode::toggle: this->keyToggle(k, value); break;
         case eKeyMode::cooldown: this->keyCooldown(k, value); break;
+        case eKeyMode::instant: this->keyInstant(k, value); break;
         default: this->key[k].value = value; break;
     };
 }
@@ -56,6 +57,16 @@ void    Controller::keyCooldown( int k, short value ) {
         this->key[k].value = 0;
 }
 
+void    Controller::keyInstant( int k, short value ) {
+    if (this->key[k].value && getElapsedMilliseconds(this->key[k].last).count() <= this->key[k].cooldown)
+        this->key[k].value = 0;
+    if (value && !this->key[k].value && getElapsedMilliseconds(this->key[k].last).count() > this->key[k].cooldown) {
+        this->key[k].value = 1;
+        this->key[k].last = std::chrono::steady_clock::now();
+        this->key[k].stamp = std::chrono::steady_clock::now();
+    }
+}
+
 void    Controller::setKeyProperties( int k, eKeyMode type, uint cooldown ) {
     this->key[k].type = type;
     this->key[k].cooldown = cooldown;
@@ -64,3 +75,19 @@ void    Controller::setKeyProperties( int k, eKeyMode type, uint cooldown ) {
 tMilliseconds   Controller::getElapsedMilliseconds( tTimePoint prev ) {
     return (std::chrono::steady_clock::now() - prev);
 }
+/*
+          [w][s] : move forward/backward
+          [a][d] : move left/right
+  [space][shift] : move up/down
+
+          [i][k] : scale z axis
+          [j][l] : scale x axis
+          [y][h] : scale y axis
+          [-][=] : scale all axes
+
+             [m] : switch bones model
+             [c] : switch free/orbit camera mode
+    [1][2][3][4] : select animation
+           [esc] : quit
+    (left click) : select bone
+*/

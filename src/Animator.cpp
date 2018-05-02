@@ -27,7 +27,6 @@ void    Animator::selectAnim( size_t id ) {
         if (this->animations[cAnim].frames->size() > 1) {
             for (size_t i = 0; i < (*this->animations[cAnim].frames)[this->cFrame]->size(); ++i) {
                 tBoneTransform curr = (*(*this->animations[cAnim].frames)[this->cFrame])[i];
-                (*this->skeleton)[curr.boneId]->rescale(vec3({0, 0, 0}));
                 (*this->skeleton)[curr.boneId]->getModel()->setExternalTransform(mtls::mat4identity);
             }
             this->skeleton->update();
@@ -52,7 +51,7 @@ void    Animator::update( void ) {
             tBoneTransform next = (*(*this->animations[cAnim].frames)[this->getNextFrame()])[i];
             if (this->skeleton->getBones().find(curr.boneId) == this->skeleton->getBones().end())
                 continue;
-            (*this->skeleton)[curr.boneId]->rescale(mtls::lerp(curr.scale, next.scale, t));
+            (*this->skeleton)[curr.boneId]->rescale((*this->skeleton)[curr.boneId]->getModel()->scaleExternal + mtls::lerp(curr.scale, next.scale, t));
             transform.identity();
             mtls::translate(transform, mtls::lerp(curr.translation, next.translation, t));
             mtls::rotate(transform, mtls::lerp(curr.rotation, next.rotation, t), (*this->skeleton)[curr.boneId]->getModel()->getJoint());

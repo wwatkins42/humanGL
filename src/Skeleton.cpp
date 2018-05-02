@@ -19,9 +19,20 @@ Bone*   Skeleton::operator[]( const std::string& id ) {
 }
 
 void    Skeleton::scaleSelection( const std::array<tKey, N_KEY>& keys, const std::string& boneId ) {
-    float s = (keys[GLFW_KEY_EQUAL].value - keys[GLFW_KEY_MINUS].value) * 0.05f;
-    vec3    scaling = mtls::max(this->bones[boneId]->getModel()->getScaling() + s, 0);
-    // this->bones[boneId]->getModel()->setScale(scaling);
-    this->bones[boneId]->rescale(scaling);
+    /* scaling all axis */
+    float   gScale = (keys[GLFW_KEY_EQUAL].value - keys[GLFW_KEY_MINUS].value) * 0.05f;
+    /* individual axis scaling */
+    vec3    aScale({
+        (keys[GLFW_KEY_L].value - keys[GLFW_KEY_J].value) * 0.05f,
+        (keys[GLFW_KEY_Y].value - keys[GLFW_KEY_H].value) * 0.05f,
+        (keys[GLFW_KEY_I].value - keys[GLFW_KEY_K].value) * 0.05f,
+    });
+    this->bones[boneId]->getModel()->scaleExternal = mtls::max(this->bones[boneId]->getModel()->scaleExternal + aScale + gScale, 0);
+    this->bones[boneId]->rescale(mtls::max(this->bones[boneId]->getModel()->getScaling() + aScale + gScale, 0));
     this->update();
+}
+
+void    Skeleton::switchBonesModel( short key ) {
+    for (auto it = this->bones.begin(); it != this->bones.end(); it++)
+        it->second->getModel()->switchModel(key);
 }

@@ -39,7 +39,7 @@ void	Env::initGlfwEnvironment( const std::string& glVersion ) {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, std::stoi(glVersion.substr(p+1)));
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);//GL_FALSE);
+	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 }
 
 void	Env::initGlfwWindow( size_t width, size_t height ) {
@@ -53,7 +53,8 @@ void	Env::initGlfwWindow( size_t width, size_t height ) {
 }
 
 void    Env::setupController( void ) {
-    this->controller->setKeyProperties(GLFW_KEY_L, eKeyMode::toggle, 1000);
+    this->controller->setKeyProperties(GLFW_KEY_C, eKeyMode::toggle, 1000);
+    this->controller->setKeyProperties(GLFW_KEY_M, eKeyMode::toggle, 500);
 }
 
 void    Env::framebufferSizeCallback( GLFWwindow* window, int width, int height ) {
