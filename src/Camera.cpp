@@ -4,9 +4,9 @@ Camera::Camera( float fov, float aspect ) : aspect(aspect), fov(fov) {
     this->projectionMatrix = Camera::createPerspectiveProjectionMatrix(fov, aspect);
     this->translation = vec3({0, 0, 0});
     this->front = vec3({0, 0, 0}); // NEW
-    this->position = vec3({5, 0, 10});
-    // this->target = vec3({0, 0, 0});
-    this->target = this->front;
+    this->position = vec3({-5, 0, 10});
+    // this->position = vec3({0, 0, 10});
+    this->target = vec3({0, 0, 0});
     this->viewMatrix = mtls::lookAt(this->position, this->front);
 }
 

@@ -64,18 +64,25 @@ void    Renderer::raycast( void ) {
     // vec3    rayDir = mtls::normalize(vec4({rayWorld[0], rayWorld[1], -1, 0}));
 
     /* https://stackoverflow.com/questions/2093096/implementing-ray-picking */
-    mat4    toWorld = mtls::inverse(this->camera.getProjectionMatrix().transpose() * this->camera.getViewMatrix());
-    vec4    nearPoint = toWorld * vec4({ mouse[0], mouse[1], 0, 1 });
-    vec3    rayDir = mtls::normalize((vec3)nearPoint);// - this->camera.getPosition());
+    // vec4    view = mtls::normalize(this->camera.getFront() - this->camera.getPosition());
+    // vec4    nearPoint = this->camera.getPosition() + view + vec4({ mouse[0], mouse[1], 0, 1 });
+    // vec3    rayDir = (vec3)nearPoint - this->camera.getPosition();
+    // rayDir = mtls::normalize(rayDir);
 
-    // std::cout << mtls::inverse(this->camera.getViewMatrix()) << std::endl;
+
+    mat4    toWorld = mtls::inverse(this->camera.getProjectionMatrix() * this->camera.getViewMatrix()); // same as view.inverse * projection.inverse
+    vec4    n = toWorld * vec4({ mouse[0], mouse[1], -0.1, 1 });
+    vec4    f = toWorld * vec4({ mouse[0], mouse[1], -100, 1 });
+
+    vec3    near = vec3({ n[0] / n[3], n[1] / n[3], n[2] / n[3] });
+    vec3     far = vec3({ f[0] / f[3], f[1] / f[3], f[2] / f[3] });
+    // vec3    near = mtls::normalize( vec3({ n[0], n[1], n[2] }) );
+    // vec3     far = mtls::normalize( vec3({ f[0], f[1], f[2] }) );
+
+    // vec3    rayDir = mtls::normalize(near - far);
+    vec3    rayDir = mtls::normalize(far - near);
 
     std::cout << rayDir << std::endl;
-    // rayDir = mtls::normalize(this->camera.getFront() - this->camera.getPosition());
-
-    // mat4 rot = mtls::mat4identity;
-    // mtls::rotate(rot, mtls::normalize(this->camera.getFront() - this->camera.getPosition()) );
-    // rayDir = (vec3)(rot * vec4({rayDir[0],rayDir[1],rayDir[2],1}));
 
     std::unordered_map<std::string, Bone*>   obj = this->env->getCharacter()->getBones();
     for (auto it = obj.begin(); it != obj.end(); it++) {
