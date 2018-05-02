@@ -82,9 +82,9 @@ tAnimationFrames*   Env::createIdleAnimation( void ) {
             {"lowerArmRight", vec3({   0,   0, 0}), vec3({ 0.03,    0,    0 }), vec3({   0,    0,   0 })},
             {"torso",         vec3({   0,   0, 0}), vec3({    0,    0,    0 }), vec3({ 0.2, 0.15, 0.1 })},
             {"head",          vec3({   0,   0, 0}), vec3({    0,    0,    0 }), vec3({   0,    0,   0 })},
-            {"upperLegLeft",  vec3({ 0.1,   0, 0}), vec3({    0,    0,    0 }), vec3({   0,    0,   0 })},
+            {"upperLegLeft",  vec3({ 0.01,  0, 0}), vec3({    0,    0,    0 }), vec3({   0,    0,   0 })},
             {"lowerLegLeft",  vec3({   0,   0, 0}), vec3({    0,    0,    0 }), vec3({   0,    0,   0 })},
-            {"upperLegRight", vec3({-0.1,   0, 0}), vec3({    0,    0,    0 }), vec3({   0,    0,   0 })},
+            {"upperLegRight", vec3({-0.01,  0, 0}), vec3({    0,    0,    0 }), vec3({   0,    0,   0 })},
             {"lowerLegRight", vec3({   0,   0, 0}), vec3({    0,    0,    0 }), vec3({   0,    0,   0 })},
         }}),
     }});
@@ -485,7 +485,7 @@ std::unordered_map<std::string, Bone*>  Env::createBetterCharacterSkeleton( void
         "kneeLeft",
         vec3({0, -1, 0}),
         vec3({0, 0, 0}),
-        vec3({0.4, 0.4, 0.4}),
+        vec3({0.3, 0.3, 0.3}),
         vec3({0, 0, 0}),
         0xA4B37F
     );
@@ -494,7 +494,7 @@ std::unordered_map<std::string, Bone*>  Env::createBetterCharacterSkeleton( void
         "kneeRight",
         vec3({0, -1, 0}),
         vec3({0, 0, 0}),
-        vec3({0.4, 0.4, 0.4}),
+        vec3({0.3, 0.3, 0.3}),
         vec3({0, 0, 0}),
         0xA4B37F
     );
@@ -521,7 +521,7 @@ std::unordered_map<std::string, Bone*>  Env::createBetterCharacterSkeleton( void
         "hipLeft",
         vec3({-0.6, -0.8, 0}),
         vec3({0, 0, 0}),
-        vec3({0.4, 0.4, 0.4}),
+        vec3({0.3, 0.3, 0.3}),
         vec3({0, 0, 0}),
         0xA4B37F
     );
@@ -530,7 +530,7 @@ std::unordered_map<std::string, Bone*>  Env::createBetterCharacterSkeleton( void
         "hipRight",
         vec3({0.6, -0.8, 0}),
         vec3({0, 0, 0}),
-        vec3({0.4, 0.4, 0.4}),
+        vec3({0.3, 0.3, 0.3}),
         vec3({0, 0, 0}),
         0xA4B37F
     );
@@ -557,7 +557,7 @@ std::unordered_map<std::string, Bone*>  Env::createBetterCharacterSkeleton( void
         "elbowLeft",
         vec3({0, -1, 0}),
         vec3({0, 0, 0}),
-        vec3({0.35, 0.35, 0.35}),
+        vec3({0.3, 0.3, 0.3}),
         vec3({0, 0, 0}),
         0xA4B37F
     );
@@ -566,7 +566,7 @@ std::unordered_map<std::string, Bone*>  Env::createBetterCharacterSkeleton( void
         "elbowRight",
         vec3({0, -1, 0}),
         vec3({0, 0, 0}),
-        vec3({0.35, 0.35, 0.35}),
+        vec3({0.3, 0.3, 0.3}),
         vec3({0, 0, 0}),
         0xA4B37F
     );
@@ -593,7 +593,7 @@ std::unordered_map<std::string, Bone*>  Env::createBetterCharacterSkeleton( void
         "shoulderLeft",
         vec3({-1.7, 0, 0}),
         vec3({0, 0, 0}),
-        vec3({0.4, 0.4, 0.4}),
+        vec3({0.3, 0.3, 0.3}),
         vec3({0, 0, 0}),
         0xA4B37F
     );
@@ -602,7 +602,7 @@ std::unordered_map<std::string, Bone*>  Env::createBetterCharacterSkeleton( void
         "shoulderRight",
         vec3({1.7, 0, 0}),
         vec3({0, 0, 0}),
-        vec3({0.4, 0.4, 0.4}),
+        vec3({0.3, 0.3, 0.3}),
         vec3({0, 0, 0}),
         0xA4B37F
     );
