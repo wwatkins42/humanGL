@@ -37,8 +37,6 @@ public:
     const float getAspect( void ) const { return (aspect); };
     const vec3& getPosition( void ) const { return (position); };
     const vec3& getTarget( void ) const { return (target); };
-    const vec3& getTranslation( void ) const { return (translation); };
-    const vec3& getFront( void ) const { return (front); };
 
     static mat4 createPerspectiveProjectionMatrix( float fov, float aspect, float near = 0.1, float far = 100.0 );
 
@@ -49,8 +47,5 @@ private:
     float   aspect;
     vec3    position;
     vec3    target;
-
-    vec3    translation;
-    vec3    front;
 
 };
