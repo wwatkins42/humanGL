@@ -70,16 +70,21 @@ void    Renderer::raycast( void ) {
     // rayDir = mtls::normalize(rayDir);
 
 
-    mat4    toWorld = mtls::inverse(this->camera.getProjectionMatrix() * this->camera.getViewMatrix()); // same as view.inverse * projection.inverse
-    vec4    n = toWorld * vec4({ mouse[0], mouse[1], -0.1, 1 });
-    vec4    f = toWorld * vec4({ mouse[0], mouse[1], -100, 1 });
+    // mat4    toWorld = mtls::inverse(this->camera.getProjectionMatrix() * this->camera.getViewMatrix()); // same as view.inverse * projection.inverse
+    // vec4    nearPoint = toWorld * vec4({ mouse[0], mouse[1], 0, 1 });
+    // vec3    rayDir = mtls::normalize(nearPoint - this->camera.getPosition());
 
-    vec3    near = vec3({ n[0] / n[3], n[1] / n[3], n[2] / n[3] });
-    vec3     far = vec3({ f[0] / f[3], f[1] / f[3], f[2] / f[3] });
-    // vec3    near = mtls::normalize( vec3({ n[0], n[1], n[2] }) );
-    // vec3     far = mtls::normalize( vec3({ f[0], f[1], f[2] }) );
+    vec4    m = vec4({ mouse[0], mouse[1], 0, 1 });
+    vec4    ndcNear = vec4({ m[0], m[1],-1, 1 });
+    vec4    ndcFar  = vec4({ m[0], m[1], 1, 1 });
+    ndcNear = mtls::inverse(this->camera.getProjectionMatrix().transpose()) * ndcNear;
+    ndcFar  = mtls::inverse(this->camera.getProjectionMatrix().transpose()) * ndcFar;
 
-    // vec3    rayDir = mtls::normalize(near - far);
+    vec3    near = static_cast<vec3>(ndcNear / ndcNear[3]);
+    vec3    far  = static_cast<vec3>( ndcFar /  ndcFar[3]);
+    near = static_cast<vec3>(mtls::inverse(this->camera.getViewMatrix().transpose()) * vec4({ near[0], near[1], near[2], 1 }) );
+    far  = static_cast<vec3>(mtls::inverse(this->camera.getViewMatrix().transpose()) * vec4({ far[0], far[1], far[2], 1 }) );
+
     vec3    rayDir = mtls::normalize(far - near);
 
     std::cout << rayDir << std::endl;
