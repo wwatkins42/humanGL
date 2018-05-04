@@ -48,4 +48,5 @@ private:
     tAnimationFrames*                       createWalkingAnimation( void );
     tAnimationFrames*                       createJumpingAnimation( void );
     tAnimationFrames*                       createBackflipAnimation( void );
+    tAnimationFrames*                       createBackflipConnectedAnimation( void );
 };
