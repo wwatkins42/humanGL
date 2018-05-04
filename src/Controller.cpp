@@ -32,6 +32,7 @@ void	Controller::keyUpdate( int k ) {
         case eKeyMode::toggle: this->keyToggle(k, value); break;
         case eKeyMode::cooldown: this->keyCooldown(k, value); break;
         case eKeyMode::instant: this->keyInstant(k, value); break;
+        case eKeyMode::cycle: this->keyCycle(k, value); break;
         default: this->key[k].value = value; break;
     };
 }
@@ -67,9 +68,21 @@ void    Controller::keyInstant( int k, short value ) {
     }
 }
 
-void    Controller::setKeyProperties( int k, eKeyMode type, uint cooldown ) {
+void    Controller::keyCycle( int k, short value ) {
+    if (value && getElapsedMilliseconds(this->key[k].last).count() > this->key[k].cooldown) {
+        this->key[k].value = (this->key[k].value + 1 >= this->key[k].cycles ? 0 : this->key[k].value + 1);
+        this->key[k].last = std::chrono::steady_clock::now();
+        this->key[k].stamp = std::chrono::steady_clock::now();
+    }
+    if (!value)
+        this->key[k].last = this->ref;
+}
+
+void    Controller::setKeyProperties( int k, eKeyMode type, short sval, uint cooldown, uint cycles ) {
+    this->key[k].value = sval;
     this->key[k].type = type;
     this->key[k].cooldown = cooldown;
+    this->key[k].cycles = cycles;
 }
 
 tMilliseconds   Controller::getElapsedMilliseconds( tTimePoint prev ) {

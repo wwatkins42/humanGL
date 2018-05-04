@@ -22,13 +22,15 @@ enum class eKeyMode {
     press,   /* default */
     toggle,  /* press to switch the key state */
     cooldown,/* press and the state remains on for so long */
-    instant  /* press and the state remains for a frame, wait cooldown to press again */
+    instant, /* press and the state remains for a frame, wait cooldown to press again */
+    cycle,   /* press and the value cycles from 0 to n */
 };
 
 typedef struct  sKey {
     short               value = 0;
     eKeyMode            type = eKeyMode::press;
     uint                cooldown = 250;
+    uint                cycles = 1;
     tTimePoint          last = std::chrono::steady_clock::now();
     tTimePoint          stamp = std::chrono::steady_clock::now();
 }               tKey;
@@ -45,7 +47,7 @@ public:
     ~Controller( void );
 
     void            update( void );
-    void            setKeyProperties( int k, eKeyMode type, uint cooldown );
+    void            setKeyProperties( int k, eKeyMode type, short sval, uint cooldown = 250, uint cycles = 1 );
     /* getters */
     short           getKeyValue( int k ) const { return (key[k].value); };
     short           getMouseButtonValue( int b ) const { return (mouse.button[b]); };
@@ -65,6 +67,7 @@ private:
     void            keyToggle( int k, short value );
     void            keyCooldown( int k, short value );
     void            keyInstant( int k, short value );
+    void            keyCycle( int k, short value );
     tMilliseconds   getElapsedMilliseconds( tTimePoint prev );
 
 };

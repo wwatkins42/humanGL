@@ -53,8 +53,8 @@ void	Env::initGlfwWindow( size_t width, size_t height ) {
 }
 
 void    Env::setupController( void ) {
-    this->controller->setKeyProperties(GLFW_KEY_C, eKeyMode::toggle, 1000);
-    this->controller->setKeyProperties(GLFW_KEY_M, eKeyMode::toggle, 500);
+    this->controller->setKeyProperties(GLFW_KEY_C, eKeyMode::toggle, 0, 1000);
+    this->controller->setKeyProperties(GLFW_KEY_M, eKeyMode::cycle, 1, 300, 3);
 }
 
 void    Env::framebufferSizeCallback( GLFWwindow* window, int width, int height ) {
