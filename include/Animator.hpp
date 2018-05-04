@@ -32,6 +32,7 @@ typedef std::chrono::duration<double,std::milli> tMilliseconds;
 typedef struct  sAnimation {
     tAnimationFrames*   frames;
     size_t              cycleDuration;
+    bool                interpolateLoopFrame;
 }               tAnimation;
 
 class Animator {

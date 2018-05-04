@@ -43,7 +43,7 @@ void    Animator::update( void ) {
         this->pTimepoint = std::chrono::steady_clock::now();
         this->cFrame = this->getNextFrame();
     }
-    if (this->animations[cAnim].frames->size() > 1) {
+    // if (this->animations[cAnim].frames->size() > 1) { // TODO: reactivate
         float   t = this->getFrameInterpolation(eInterpolationType::linear);
         mat4    transform;
         for (size_t i = 0; i < (*this->animations[cAnim].frames)[this->cFrame]->size(); ++i) {
@@ -53,11 +53,16 @@ void    Animator::update( void ) {
                 continue;
             (*this->skeleton)[curr.boneId]->rescale((*this->skeleton)[curr.boneId]->getModel()->scaleExternal + mtls::lerp(curr.scale, next.scale, t));
             transform.identity();
-            mtls::translate(transform, mtls::lerp(curr.translation, next.translation, t));
-            mtls::rotate(transform, mtls::lerp(curr.rotation, next.rotation, t), (*this->skeleton)[curr.boneId]->getModel()->getJoint());
+            if (this->animations[cAnim].interpolateLoopFrame and this->getNextFrame() == 0) {
+                mtls::translate(transform, next.translation);
+                mtls::rotate(transform, next.rotation, (*this->skeleton)[curr.boneId]->getModel()->getJoint());
+            } else {
+                mtls::translate(transform, mtls::lerp(curr.translation, next.translation, t));
+                mtls::rotate(transform, mtls::lerp(curr.rotation, next.rotation, t), (*this->skeleton)[curr.boneId]->getModel()->getJoint());
+            }
             (*this->skeleton)[curr.boneId]->getModel()->setExternalTransform(transform);
         }
-    }
+    // }
     this->skeleton->update();
 }
 
