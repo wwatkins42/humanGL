@@ -1,8 +1,7 @@
 #include "Bone.hpp"
 
 Bone::Bone( std::forward_list<Bone*> children, const std::string& name, const vec3& position, const vec3& orientation, const vec3& scale, const vec3& joint, const int64_t color ) : name(name), children(children) {
-    this->model = new Model(position, orientation, scale, joint, color); // TODO: adapt for the * 0.5
-    // this->model = new Model(position * 0.5, orientation, scale, joint * 0.5, color); // TODO: adapt for the * 0.5
+    this->model = new Model(position, orientation, scale, joint, color);
 }
 
 Bone::~Bone( void ) {

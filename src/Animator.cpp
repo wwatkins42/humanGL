@@ -43,7 +43,7 @@ void    Animator::update( void ) {
         this->pTimepoint = std::chrono::steady_clock::now();
         this->cFrame = this->getNextFrame();
     }
-    // if (this->animations[cAnim].frames->size() > 1) { // TODO: reactivate
+    if (this->animations[cAnim].frames->size() > 1) { // TODO: reactivate
         float   t = this->getFrameInterpolation(eInterpolationType::linear);
         mat4    transform;
         for (size_t i = 0; i < (*this->animations[cAnim].frames)[this->cFrame]->size(); ++i) {
@@ -61,8 +61,12 @@ void    Animator::update( void ) {
                 mtls::rotate(transform, mtls::lerp(curr.rotation, next.rotation, t), (*this->skeleton)[curr.boneId]->getModel()->getJoint());
             }
             (*this->skeleton)[curr.boneId]->getModel()->setExternalTransform(transform);
+            if (curr.boneId == "lowerLegRight") // DEBUG
+                std::cout << (*this->skeleton)[curr.boneId]->getModel()->getWorldPosition() +
+                (*this->skeleton)[curr.boneId]->getModel()->getScale() * 0.5f
+                 << std::endl;
         }
-    // }
+    }
     this->skeleton->update();
 }
 
