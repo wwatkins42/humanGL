@@ -7,7 +7,7 @@ Model::Model( const vec3& position, const vec3& orientation, const vec3& scale, 
     this->externalTransform.identity();
     this->worldPosition = vec3({0, 0, 0});
     this->selected = false;
-    this->scaleExternal = vec3({0, 0, 0});
+    this->scaleExternal = vec3({0, 0, 0}); // TODO: change that ?
 }
 
 Model::~Model( void ) {

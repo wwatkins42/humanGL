@@ -54,7 +54,7 @@ public:
     const bool      getSelected( void ) const { return (selected); };
     void            setSelected( bool b ) { selected = b; }; // DEBUG
 
-    vec3            scaleExternal;
+    vec3            scaleExternal; // MEH
 
 private:
     int                 nIndices;           // the number of triangles of the model

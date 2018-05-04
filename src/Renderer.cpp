@@ -61,13 +61,13 @@ void    Renderer::raycastObjectSelect( void ) {
         vec2    m = mousePosToClipSpace( this->env->getController()->getMousePosition(), this->env->getWindow().width, this->env->getWindow().height );
         /* matrix to transform from clip-space to world-space */
         mat4    toWorld = mtls::inverse(this->camera.getProjectionMatrix().transpose() * this->camera.getViewMatrix().transpose());
-
+        /* create a ray from the camera in world-space */
         vec4   nearWorld = toWorld * vec4({ m[0], m[1], 1, 1 });
         vec4    farWorld = toWorld * vec4({ m[0], m[1],-1, 1 });
         vec3    near = static_cast<vec3>(nearWorld / nearWorld[3]);
         vec3     far = static_cast<vec3>(farWorld / farWorld[3]);
         vec3    rayDir = mtls::normalize(near - far);
-
+        /* check ray-ellipsoid intersection for all bones */
         for (auto it = obj.begin(); it != obj.end(); it++) {
             float t = rayEllipsoidIntersect(this->camera.getPosition(), rayDir, obj[it->first]->getModel()->getWorldPosition(), obj[it->first]->getModel()->getScale() + obj[it->first]->getModel()->getScaling());
             if (t > 0 and t < dist) {

@@ -7,12 +7,11 @@ Env::Env( void ) : character() {
         if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
             throw Exception::InitError("glad initialization failed");
         this->controller = new Controller(this->window.ptr);
-        // this->character = new Skeleton(this->createCharacterSkeleton(), "torso");
-        this->character = new Skeleton(this->createBetterCharacterSkeleton(), "torso");
+        this->character = new Skeleton(this->createCharacterSkeleton(), "torso");
         this->animator = new Animator(this->character, {
-            {new tAnimationFrames({{}}), 100}, // TODO: handle that differently
+            {new tAnimationFrames({{}}), 100},
             {this->createIdleAnimation(), 1800},
-            {this->createBetterWalkingAnimation(), 750},
+            {this->createWalkingAnimation(), 750},
             {this->createJumpingAnimation(), 1100},
         });
         this->setupController();
@@ -91,7 +90,7 @@ tAnimationFrames*   Env::createIdleAnimation( void ) {
     return (idleAnimation);
 }
 
-tAnimationFrames*   Env::createBetterWalkingAnimation( void ) {
+tAnimationFrames*   Env::createWalkingAnimation( void ) {
     tAnimationFrames*   walkingAnimation = new tAnimationFrames({{
         // contact
         new std::vector<tBoneTransform>({{
@@ -210,36 +209,6 @@ tAnimationFrames*   Env::createBetterWalkingAnimation( void ) {
     return (walkingAnimation);
 }
 
-tAnimationFrames*   Env::createWalkingAnimation( void ) {
-    tAnimationFrames*   walkingAnimation = new tAnimationFrames({{
-        new std::vector<tBoneTransform>({{
-            {"upperArmLeft",  vec3({0, 0, 0}), vec3({   1,   0, 0.5}), vec3({ 0, 0, 0 })},
-            {"lowerArmLeft",  vec3({0, 0, 0}), vec3({ 2.4,   0,-0.5}), vec3({ 0, 0, 0 })},
-            {"upperArmRight", vec3({0, 0, 0}), vec3({  -1,   0,   0}), vec3({ 0, 0, 0 })},
-            {"lowerArmRight", vec3({0, 0, 0}), vec3({ 0.4,   0,   0}), vec3({ 0, 0, 0 })},
-            {"torso",         vec3({0, 0, 0}), vec3({   0,-0.2,   0}), vec3({ 0, 0, 0 })},
-            {"head",          vec3({0, 0, 0}), vec3({   0,0.15,   0}), vec3({ 0, 0, 0 })},
-            {"upperLegLeft",  vec3({0, 0, 0}), vec3({  -1,   0,   0}), vec3({ 0, 0, 0 })},
-            {"lowerLegLeft",  vec3({0, 0, 0}), vec3({  -1,   0,   0}), vec3({ 0, 0, 0 })},
-            {"upperLegRight", vec3({0, 0, 0}), vec3({ 1.2,   0,   0}), vec3({ 0, 0, 0 })},
-            {"lowerLegRight", vec3({0, 0, 0}), vec3({   0,   0,   0}), vec3({ 0, 0, 0 })},
-        }}),
-        new std::vector<tBoneTransform>({{
-            {"upperArmLeft",  vec3({0, 0, 0}), vec3({  -1,    0,   0}), vec3({ 0, 0, 0 })},
-            {"lowerArmLeft",  vec3({0, 0, 0}), vec3({ 0.4,    0,   0}), vec3({ 0, 0, 0 })},
-            {"upperArmRight", vec3({0, 0, 0}), vec3({   1,    0,-0.5}), vec3({ 0, 0, 0 })},
-            {"lowerArmRight", vec3({0, 0, 0}), vec3({ 2.4,    0, 0.5}), vec3({ 0, 0, 0 })},
-            {"torso",         vec3({0, 0, 0}), vec3({   0,  0.2,   0}), vec3({ 0, 0, 0 })},
-            {"head",          vec3({0, 0, 0}), vec3({   0,-0.15,   0}), vec3({ 0, 0, 0 })},
-            {"upperLegLeft",  vec3({0, 0, 0}), vec3({ 1.2,    0,   0}), vec3({ 0, 0, 0 })},
-            {"lowerLegLeft",  vec3({0, 0, 0}), vec3({   0,    0,   0}), vec3({ 0, 0, 0 })},
-            {"upperLegRight", vec3({0, 0, 0}), vec3({  -1,    0,   0}), vec3({ 0, 0, 0 })},
-            {"lowerLegRight", vec3({0, 0, 0}), vec3({  -1,    0,   0}), vec3({ 0, 0, 0 })},
-        }}),
-    }});
-    return (walkingAnimation);
-}
-
 tAnimationFrames*   Env::createJumpingAnimation( void ) {
     tAnimationFrames*   jumpingAnimation = new tAnimationFrames({{
         // frame 1: start
@@ -347,116 +316,21 @@ tAnimationFrames*   Env::createJumpingAnimation( void ) {
     return (jumpingAnimation);
 }
 
-std::unordered_map<std::string, Bone*>  Env::createCharacterSkeleton( void ) {
+std::unordered_map<std::string, Bone*>  Env::createCharacterSkeleton( void ) { // NOTE: add hands
     std::unordered_map<std::string, Bone*>  bones;
     bones["head"] = new Bone(
         (std::forward_list<Bone*>){{}},
         "head",
-        vec3({0, 2, 0}),
-        vec3({0, 0, 0}),
-        vec3({1, 1, 1}),
-        vec3({0, -0.5, 0}),
-        0xEEAD7E
-    );
-    bones["lowerLegLeft"] = new Bone(
-        (std::forward_list<Bone*>){{}},
-        "lowerLegLeft",
-        vec3({0, -1.5, 0}),
-        vec3({0, 0, 0}),
-        vec3({0.75, 1.5, 0.75}),
-        vec3({0, 0.75, 0}),
-        0x3F5D6A
-    );
-    bones["lowerLegRight"] = new Bone(
-        (std::forward_list<Bone*>){{}},
-        "lowerLegRight",
-        vec3({0, -1.5, 0}),
-        vec3({0, 0, 0}),
-        vec3({0.75, 1.5, 0.75}),
-        vec3({0, 0.75, 0}),
-        0x3F5D6A
-    );
-    bones["upperLegLeft"] = new Bone(
-        (std::forward_list<Bone*>){ bones["lowerLegLeft"] },
-        "upperLegLeft",
-        vec3({-0.624, -2.25, 0}),
-        vec3({0, 0, 0}),
-        vec3({0.75, 1.5, 0.75}),
-        vec3({-0.375, 0.75, 0}),
-        0x3F5D6A
-    );
-    bones["upperLegRight"] = new Bone(
-        (std::forward_list<Bone*>){ bones["lowerLegRight"] },
-        "upperLegRight",
-        vec3({0.624, -2.25, 0}),
-        vec3({0, 0, 0}),
-        vec3({0.75, 1.5, 0.75}),
-        vec3({0.375, 0.75, 0}),
-        0x3F5D6A
-    );
-    bones["lowerArmLeft"] = new Bone(
-        (std::forward_list<Bone*>){{}},
-        "lowerArmLeft",
-        vec3({0, -1.5, 0}),
-        vec3({0, 0, 0}),
-        vec3({0.6, 1.5, 0.6}),
-        vec3({0, 0.75, 0}),
-        0xEEAD7E
-    );
-    bones["lowerArmRight"] = new Bone(
-        (std::forward_list<Bone*>){{}},
-        "lowerArmRight",
-        vec3({0, -1.5, 0}),
-        vec3({0, 0, 0}),
-        vec3({0.6, 1.5, 0.6}),
-        vec3({0, 0.75, 0}),
-        0xEEAD7E
-    );
-    bones["upperArmLeft"] = new Bone(
-        (std::forward_list<Bone*>){ bones["lowerArmLeft"] },
-        "upperArmLeft",
-        vec3({-1.3, 0.75, 0}),
-        vec3({0, 0, 0}),
-        vec3({0.6, 1.5, 0.6}),
-        vec3({0.3, 0.75, 0}),
-        0x408467
-    );
-    bones["upperArmRight"] = new Bone(
-        (std::forward_list<Bone*>){ bones["lowerArmRight"] },
-        "upperArmRight",
-        vec3({1.3, 0.75, 0}),
-        vec3({0, 0, 0}),
-        vec3({0.6, 1.5, 0.6}),
-        vec3({-0.3, 0.75, 0}),
-        0x408467
-    );
-    bones["torso"] = new Bone(
-        (std::forward_list<Bone*>){{ bones["head"], bones["upperArmLeft"], bones["upperArmRight"], bones["upperLegLeft"], bones["upperLegRight"] }},
-        "torso",
-        vec3({0, -0.5, 0}),
-        vec3({0, 0, 0}),
-        vec3({2, 3, 0.9}),
-        vec3({0, 0, 0}),
-        0x43876A
-    );
-    return (bones);
-}
-
-std::unordered_map<std::string, Bone*>  Env::createBetterCharacterSkeleton( void ) { // NOTE: add hands
-    std::unordered_map<std::string, Bone*>  bones;
-    bones["head"] = new Bone(
-        (std::forward_list<Bone*>){{}},
-        "head",
-        vec3({0, 0.85, 0}),
+        vec3({0, 0.425, 0}),
         vec3({0, 0, 0}),
         vec3({0.8, 0.85, 0.8}),
-        vec3({0, -0.45, 0}),
+        vec3({0, -0.225, 0}),
         0xEEAD7E
     );
     bones["neck"] = new Bone(
         (std::forward_list<Bone*>){ bones["head"] },
         "neck",
-        vec3({0, 1, 0}),
+        vec3({0, 0.5, 0}),
         vec3({0, 0, 0}),
         vec3({0.3, 0.3, 0.3}),
         vec3({0, 0, 0}),
@@ -465,25 +339,25 @@ std::unordered_map<std::string, Bone*>  Env::createBetterCharacterSkeleton( void
     bones["lowerLegLeft"] = new Bone(
         (std::forward_list<Bone*>){{}},
         "lowerLegLeft",
-        vec3({0, -1, 0}),
+        vec3({0, -0.5, 0}),
         vec3({0, 0, 0}),
         vec3({0.4, 1, 0.4}),
-        vec3({0, 1, 0}),
+        vec3({0, 0.5, 0}),
         0x3F5D6A
     );
     bones["lowerLegRight"] = new Bone(
         (std::forward_list<Bone*>){{}},
         "lowerLegRight",
-        vec3({0, -1, 0}),
+        vec3({0, -0.5, 0}),
         vec3({0, 0, 0}),
         vec3({0.4, 1, 0.4}),
-        vec3({0, 1, 0}),
+        vec3({0, 0.5, 0}),
         0x3F5D6A
     );
     bones["kneeLeft"] = new Bone(
         (std::forward_list<Bone*>){ bones["lowerLegLeft"] },
         "kneeLeft",
-        vec3({0, -1, 0}),
+        vec3({0, -0.5, 0}),
         vec3({0, 0, 0}),
         vec3({0.3, 0.3, 0.3}),
         vec3({0, 0, 0}),
@@ -492,7 +366,7 @@ std::unordered_map<std::string, Bone*>  Env::createBetterCharacterSkeleton( void
     bones["kneeRight"] = new Bone(
         (std::forward_list<Bone*>){ bones["lowerLegRight"] },
         "kneeRight",
-        vec3({0, -1, 0}),
+        vec3({0, -0.5, 0}),
         vec3({0, 0, 0}),
         vec3({0.3, 0.3, 0.3}),
         vec3({0, 0, 0}),
@@ -501,25 +375,25 @@ std::unordered_map<std::string, Bone*>  Env::createBetterCharacterSkeleton( void
     bones["upperLegLeft"] = new Bone(
         (std::forward_list<Bone*>){ bones["kneeLeft"] },
         "upperLegLeft",
-        vec3({0, -1, 0}),
+        vec3({0, -0.5, 0}),
         vec3({0, 0, 0}),
         vec3({0.5, 1, 0.5}),
-        vec3({0, 1, 0}),
+        vec3({0, 0.5, 0}),
         0x3F5D6A
     );
     bones["upperLegRight"] = new Bone(
         (std::forward_list<Bone*>){ bones["kneeRight"] },
         "upperLegRight",
-        vec3({0, -1, 0}),
+        vec3({0, -0.5, 0}),
         vec3({0, 0, 0}),
         vec3({0.5, 1, 0.5}),
-        vec3({0, 1, 0}),
+        vec3({0, 0.5, 0}),
         0x3F5D6A
     );
     bones["hipLeft"] = new Bone(
         (std::forward_list<Bone*>){ bones["upperLegLeft"] },
         "hipLeft",
-        vec3({-0.6, -0.8, 0}),
+        vec3({-0.3, -0.4, 0}),
         vec3({0, 0, 0}),
         vec3({0.3, 0.3, 0.3}),
         vec3({0, 0, 0}),
@@ -528,7 +402,7 @@ std::unordered_map<std::string, Bone*>  Env::createBetterCharacterSkeleton( void
     bones["hipRight"] = new Bone(
         (std::forward_list<Bone*>){ bones["upperLegRight"] },
         "hipRight",
-        vec3({0.6, -0.8, 0}),
+        vec3({0.3, -0.4, 0}),
         vec3({0, 0, 0}),
         vec3({0.3, 0.3, 0.3}),
         vec3({0, 0, 0}),
@@ -537,25 +411,25 @@ std::unordered_map<std::string, Bone*>  Env::createBetterCharacterSkeleton( void
     bones["lowerArmLeft"] = new Bone(
         (std::forward_list<Bone*>){{}},
         "lowerArmLeft",
-        vec3({0, -0.8, 0}),
+        vec3({0, -0.4, 0}),
         vec3({0, 0, 0}),
         vec3({0.35, 0.8, 0.35}),
-        vec3({0, 0.8, 0}),
+        vec3({0, 0.4, 0}),
         0xEEAD7E
     );
     bones["lowerArmRight"] = new Bone(
         (std::forward_list<Bone*>){{}},
         "lowerArmRight",
-        vec3({0, -0.8, 0}),
+        vec3({0, -0.4, 0}),
         vec3({0, 0, 0}),
         vec3({0.35, 0.8, 0.35}),
-        vec3({0, 0.8, 0}),
+        vec3({0, 0.4, 0}),
         0xEEAD7E
     );
     bones["elbowLeft"] = new Bone(
         (std::forward_list<Bone*>){ bones["lowerArmLeft"] },
         "elbowLeft",
-        vec3({0, -1, 0}),
+        vec3({0, -0.5, 0}),
         vec3({0, 0, 0}),
         vec3({0.3, 0.3, 0.3}),
         vec3({0, 0, 0}),
@@ -564,7 +438,7 @@ std::unordered_map<std::string, Bone*>  Env::createBetterCharacterSkeleton( void
     bones["elbowRight"] = new Bone(
         (std::forward_list<Bone*>){ bones["lowerArmRight"] },
         "elbowRight",
-        vec3({0, -1, 0}),
+        vec3({0, -0.5, 0}),
         vec3({0, 0, 0}),
         vec3({0.3, 0.3, 0.3}),
         vec3({0, 0, 0}),
@@ -573,25 +447,25 @@ std::unordered_map<std::string, Bone*>  Env::createBetterCharacterSkeleton( void
     bones["upperArmLeft"] = new Bone(
         (std::forward_list<Bone*>){ bones["elbowLeft"] },
         "upperArmLeft",
-        vec3({0, -0.9, 0}),
+        vec3({0, -0.45, 0}),
         vec3({0, 0, 0}),
         vec3({0.4, 0.9, 0.4}),
-        vec3({0, 0.9, 0}),
+        vec3({0, 0.45, 0}),
         0x408467
     );
     bones["upperArmRight"] = new Bone(
         (std::forward_list<Bone*>){ bones["elbowRight"] },
         "upperArmRight",
-        vec3({0, -0.9, 0}),
+        vec3({0, -0.45, 0}),
         vec3({0, 0, 0}),
         vec3({0.4, 0.9, 0.4}),
-        vec3({0, 0.9, 0}),
+        vec3({0, 0.45, 0}),
         0x408467
     );
     bones["shoulderLeft"] = new Bone(
         (std::forward_list<Bone*>){ bones["upperArmLeft"] },
         "shoulderLeft",
-        vec3({-1.7, 0, 0}),
+        vec3({-0.85, 0, 0}),
         vec3({0, 0, 0}),
         vec3({0.3, 0.3, 0.3}),
         vec3({0, 0, 0}),
@@ -600,7 +474,7 @@ std::unordered_map<std::string, Bone*>  Env::createBetterCharacterSkeleton( void
     bones["shoulderRight"] = new Bone(
         (std::forward_list<Bone*>){ bones["upperArmRight"] },
         "shoulderRight",
-        vec3({1.7, 0, 0}),
+        vec3({0.85, 0, 0}),
         vec3({0, 0, 0}),
         vec3({0.3, 0.3, 0.3}),
         vec3({0, 0, 0}),
@@ -609,7 +483,7 @@ std::unordered_map<std::string, Bone*>  Env::createBetterCharacterSkeleton( void
     bones["pelvis"] = new Bone(
         (std::forward_list<Bone*>){{ bones["hipLeft"], bones["hipRight"] }},
         "pelvis",
-        vec3({0, -0.95, 0}),
+        vec3({0, -0.425, 0}),
         vec3({0, 0, 0}),
         vec3({0.95, 0.95, 0.8}),
         vec3({0, 0, 0}),
@@ -618,7 +492,7 @@ std::unordered_map<std::string, Bone*>  Env::createBetterCharacterSkeleton( void
     bones["stomach"] = new Bone(
         (std::forward_list<Bone*>){ bones["pelvis"] },
         "stomach",
-        vec3({0, -1, 0}),
+        vec3({0, -0.5, 0}),
         vec3({0, 0, 0}),
         vec3({0.8, 0.8, 0.9}),
         vec3({0, 0, 0}),
@@ -627,7 +501,7 @@ std::unordered_map<std::string, Bone*>  Env::createBetterCharacterSkeleton( void
     bones["torso"] = new Bone(
         (std::forward_list<Bone*>){{ bones["neck"], bones["stomach"], bones["shoulderLeft"], bones["shoulderRight"] }},//, bones["shoulderLeft"], bones["shoulderRight"], bones["hipLeft"], bones["hipRight"] }},
         "torso",
-        vec3({0, 0.5, 0}),
+        vec3({0, 0.25, 0}),
         vec3({0, 0, 0}),
         vec3({1.5, 1, 1}),
         vec3({0, 0, 0}),
