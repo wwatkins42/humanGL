@@ -48,7 +48,9 @@ void    Animator::update( void ) {
         for (size_t i = 0; i < (*this->animations[cAnim].frames)[this->cFrame]->size(); ++i) {
             tBoneTransform curr = (*(*this->animations[cAnim].frames)[this->cFrame])[i];
             tBoneTransform next = (*(*this->animations[cAnim].frames)[this->getNextFrame()])[i];
-            if (this->skeleton->getBones().find(curr.boneId) == this->skeleton->getBones().end())
+            /* check if the bone in the animation exists on the skeleton */
+            if (this->skeleton->getBones().find(curr.boneId) == this->skeleton->getBones().end() ||
+                this->skeleton->getBones().find(next.boneId) == this->skeleton->getBones().end())
                 continue;
             (*this->skeleton)[curr.boneId]->rescale((*this->skeleton)[curr.boneId]->getModel()->scaleExternal + mtls::lerp(curr.scale, next.scale, t));
             transform.identity();

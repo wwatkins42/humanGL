@@ -2,7 +2,7 @@
 
 Renderer::Renderer( Env* env ) :
     env(env),
-    camera(60, (float)env->getWindow().width / (float)env->getWindow().height),
+    camera(75, (float)env->getWindow().width / (float)env->getWindow().height),
     shader("./shader/vertex.glsl", "./shader/fragment.glsl") {
         this->env->getCharacter()->setShader(&this->shader);
 }
@@ -18,10 +18,10 @@ void	Renderer::loop( void ) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         this->shader.use();
         this->env->getController()->update();
-        this->camera.handleKeys( this->env->getController()->getKeys(), this->env->getCharacter()->getParentBone()->getModel()->getWorldPosition() );
-        this->raycastObjectSelect();
         this->env->getAnimator()->handleKeys( this->env->getController()->getKeys() );
         this->env->getAnimator()->update();
+        this->camera.handleKeys( this->env->getController()->getKeys(), this->env->getCharacter()->getParentBone()->getModel()->getPosition() );
+        this->raycastObjectSelect();
         this->updateShaderUniforms();
         this->env->getCharacter()->switchBonesModel( this->env->getController()->getKeyValue(GLFW_KEY_M) );
         glfwSwapBuffers(this->env->getWindow().ptr);
