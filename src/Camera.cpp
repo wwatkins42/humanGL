@@ -2,8 +2,7 @@
 
 Camera::Camera( float fov, float aspect ) : aspect(aspect), fov(fov) {
     this->projectionMatrix = Camera::createPerspectiveProjectionMatrix(fov, aspect);
-    // this->position = vec3({0, 0, 10});
-    this->position = vec3({0, 0, 6});
+    this->position = vec3({0, 0, 8});
     this->target = vec3({0, 0, 0});
     this->viewMatrix = mtls::lookAt(this->position, this->target);
 }

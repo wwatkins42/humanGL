@@ -7,7 +7,7 @@ Model::Model( const vec3& position, const vec3& orientation, const vec3& scale, 
     this->externalTransform.identity();
     this->worldPosition = vec3({0, 0, 0});
     this->selected = false;
-    this->scaleExternal = vec3({0, 0, 0}); // TODO: change that ?
+    this->scaleExternal = vec3({0, 0, 0});
 }
 
 Model::~Model( void ) {
@@ -45,9 +45,7 @@ void    Model::render( Shader* shader ) {
 }
 
 void    Model::updateWorldPosition( const mat4& parentTransform ) {
-    vec4    tmp = static_cast<vec4>(this->position);
-    tmp(3) = 1;
-    this->worldPosition = static_cast<vec3>(parentTransform.transpose() * tmp);
+    this->worldPosition = static_cast<vec3>(this->stack.top().transpose() * vec4({0,0,0,1}));
 }
 
 void    Model::switchModel( short key ) {

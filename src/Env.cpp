@@ -13,7 +13,7 @@ Env::Env( void ) : character() {
             {this->createIdleAnimation(), 1800, false},
             {this->createWalkingAnimation(), 750, false},
             {this->createBackflipAnimation(), 1500, true},
-            {this->createBackflipConnectedAnimation(), 8000, true},
+            {this->createBackflipConnectedAnimation(), 2000, true},
             {this->createJumpingAnimation(), 1100, false},
         });
         this->setupController();

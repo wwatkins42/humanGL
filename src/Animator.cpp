@@ -21,7 +21,6 @@ Animator::~Animator( void ) {
 void    Animator::selectAnim( size_t id ) {
     if (id >= this->animations.size())
         id = this->animations.size() - 1;
-    // Maybe do a smooth transition between animations ??
     if (this->cAnim != id) {
         /* reset all the bones' externalTransform to identity matrix */
         if (this->animations[cAnim].frames->size() > 1) {
@@ -77,6 +76,8 @@ void    Animator::handleKeys( const std::array<tKey, N_KEY>& keys ) {
         this->selectAnim(3);
     else if (keys[GLFW_KEY_5].value)
         this->selectAnim(4);
+    else if (keys[GLFW_KEY_6].value)
+        this->selectAnim(5);
 }
 
 tMilliseconds   Animator::getElapsedMilliseconds( void ) {

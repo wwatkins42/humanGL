@@ -26,7 +26,6 @@ public:
 
     void            update( const mat4& parentTransform, Shader* shader );
     void            render( Shader* shader );
-    void            updateWorldPosition( const mat4& parentTransform );
     void            switchModel( short key );
 
     mat4            popMatrix( void );
@@ -77,5 +76,6 @@ private:
     bool                selected;           // true if the model is selected
 
     void                initBufferObjects( int mode = GL_STATIC_DRAW, eModelType modelType = eModelType::cube );
+    void                updateWorldPosition( const mat4& parentTransform );
 
 };

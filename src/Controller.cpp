@@ -2,6 +2,8 @@
 
 Controller::Controller( GLFWwindow* window ) : window(window) {
     this->ref = std::chrono::steady_clock::now();
+    std::cout <<
+        "[w][s] : move forward/backward\n[a][d] : move left/right\n[space][shift] : move up/down\n\n[i][k] : scale z axis\n[j][l] : scale x axis\n[y][h] : scale y axis\n[-][=] : scale all axes\n\n[m] : switch bones model\n[c] : switch free/orbit camera mode\n[1][2][3][4][5][6] : select animation\n[esc] : quit\n(left click) : select bone\n";
 }
 
 Controller::~Controller( void ) {
