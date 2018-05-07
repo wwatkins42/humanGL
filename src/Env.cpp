@@ -640,7 +640,7 @@ tAnimationFrames*   Env::createJumpingAnimation( void ) {
     return (jumpingAnimation);
 }
 
-std::unordered_map<std::string, Bone*>  Env::createCharacterSkeleton( void ) { // NOTE: add hands
+std::unordered_map<std::string, Bone*>  Env::createCharacterSkeleton( void ) {
     std::unordered_map<std::string, Bone*>  bones;
     bones["head"] = new Bone(
         (std::forward_list<Bone*>){{}},

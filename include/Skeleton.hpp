@@ -30,7 +30,7 @@ public:
     const std::unordered_map<std::string, Bone*>&   getBones( void ) const { return (bones); };
     Shader*                                         getShader( void ) const { return (shader); };
 
-    Bone*   operator[]( const std::string& id );
+    Bone*                                           operator[]( const std::string& id );
 
 private:
     Bone*                                   parentBone;

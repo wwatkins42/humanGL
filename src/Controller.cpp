@@ -2,8 +2,11 @@
 
 Controller::Controller( GLFWwindow* window ) : window(window) {
     this->ref = std::chrono::steady_clock::now();
-    std::cout <<
-        "[w][s] : move forward/backward\n[a][d] : move left/right\n[space][shift] : move up/down\n\n[i][k] : scale z axis\n[j][l] : scale x axis\n[y][h] : scale y axis\n[-][=] : scale all axes\n\n[m] : switch bones model\n[c] : switch free/orbit camera mode\n[1][2][3][4][5][6] : select animation\n[esc] : quit\n(left click) : select bone\n";
+    std::cout << "[w][s] : move forward/backward\n[a][d] : move left/right\n\
+[space][shift] : move up/down\n\n[i][k] : scale z axis\n[j][l] : scale x axis\n\
+[y][h] : scale y axis\n[-][=] : scale all axes\n\n[m] : switch bones model\n\
+[c] : switch free/orbit camera mode\n[1][2][3][4][5][6] : select animation\n\
+[esc] : quit\n(left click) : select bone\n";
 }
 
 Controller::~Controller( void ) {
@@ -90,19 +93,3 @@ void    Controller::setKeyProperties( int k, eKeyMode type, short sval, uint coo
 tMilliseconds   Controller::getElapsedMilliseconds( tTimePoint prev ) {
     return (std::chrono::steady_clock::now() - prev);
 }
-/*
-          [w][s] : move forward/backward
-          [a][d] : move left/right
-  [space][shift] : move up/down
-
-          [i][k] : scale z axis
-          [j][l] : scale x axis
-          [y][h] : scale y axis
-          [-][=] : scale all axes
-
-             [m] : switch bones model
-             [c] : switch free/orbit camera mode
-    [1][2][3][4] : select animation
-           [esc] : quit
-    (left click) : select bone
-*/

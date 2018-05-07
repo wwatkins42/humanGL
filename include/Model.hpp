@@ -51,9 +51,9 @@ public:
     void            setScaling( const vec3& s ) { scaling = s; };
 
     const bool      getSelected( void ) const { return (selected); };
-    void            setSelected( bool b ) { selected = b; }; // DEBUG
+    void            setSelected( bool b ) { selected = b; };
 
-    vec3            scaleExternal; // MEH
+    vec3            scaleExternal; // meh
 
 private:
     int                 nIndices;           // the number of triangles of the model
