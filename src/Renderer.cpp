@@ -12,6 +12,7 @@ Renderer::~Renderer( void ) {
 
 void	Renderer::loop( void ) {
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_MULTISAMPLE);
     while (!glfwWindowShouldClose(this->env->getWindow().ptr)) {
         glfwPollEvents();
         glClearColor(0.09f, 0.08f, 0.15f, 1.0f);

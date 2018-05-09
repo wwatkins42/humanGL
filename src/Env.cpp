@@ -44,6 +44,7 @@ void	Env::initGlfwEnvironment( const std::string& glVersion ) {
 }
 
 void	Env::initGlfwWindow( size_t width, size_t height ) {
+    glfwWindowHint(GLFW_SAMPLES, 8);
 	if (!(this->window.ptr = glfwCreateWindow(width, height, "humanGL", NULL, NULL)))
         throw Exception::InitError("glfwCreateWindow failed");
 	glfwMakeContextCurrent(this->window.ptr);
